@@ -1,16 +1,16 @@
-Package: BAQM
 Type: Package
-Title: What the Package Does (Title Case)
+Package: BAQM
+Title: Analytics Functions for Babson AQM Courses
 Version: 0.1.0
-Authors@R: c(
-    person(
-      "Jane", "Doe",
-      email = "jane@example.com",
-      role = c("aut", "cre")
-    )
-  )
-Description: More about what it does (maybe more than one line).
-    Continuation lines should be indented.
+Authors@R: 
+    person("Peter", "Lert", , "plert@babson.edu", role = c("aut", "cre"))
+Description: Functions developed by instructors for AQM 1000 and AQM 2000
+    courses using R in the curriculum.
 License: GPL (>= 2)
+Imports:
+    HH
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
 Encoding: UTF-8
 LazyData: true

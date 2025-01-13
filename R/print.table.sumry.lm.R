@@ -1,0 +1,130 @@
+print.table.sumry.lm <- function (tbl,
+                                  digits = max(4, getOption("digits") - 2),
+                                  signif.stars = getOption("show.signif.stars"),
+                                  eps = .Machine$double.eps,
+                                  nsmall = 4,
+                                  na.print = "",
+                                  justify = "right",
+                                  quote = FALSE,
+                                  prnt.lgnd = c("coefficients"),
+                                  dig.test = max(1, min(5, digits - 2)),
+                                  ...) {
+  tbl_nm <- sub(".sumry.lm", "", grep("sumry.lm", class(tbl), value = TRUE))
+  tbl_nm <- tbl_nm[!tbl_nm %in% "table"]
+  t.mat <- as.matrix(tbl)
+  t.fmtd <- array("", dim = dim(t.mat), dimnames = dimnames(t.mat))
+  t.note <- rbind(matrix(character(0), nrow = 0, ncol = 1), attr(tbl, "note"))
+  #
+  if (tbl_nm %in% c("v.correlation", "cov.unscaled", "correlation")) {
+    p <- NCOL(t.mat)
+    if (p > 1L) {
+      t.fmtd <- format(
+        round(t.mat, nsmall),
+        nsmall = nsmall,
+        digits = digits,
+        justify = justify
+      )
+      t.fmtd[!lower.tri(t.fmtd, diag = TRUE)] <- ""
+    }
+  } else {
+    nms <- colnames(t.mat)
+    i.pval <- which(substr(nms, 1, 3) %in% c("Pr(", "p-v"))
+    if (tbl_nm %in% "stats") {
+      s.cols <- c("R-Squared", "Adj-R2", "MAPE")
+      for (nm in  nms[i.pval])
+        t.fmtd[, nm] <-
+          format.pval(t.mat[, nm], digits = dig.test, eps = eps)
+      for (nm in  nms[nms %in% s.cols])
+        t.fmtd[, nm] <- format(t.mat[, nm], digits = digits, nsmall = nsmall)
+      for (nm in nms[!nms %in% c(nms[i.pval], s.cols)])
+        t.fmtd[, nm] <- format(t.mat[, nm], digits = digits)
+      t.fmtd <- cbind(paste(nms, "="), as.character(t.fmtd[1, ]))
+      t.grpd <- cbind(t.fmtd[1:3, ], t.fmtd[4:6, ], t.fmtd[7:9, ])
+      for (i in 1:6)
+        t.grpd[, i] <- format(t.grpd[, i], justify = c("r", "l")[1 + (i %% 2)])
+      c.nms <- c("Fit",
+                 "Value",
+                 "Performance    ",
+                 "Measure",
+                 "Err(Resids)",
+                 "Metric")
+      if (signif.stars) for (i.p in i.pval) {
+        ij.p <- c((i.p - 1) %% 3 + 1, (i.p - 1) %/% 3 + 2)
+        strs <- rep("   ", 3)
+        sig <- symnum(
+          t.mat[, nms[i.p]],
+          corr = FALSE,
+          na = FALSE,
+          cutpoints = c(0, 0.001, 0.01, 0.05, 0.1, 1),
+          symbols = c("***", "**", "*", ".", " ")
+        )
+        strs[ij.p[1]] <- sig
+        t.note <- rbind(t.note, matrix(
+          attr(sig, "legend"),
+          nrow = 1,
+          ncol = 1,
+          dimnames = list("Signif.Levels", NULL)
+        ))
+        t.grpd[, ij.p[2]] <- paste(t.grpd[, ij.p[2]], strs)
+        c.nms[ij.p[2]] <- paste(c.nms[ij.p[2]], "   ")
+      }
+      spce <- rep(" ", 3)
+      t.grpd <- cbind(t.grpd[, 1:2], spce, t.grpd[, 3:4], spce, t.grpd[, 5:6])
+      c.nms <- c(c.nms[1:2], spce[1], c.nms[3:4], spce[1], c.nms[5:6])
+      t.fmtd <- matrix(t.grpd[, -1],
+                       nrow = 3,
+                       dimnames = list(t.grpd[, 1], c.nms[-1]))
+    } else {
+      # for coefficients and anova
+      i.tval <- which(substr(nms, 1, 3) %in% c("t-s", "t v"))
+      for (nm in nms[i.tval])
+        t.fmtd[, nm] <-
+          format(round(t.mat[, nm], digits = dig.test + 1),
+                 digits = digits,
+                 eps = eps)
+      for (nm in nms[i.pval])
+        t.fmtd[, nm] <-
+          format.pval(t.mat[, nm], digits = dig.test, eps = eps)
+      for (nm in nms[!nms %in% nms[c(i.pval, i.tval)]])
+        t.fmtd[, nm] <- format(t.mat[, nm], digits = digits, justify = justify)
+      t.fmtd[is.na(t.mat)] <- NA
+      if (signif.stars) for (i.p in i.pval) {
+        sig <- symnum(
+          t.mat[, nms[i.p]],
+          corr = FALSE,
+          na = FALSE,
+          cutpoints = c(0, 0.001, 0.01, 0.05, 0.1, 1),
+          symbols = c("***", "** ", "*  ", ".  ", "   ")
+        )
+        t.note <- rbind(t.note, matrix(
+          attr(sig, "legend"),
+          nrow = 1,
+          ncol = 1,
+          dimnames = list("Signif.Levels", NULL)
+        ))
+        i <- which(!is.na(t.fmtd[, nms[i.p]]))
+        t.fmtd[i, nms[i.p]] <- paste(t.fmtd[i, nms[i.p]], sig[i])
+        colnames(t.fmtd)[i.p] <- paste(colnames(t.fmtd)[i.p], "   ")
+      }
+    }
+  }
+  print.default(
+    t.fmtd,
+    print.gap = 2,
+    quote = quote,
+    right = justify == "right",
+    na.print = na.print
+  )
+  #
+  if (nrow(t.note) > 0) {
+    p.note <- t.note
+    if (!tbl_nm %in% prnt.lgnd)
+      p.note <- p.note[!rownames(p.note) %in% "Signif.Levels", ]
+    if (length(p.note) > 0)
+      print.default(matrix(p.note, dimnames = list(paste0(
+        rownames(p.note), ": "
+      ), "")), quote = FALSE)
+    attr(tbl, "note") <- t.note
+  }
+  invisible(tbl)
+}

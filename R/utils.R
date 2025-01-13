@@ -97,3 +97,9 @@ file_split <- function(fil, n, sep) {
   }
   x_lst
 }
+sumry <- function(object, ...) {
+  if (!"lm" %in% class(object))
+    return(summary(object, ...))
+  sumry.lm(object, ...)
+}
+
