@@ -1,4 +1,4 @@
-sumry.lm <- function (object)
+sumry.lm <- function (object, ...)
 {
   #
   z <- object
@@ -233,7 +233,7 @@ sumry.lm <- function (object)
       vif[!is.finite(vif)] <- NA
 
     } else {
-      vif <- rep(NA_real_, dim(coeffs)[1])
+      vif <- rep(NA_real_, length(coeffs))
     }
     # End VIF
     pval <- 2 * pt(abs(tval), rdf, lower.tail = FALSE)

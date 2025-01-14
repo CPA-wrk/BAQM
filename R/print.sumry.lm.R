@@ -28,7 +28,7 @@ print.sumry.lm <- function (sumry,
       next
     }
     cat("\n", headings[[tbl_nm]], "\n", sep = "")
-    print(sumry[[tbl_nm]],
+    print.table.sumry.lm(sumry[[tbl_nm]],
           digits = digits,
           na.print = na.print,
           signif.stars = signif.stars,
