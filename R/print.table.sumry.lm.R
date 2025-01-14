@@ -56,7 +56,7 @@ print.table.sumry.lm <- function (tbl,
           corr = FALSE,
           na = FALSE,
           cutpoints = c(0, 0.001, 0.01, 0.05, 0.1, 1),
-          symbols = c("***", "**", "*", ".", " ")
+          symbols = c("***", "** ", "*  ", ".  ", "   ")
         )
         strs[ij.p[1]] <- sig
         t.note <- rbind(t.note, matrix(
