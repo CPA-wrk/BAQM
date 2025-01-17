@@ -24,3 +24,5 @@ Imports:
     lmtest,
     stats,
     utils
+URL: https://github.com/CPA-wrk/BAQM
+BugReports: https://github.com/CPA-wrk/BAQM/issues
