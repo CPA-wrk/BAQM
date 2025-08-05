@@ -27,7 +27,7 @@ lm_plot.var <- function(mdl,
     # Highlight axes, if within frame
     ggplot2::geom_hline(
       color = "white",
-      size = parms$lins$size_lg,
+      linewidth = parms$lins$size_lg,
       yintercept = 0
     )
   #
@@ -35,14 +35,14 @@ lm_plot.var <- function(mdl,
     plts$var <- plts$var +
     ggplot2::geom_vline(
       color = "white",
-      size = parms$lins$size_lg,
+      linewidth = parms$lins$size_lg,
       xintercept = 0
     )
   #
   # Plot points - vary color & shape for normal/outlier points
   plts$var <- plts$var +
     ggplot2::geom_point(
-      ggplot2::aes(shape = .outlier, color = .outlier),
+      ggplot2::aes(shape = outlier, color = outlier),
       size = parms$pts$size,
       show.legend = FALSE
     ) +
@@ -79,7 +79,7 @@ lm_plot.var <- function(mdl,
   # ID outlier points if desired
   if (parms$pts$id$outl) {
     plts$var <- plts$var + ggrepel::geom_text_repel(
-      data = df[df$.outlier == "outl", ],
+      data = df[df$outlier == "outl", ],
       ggplot2::aes(x = .fits, y = .resid, label = .id),
       color = parms$pts$colr$outl,
       size = parms$pts$csz
@@ -89,7 +89,7 @@ lm_plot.var <- function(mdl,
   # ID regular points if desired
   if (parms$pts$id$reg) {
     plts$var <- plts$var + ggrepel::geom_text_repel(
-      data = df[df$.outlier == "reg", ],
+      data = df[df$outlier == "reg", ],
       ggplot2::aes(x = .fits, y = .resid, label = .id),
       color = parms$pts$colr$reg,
       size = parms$pts$csz
@@ -101,7 +101,7 @@ lm_plot.var <- function(mdl,
   #
   # Add Breusch-Pagan heteroskedasticity test p-value if desired
   if (parms$opt$pval.BP) {
-    note_var <- str_c("Const.Var: BP p-val=", round(parms$var$BP$p.value, 4))
+    note_var <- paste0("Const.Var: BP p-val=", round(parms$var$BP$p.value, 4))
     plts$var <- plts$var +
       ggplot2::annotate(
         "text",

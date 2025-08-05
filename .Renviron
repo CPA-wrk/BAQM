@@ -10,4 +10,5 @@ R_CLIENT_HOME=/Users/peter/Library/CloudStorage/OneDrive-BabsonCollege/GDrive/Ba
 R_COURSE=AQM_1000
 R_COURSE_HOME=${R_CLIENT_HOME}/${R_COURSE}
 #
+R_PROJ_LIB=BAQM_lib
 R_BAS_PACKAGES=${R_BAS_PACKAGES},devtools,roxygen2,testthat,knitr,pak,styler

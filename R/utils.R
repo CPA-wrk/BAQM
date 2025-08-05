@@ -2,7 +2,7 @@
 # Copyright 2025, Peter Lert, All rights reserved.
 char2dt <- function(chr, d = "/") {
   if (!is.na(dt <-
-    as.Date(chr, format = paste("%m", "%d", "%Y", sep = d)))[1]) {
+             as.Date(chr, format = paste("%m", "%d", "%Y", sep = d)))[1]) {
     dt
   } else {
     as.Date(chr)
@@ -18,10 +18,16 @@ is.ok <- function(x) {
   if (is.list(x)) {
     return(any(!is.na(x)))
   }
-  if (is.numeric(x)) any(is.finite(x)) else any(!is.na(x))
+  if (is.numeric(x))
+    any(is.finite(x))
+  else
+    any(!is.na(x))
 }
 if.ok <- function(x, def = 0) {
-  if (is.ok(x)) x else def
+  if (is.ok(x))
+    x
+  else
+    def
 }
 if.na <- function(x, def = NA) {
   ifelse(!is.na(x), x, def)
@@ -29,27 +35,15 @@ if.na <- function(x, def = NA) {
 if.blank <- function(x, def = NA) {
   ifelse(!x %in% c("", NA), x, def)
 }
-namewith <- function(obj, nm = NULL) {
-  if (!is.ok(nm)) {
-    return(obj)
-  }
-  obj <- rep_len(obj, length(nm))
-  names(obj) <- nm
-  obj
-}
-permute <- function(n, k) {
-  choose(n, k) * factorial(k)
-}
 pr <- function(x, ...) {
   format(x, big.mark = ",", ...)
 }
 attrs_get <- function(x) {
-  attributes(x)[names(attributes(x)) %notof% c(
-    "names", "row.names", "class", "dim", "dimnames", "tsp"
-  )]
+  attributes(x)[names(attributes(x)) %notof% c("names", "row.names", "class", "dim", "dimnames", "tsp")]
 }
 attrs_add <- function(x, attrs) {
-  for (nm in names(attrs)) attr(x, nm) <- attrs[[nm]]
+  for (nm in names(attrs))
+    attr(x, nm) <- attrs[[nm]]
   x
 }
 hd <- function(tbl, n = 30L) {
@@ -69,8 +63,12 @@ rpt_space <- function(loc, last.col = 15) {
   }
 }
 trim <- function(s) {
-  s <- sub(pattern = "^ +", replacement = "", x = s)
-  s <- sub(pattern = " +$", replacement = "", x = s)
+  s <- sub(pattern = "^ +",
+           replacement = "",
+           x = s)
+  s <- sub(pattern = " +$",
+           replacement = "",
+           x = s)
   s
 }
 file_ext <- function(fil, n = 2) {
@@ -98,8 +96,20 @@ file_split <- function(fil, n, sep) {
   x_lst
 }
 sumry <- function(object, ...) {
-  if (!"lm" %in% class(object))
-    return(summary(object, ...))
-  sumry.lm(object, ...)
+  if (inherits(object, "regsubsets"))
+    return(sumry.regsubsets(object, ...))
+  if (inherits(object, "lm"))
+    return(print.sumry.lm(object, ...))
+  summary(object, ...)
 }
-
+permute <- function(n, k) {
+  choose(n, k) * factorial(k)
+}
+# Outlier function - boxplot heuristic
+outlier <- function(x, rpt = FALSE) {
+  q <- quantile(x, c(0.25, 0, 0.75), na.rm = TRUE)
+  lims <- q[c(1, 3)] + c(-1.5, 1.5) * (q[3] - q[1])
+  if (rpt)
+    return(lims)
+  x < lims[1] | x > lims[2]
+}

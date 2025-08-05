@@ -30,21 +30,21 @@ lm_plot.fit <- function(mdl,
     plts$fit <- plts$fit +
     ggplot2::geom_hline(
       color = "white",
-      size = parms$lins$size_lg,
+      linewidth = parms$lins$size_lg,
       yintercept = 0
     )
   if (prod(sign(lim$x)) %in% -1)
     plts$fit <- plts$fit +
     ggplot2::geom_vline(
       color = "white",
-      size = parms$lins$size_lg,
+      linewidth = parms$lins$size_lg,
       xintercept = 0
     )
   #
   # Plot points - vary color & shape for normal/outlier points
   plts$fit <- plts$fit +
     ggplot2::geom_point(
-      ggplot2::aes(shape = .outlier, color = .outlier),
+      ggplot2::aes(shape = outlier, color = outlier),
       size = parms$pts$size,
       show.legend = FALSE
     ) +
@@ -114,19 +114,21 @@ lm_plot.fit <- function(mdl,
   # ID outlier points if desired
   if (parms$pts$id$outl) {
     plts$fit <- plts$fit + ggrepel::geom_text_repel(
-      data = df[df$.outlier == "outl", ],
+      data = df[df$outlier == "outl", ],
       ggplot2::aes(x = .fits, y = .obs, label = .id),
       color = parms$pts$colr$outl,
-      size = parms$pts$csz      )
+      size = parms$pts$csz
+    )
   }
   #
   # ID regular points if desired
   if (parms$pts$id$reg) {
     plts$fit <- plts$fit + ggrepel::geom_text_repel(
-      data = df[df$.outlier == "reg", ],
+      data = df[df$outlier == "reg", ],
       ggplot2::aes(x = .fits, y = .obs, label = .id),
       color = parms$pts$colr$reg,
-      size = parms$pts$csz      )
+      size = parms$pts$csz
+    )
   }
   #
   # Return fit results

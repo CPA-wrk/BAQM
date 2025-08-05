@@ -1,0 +1,68 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# BAQM
+
+  <!-- badges: start -->
+  [![R-CMD-check](https://github.com/CPA-wrk/BAQM/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/CPA-wrk/BAQM/actions/workflows/R-CMD-check.yaml)
+  <!-- badges: end -->
+
+<!-- R_LIBS_USER='/Users/peter/Library/Caches/org.R-project.R/R/renv/library/BAQM-8c6b0fb8/macos/R-4.5/aarch64-apple-darwin20' -->
+  
+BAQM supplies functions developed by Babson College instructors
+for AQM 1000 and AQM 2000 courses using R in the curriculum.
+The primary functions include:
+
+* `stat_desc()` - a function to produce descriptive statistics for data frames
+* `sumry.lm()` - a function to summarize linear model results
+* `lm_plot.4way()` - a function to produce diagnostic plots for linear models
+* `sumry.regsubsets()` - a function to format a "best subsets" regression analysis
+
+## Installation
+
+You can install the development version of BAQM
+from [GitHub](https://github.com/) with:
+
+``` r
+# install.packages("pak")
+# pak::pak("CPA-wrk/BAQM")
+```
+
+## Example
+
+Here are summaries of the built-in R data sets
+'swiss' and `iris`, with
+
+* a best-subsets analysis of modeling Fertility in 'swiss' and
+* a linear model with analytics of Sepal Length in 'iris'.
+
+(Variable names are truncated in 'swiss' to narrow the output.)
+
+```{r example}
+# library(BAQM)
+names(swiss) # Show original variable names
+names(swiss) <- substr(names(swiss), 1, 4) # Narrows output
+stat_desc(swiss)
+#
+regs <- leaps::regsubsets(Fert ~ ., data = swiss, nbest = 3)
+sumry(regs)
+#
+stat_desc(iris) # Includes non-numeric variable
+#
+mdl <- lm(Sepal.Length ~ ., data = iris)
+sumry(mdl)
+lm_plot.4way(mdl)
+```
+

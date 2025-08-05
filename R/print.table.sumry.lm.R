@@ -44,33 +44,39 @@ print.table.sumry.lm <- function (tbl,
         t.grpd[, i] <- format(t.grpd[, i], justify = c("r", "l")[1 + (i %% 2)])
       c.nms <- c("Fit",
                  "Value",
-                 "Performance    ",
+                 "Performance  ",
                  "Measure",
                  "Err(Resids)",
                  "Metric")
-      if (signif.stars) for (i.p in i.pval) {
-        ij.p <- c((i.p - 1) %% 3 + 1, (i.p - 1) %/% 3 + 2)
-        strs <- rep("   ", 3)
-        sig <- symnum(
-          t.mat[, nms[i.p]],
-          corr = FALSE,
-          na = FALSE,
-          cutpoints = c(0, 0.001, 0.01, 0.05, 0.1, 1),
-          symbols = c("***", "** ", "*  ", ".  ", "   ")
-        )
-        strs[ij.p[1]] <- sig
-        t.note <- rbind(t.note, matrix(
-          attr(sig, "legend"),
-          nrow = 1,
-          ncol = 1,
-          dimnames = list("Signif.Levels", NULL)
-        ))
-        t.grpd[, ij.p[2]] <- paste(t.grpd[, ij.p[2]], strs)
-        c.nms[ij.p[2]] <- paste(c.nms[ij.p[2]], "   ")
-      }
-      spce <- rep(" ", 3)
-      t.grpd <- cbind(t.grpd[, 1:2], spce, t.grpd[, 3:4], spce, t.grpd[, 5:6])
-      c.nms <- c(c.nms[1:2], spce[1], c.nms[3:4], spce[1], c.nms[5:6])
+      if (signif.stars)
+        for (i.p in i.pval) {
+          ij.p <- c((i.p - 1) %% 3 + 1, (i.p - 1) %/% 3 + 2)
+          strs <- rep("   ", 3)
+          sig <- symnum(
+            t.mat[, nms[i.p]],
+            corr = FALSE,
+            na = FALSE,
+            cutpoints = c(0, 0.001, 0.01, 0.05, 0.1, 1),
+            symbols = c("***", "** ", "*  ", ".  ", "   ")
+          )
+          strs[ij.p[1]] <- sig
+          t.note <- rbind(t.note, matrix(
+            attr(sig, "legend"),
+            nrow = 1,
+            ncol = 1,
+            dimnames = list("Signif.Levels", NULL)
+          ))
+          t.grpd[, ij.p[2]] <- paste(t.grpd[, ij.p[2]], strs)
+          c.nms[ij.p[2]] <- paste(c.nms[ij.p[2]], "   ")
+        }
+      # spce <- rep("", 3)
+      # t.grpd <- cbind(t.grpd[, 1:2], spce, t.grpd[, 3:4], spce, t.grpd[, 5:6])
+      # c.nms <- c(c.nms[1:2], spce[1], c.nms[3:4], spce[1], c.nms[5:6])
+      # t.fmtd <- matrix(t.grpd[, -1],
+      #                  nrow = 3,
+      #                  dimnames = list(t.grpd[, 1], c.nms[-1]))
+      t.grpd <- cbind(t.grpd[, 1:2], t.grpd[, 3:4], t.grpd[, 5:6])
+      c.nms <- c(c.nms[1:2], c.nms[3:4], c.nms[5:6])
       t.fmtd <- matrix(t.grpd[, -1],
                        nrow = 3,
                        dimnames = list(t.grpd[, 1], c.nms[-1]))
@@ -88,24 +94,25 @@ print.table.sumry.lm <- function (tbl,
       for (nm in nms[!nms %in% nms[c(i.pval, i.tval)]])
         t.fmtd[, nm] <- format(t.mat[, nm], digits = digits, justify = justify)
       t.fmtd[is.na(t.mat)] <- NA
-      if (signif.stars) for (i.p in i.pval) {
-        sig <- symnum(
-          t.mat[, nms[i.p]],
-          corr = FALSE,
-          na = FALSE,
-          cutpoints = c(0, 0.001, 0.01, 0.05, 0.1, 1),
-          symbols = c("***", "** ", "*  ", ".  ", "   ")
-        )
-        t.note <- rbind(t.note, matrix(
-          attr(sig, "legend"),
-          nrow = 1,
-          ncol = 1,
-          dimnames = list("Signif.Levels", NULL)
-        ))
-        i <- which(!is.na(t.fmtd[, nms[i.p]]))
-        t.fmtd[i, nms[i.p]] <- paste(t.fmtd[i, nms[i.p]], sig[i])
-        colnames(t.fmtd)[i.p] <- paste(colnames(t.fmtd)[i.p], "   ")
-      }
+      if (signif.stars)
+        for (i.p in i.pval) {
+          sig <- symnum(
+            t.mat[, nms[i.p]],
+            corr = FALSE,
+            na = FALSE,
+            cutpoints = c(0, 0.001, 0.01, 0.05, 0.1, 1),
+            symbols = c("***", "** ", "*  ", ".  ", "   ")
+          )
+          t.note <- rbind(t.note, matrix(
+            attr(sig, "legend"),
+            nrow = 1,
+            ncol = 1,
+            dimnames = list("Signif.Levels", NULL)
+          ))
+          i <- which(!is.na(t.fmtd[, nms[i.p]]))
+          t.fmtd[i, nms[i.p]] <- paste(t.fmtd[i, nms[i.p]], sig[i])
+          colnames(t.fmtd)[i.p] <- paste(colnames(t.fmtd)[i.p], "   ")
+        }
     }
   }
   print.default(

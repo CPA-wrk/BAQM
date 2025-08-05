@@ -21,7 +21,8 @@ lm_plot.df <- function(mdl) {
     .sigma = infl$sigma,
     .std.resid = rstandard(mdl, infl = infl),
     .stud.resid = rstudent(mdl, infl = infl),
-    structure(cbind(pred$fit[, -1], infl.msrs$infmat[, c("cook.d", "hat")]), dimnames = list(
+    structure(cbind(
+      pred$fit[, -1], infl.msrs$infmat[, c("cook.d", "hat")]), dimnames = list(
       NULL, c(".lower.pi", ".upper.pi", ".cooksd", ".hat")
     )),
     structure(infl.msrs$is.inf[, c("cook.d", "hat")], dimnames = list(
@@ -42,8 +43,8 @@ lm_plot.df <- function(mdl) {
   df$.quantile <- qqnorm(y = df$.resid, plot.it = FALSE)$x
   #
   # Outlier per ordinary residual, influential per studentized residual
-  df$.outlier <- ifelse(.outlier(df$.resid), "outl", "reg")
-  df$.stud.outl <- ifelse(.outlier(df$.stud.resid), "infl", "reg")
+  df$outlier <- ifelse(outlier(df$.resid), "outl", "reg")
+  df$.stud.outl <- ifelse(outlier(df$.stud.resid), "infl", "reg")
   #
   df
 }

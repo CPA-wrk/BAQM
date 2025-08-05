@@ -1,7 +1,28 @@
+# dev_tst.R
+#### Example code for testing BAQM package readme ####
+stat_desc(swiss)
+names(swiss) <- substr(names(swiss), 1, 4) # Narrows output
+regs <- leaps::regsubsets(Fert ~ ., data = swiss, nbest = 3)
+sumry(regs)
+stat_desc(iris) # Includes non-numeric variable
+mdl <- lm(Sepal.Length ~ ., data = iris)
+sumry(mdl)
+lm_plot.4way(mdl)
+#### End of example ####
+
+
+
+
+
 print.default(sumry(lm(Sepal.Length ~ Sepal.Width, data = iris)))
 print.default(sumry(lm(Sepal.Length ~ Sepal.Length, data = iris)))
 
 print.sumry.lm(sumry(lm(Sepal.Length ~ Sepal.Width, data = iris)))
+
+mdl <- lm(Sepal.Length ~ Sepal.Width, data = iris)
+sumry.lm(mdl)
+
+
 
 
 expect_snapshot(print.sumry.lm(sumry(lm(
@@ -37,8 +58,8 @@ lm_plot.lst$p_4way
 mdl <- lm(Sepal.Length ~ Sepal.Width + Petal.Length + Species, data = iris)
 
 mdl <- lm(Sepal.Length ~ Sepal.Width + Petal.Length, data = iris)
-lm_plot.lst <- lm_plot.4way(mdl)
-lm_plot.lst$p_4way
+lm_plot.4way <- lm_plot.4way(mdl)
+lm_plot.4way
 
 infl <- influence.measures(mdl)
 

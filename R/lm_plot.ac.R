@@ -1,9 +1,9 @@
 lm_plot.ac <- function(mdl,
                        parms = list(),
-                       df = data.frame(),
+                       df = lm_plot.df(mdl),
                        plts = list()) {
   #
-  # Plot of Residuals vs sequence to test independence (autocorrelation)
+  # Plot of Residuals vs order to test independence (autocorrelation)
   #
   # df:     augmented model data
   #
@@ -17,10 +17,10 @@ lm_plot.ac <- function(mdl,
     df$.resid <- residuals(mdl)
   if (!is.ok(df$.id))
     df$.id <- row.names(mdl$model)
-  if (!is.ok(df$.outlier))
-    df$.outlier <- ifelse(df$.resid %in% boxplot(df$.resid, plot = FALSE)$out,
-                          "outl",
-                          "reg")
+  if (!is.ok(df$outlier))
+    df$outlier <- ifelse(df$.resid %in% boxplot(df$.resid, plot = FALSE)$out,
+                         "outl",
+                         "reg")
   if (!is.ok(df$.sequence))
     df$.sequence <- 1:nrow(df)
   #
@@ -31,17 +31,17 @@ lm_plot.ac <- function(mdl,
     row.names = c("min", "max")
   )
   #
-  # Plot of Residuals vs sequence
+  # Plot of Residuals vs order
   plts$ac <- ggplot2::ggplot(data = df) +
     ggplot2::aes(x = .sequence, y = .resid) +
     #
     # PLot axis labels
-    labs(x = "Sequence", y = "Residual") +
+    ggplot2::labs(x = "Order", y = "Residual") +
     #
     # Highlight axes, if within frame
     ggplot2::geom_hline(
       color = "white",
-      size = parms$lins$size_lg,
+      linewidth = parms$lins$size_lg,
       yintercept = 0
     )
   #
@@ -49,15 +49,14 @@ lm_plot.ac <- function(mdl,
     plts$ac <- plts$ac +
     ggplot2::geom_vline(
       color = "white",
-      size = parms$lins$size_lg,
+      linewidth = parms$lins$size_lg,
       xintercept = 0
     )
-
   #
   # Plot points - vary color & shape for normal/outlier points
   plts$ac <- plts$ac +
     ggplot2::geom_point(
-      ggplot2::aes(shape = .outlier, color = .outlier),
+      ggplot2::aes(shape = outlier, color = outlier),
       size = parms$pts$size,
       show.legend = FALSE
     ) +
@@ -68,24 +67,31 @@ lm_plot.ac <- function(mdl,
     ggplot2::scale_color_manual(values = c(
       outl = parms$pts$colr$outl,
       reg = parms$pts$colr$reg
-    )) +
-    #
-    # Add sequence line
+    ))
+  #
+  # Add sequence line
+  plts$ac <- plts$ac +
     ggplot2::geom_path(
       linetype = parms$lins$ltyp,
       color = parms$pts$colr$reg,
-      size = parms$lins$size
-    ) +
-    #
-    # Add legend for outliers
-    ggplot2::geom_point(
-      ggplot2::aes(x = lim["max", "x"], y = lim["min", "y"]),
+      linewidth = parms$lins$size
+    )
+  #
+  # Add legend for outliers
+  plts$ac <- plts$ac +
+    ggplot2::annotate(
+      "point",
+      x = lim["max", "x"],
+      y = lim["min", "y"],
       shape = parms$pts$shape$outl,
       color = parms$pts$colr$outl,
       size = parms$pts$size
     ) +
-    ggplot2::geom_text(
-      ggplot2::aes(x = lim["max", "x"], y = lim["min", "y"], label = "Residual Outlier   "),
+    ggplot2::annotate(
+      "text",
+      x = lim["max", "x"],
+      y = lim["min", "y"],
+      label = "Residual Outlier   ",
       hjust = 1,
       vjust = 0.5,
       color = parms$pts$colr$outl,
@@ -95,7 +101,7 @@ lm_plot.ac <- function(mdl,
   # ID outlier points if desired
   if (parms$pts$id$outl) {
     plts$ac <- plts$ac + ggrepel::geom_text_repel(
-      data = df[df$.outlier == "outl", ],
+      data = df[df$outlier == "outl", ],
       ggplot2::aes(x = .quantile, y = .resid, label = .id),
       color = parms$pts$colr$outl,
       size = parms$pts$csz
@@ -105,7 +111,7 @@ lm_plot.ac <- function(mdl,
   # ID regular points if desired
   if (parms$pts$id$reg) {
     plts$ac <- plts$ac + ggrepel::geom_text_repel(
-      data = df[df$.outlier == "reg", ],
+      data = df[df$outlier == "reg", ],
       ggplot2::aes(x = .quantile, y = .resid, label = .id),
       color = parms$pts$colr$reg,
       size = parms$pts$csz
@@ -117,11 +123,14 @@ lm_plot.ac <- function(mdl,
   #
   # Add Durbin-Watson autocorrelation test p-value if desired
   if (parms$opt$pval.DW) {
-    note_ac <- str_c("Autocorrelation: DW p-val=",
-                     round(parms$ac$DW$p.value, 4))
+    note_ac <- paste0("Autocorrelation: DW p-val=",
+                      round(parms$ac$DW$p.value, 4))
     plts$ac <- plts$ac +
-      ggplot2::geom_text(
-        ggplot2::aes(x = lim["min", "x"], y = lim["max", "y"], label = note_ac),
+      ggplot2::annotate(
+        "text",
+        x = lim["min", "x"],
+        y = lim["max", "y"],
+        label = note_ac,
         hjust = 0,
         vjust = 1,
         color = parms$lins$colr$ac,

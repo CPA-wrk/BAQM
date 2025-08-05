@@ -24,12 +24,14 @@ lm_plot.lev <- function(mdl,
   parms$cook$level <- unique(abs(parms$cook$level))
   for (level in parms$cook$level) {
     y <- sqrt(level * length(coef(mdl)) * (1 - x) / x)
-    parms$cook$cont[str_c(c("pos.", "neg."), level)] <- data.frame(y, -y)
-    parms$cook$labl <- c(parms$cook$labl, str_c("d = ", c("+", "-"), level))
+    parms$cook$cont[paste0(c("pos.", "neg."), level)] <- data.frame(y, -y)
+    parms$cook$labl <- c(parms$cook$labl, paste0("d = ", c("+", "-"), level))
   }
   names(parms$cook$labl) <- names(parms$cook$cont)
-  parms$cook$level <- namewith(rep(parms$cook$level, each = 2) * rep(c(1, -1), 2),
-                               names(parms$cook$cont))
+  # parms$cook$level <- namewith(rep(parms$cook$level, each = 2) * rep(c(1, -1), 2),
+  #                              names(parms$cook$cont))
+  parms$cook$level <- rep(parms$cook$level, each = 2) * rep(c(1, -1), 2)
+  names(parms$cook$level) <- names(parms$cook$cont)
   parms$cook$cont$x <- x
   parms$cook$cont <- data.frame(parms$cook$cont)
   #
@@ -42,19 +44,19 @@ lm_plot.lev <- function(mdl,
     # Highlight axes within frame
     ggplot2::geom_hline(
       colour = "white",
-      size = parms$lins$size_lg,
+      linewidth = parms$lins$size_lg,
       yintercept = 0
     ) +
     ggplot2::geom_vline(
       colour = "white",
-      size = parms$lins$size_lg,
+      linewidth = parms$lins$size_lg,
       xintercept = 0
     )
   #
   # Plot points - vary color & shape for normal/outlier points
   plts$lev <- plts$lev +
     ggplot2::geom_point(
-      ggplot2::aes(shape = .outlier, color = .outlier),
+      ggplot2::aes(shape = outlier, color = outlier),
       size = parms$pts$size,
       show.legend = FALSE
     ) +
@@ -115,7 +117,7 @@ lm_plot.lev <- function(mdl,
   #
   # ID outlier points if desired
   if (parms$pts$id$outl) {
-    i_out <- which(df$.outlier == "outl")
+    i_out <- which(df$outlier == "outl")
     plts$lev <- plts$lev + ggrepel::geom_text_repel(
       data = df[i_out[!i_out %in% i_d], ],
       ggplot2::aes(x = .hat, y = .std.resid, label = .id),
@@ -126,7 +128,7 @@ lm_plot.lev <- function(mdl,
   #
   # ID regular points if desired
   if (parms$pts$id$reg) {
-    i_reg <- which(df$.outlier == "reg")
+    i_reg <- which(df$outlier == "reg")
     plts$lev <- plts$lev + ggrepel::geom_text_repel(
       data = df[i_reg[!i_reg %in% i_d], ],
       ggplot2::aes(x = .hat, y = .std.resid, label = .id),

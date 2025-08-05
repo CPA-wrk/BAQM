@@ -13,6 +13,10 @@ print.sumry.lm <- function (sumry,
   #   v.correlation, cov.unscaled, correlation, residuals
   # Summary output ends with 5-number+ summary of residuals and the call.
   #
+  if (inherits(sumry, "lm")) {
+    sumry <- sumry.lm(sumry)
+  }
+  #
   headings <- list(
     stats = "Summary Statistics:",
     anova = "Analysis of Variance:",
@@ -28,11 +32,13 @@ print.sumry.lm <- function (sumry,
       next
     }
     cat("\n", headings[[tbl_nm]], "\n", sep = "")
-    print.table.sumry.lm(sumry[[tbl_nm]],
-          digits = digits,
-          na.print = na.print,
-          signif.stars = signif.stars,
-          eps = eps)
+    print.table.sumry.lm(
+      sumry[[tbl_nm]],
+      digits = digits,
+      na.print = na.print,
+      signif.stars = signif.stars,
+      eps = eps
+    )
   }
   #
   # Residuals summary
@@ -55,7 +61,8 @@ print.sumry.lm <- function (sumry,
     r.sumry <- format(resid, digits = digits)
   }
   if (is.null(r.sumry)) {
-    cat("ALL", sumry$df[1],
+    cat("ALL",
+        sumry$df[1],
         "residuals are 0: no residual degrees of freedom!\n")
   } else {
     print.default(r.sumry, quote = FALSE, print.gap = 2)
@@ -63,10 +70,12 @@ print.sumry.lm <- function (sumry,
   #
   # Lastly report the lm Call
   s.note <- matrix(
-    format(sumry$call),
-    nrow = 1,
+    cl <- format(sumry$call),
+    nrow = length(cl),
     ncol = 1,
-    dimnames = list("Call", NULL)
+    dimnames = list(c("Call", rep("", length(
+      cl
+    ) - 1)), NULL)
   )
   print.default(matrix(s.note, dimnames = list(paste0(
     rownames(s.note), ": "

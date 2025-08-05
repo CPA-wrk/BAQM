@@ -6,3 +6,5 @@
 ^dev_tst\.R$
 ^.*\.DS_Store\.R$
 ^\.Rbuildignore$
+^\.github$
+^README\.Rmd$

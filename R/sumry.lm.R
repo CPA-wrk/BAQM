@@ -172,15 +172,29 @@ sumry.lm <- function (object, ...)
       #
       # Build Performance statistics table
       ans$stats <- cbind(
-        n, ans$fstatistic["value"], ans$f.pval,
-        ans$r.squared, ans$adj.r.squared, ans$sigma,
-        mean(abs(r / obs)), mean(abs(r)), sqrt(mean(r^2))
+        n,
+        ans$fstatistic["value"],
+        ans$f.pval,
+        ans$r.squared,
+        ans$adj.r.squared,
+        ans$sigma,
+        mean(abs(r / obs)),
+        mean(abs(r)),
+        sqrt(mean(r^2))
       )
       dimnames(ans$stats) = list(
         NULL,
-        c("Observations", "F-Statistic", "Pr(b's=0),%",
-          "R-Squared", "Adj-R2", "Std.Error.Est",
-          "MAPE", "MAD ", "RMSE")
+        c(
+          "Observations",
+          "F-Statistic",
+          "Pr(b's=0),%",
+          "R-Squared",
+          "Adj-R2",
+          "Std.Err.Est",
+          "MAPE",
+          "MAD ",
+          "RMSE"
+        )
       )
       #
     } else {
@@ -201,8 +215,7 @@ sumry.lm <- function (object, ...)
       names(data) <- make.names(names(data), unique = TRUE)
       #
       # Calulate VIF
-      vif <- as.list(array(NA_real_, dim = ncol(data),
-                           dimnames <- list(names(data))))
+      vif <- as.list(array(NA_real_, dim = ncol(data), dimnames <- list(names(data))))
       nms <- names(vif)
       vif[nms] <- lapply(nms, function(xvar, data) {
         xvar.lm <- lm(as.formula(paste(xvar, "~ .")),
@@ -220,12 +233,16 @@ sumry.lm <- function (object, ...)
         vif <- 1 / (1 - xvar.r.squared)
         if (is.finite(res.var) &&
             res.var < (mean(fits)^2 + var(c(fits))) * .Machine$double.eps)
-          attr(vif, "note") <- matrix("shows essentially perfect collinearity",
-                       nrow = 1, ncol = 1,
-                       dimnames = list(paste("VIF for", xvar), NULL))
+          attr(vif, "note") <- matrix(
+            "shows essentially perfect collinearity",
+            nrow = 1,
+            ncol = 1,
+            dimnames = list(paste("VIF for", xvar), NULL)
+          )
         vif
       }, data = data)
-      for (nm in names(vif)) note <- rbind(note, attr(vif[[nm]], "note"))
+      for (nm in names(vif))
+        note <- rbind(note, attr(vif[[nm]], "note"))
       vif <- unlist(vif)
       names(vif) <- names(m.mat)[!names(m.mat) %in% "(Intercept)"]
       vif <- vif[names(m.mat)]
@@ -248,17 +265,23 @@ sumry.lm <- function (object, ...)
     dimnames(ans$correlation) <- dimnames(ans$cov.unscaled)
   }
   if (any(aliased <- ans$aliased)) {
-    note <- rbind(note,
-                  matrix(paste("Collinear variables removed:",
-                         paste(names(aliased[aliased]), collapse = ", ")),
-                         nrow = 1, ncol = 1,
-                         dimnames = list("Aliased variables", NULL)))
+    note <- rbind(note, matrix(
+      paste(
+        "Collinear variables removed:",
+        paste(names(aliased[aliased]), collapse = ", ")
+      ),
+      nrow = 1,
+      ncol = 1,
+      dimnames = list("Aliased variables", NULL)
+    ))
   }
   if ((nsingular <- ans$df[3] - ans$df[1]) > 0) {
-    note <- rbind(note,
-                  matrix(paste("Cannot define", nsingular, "coefficients"),
-                         nrow = 1, ncol = 1,
-                         dimnames = list("Singularities", NULL)))
+    note <- rbind(note, matrix(
+      paste("Cannot define", nsingular, "coefficients"),
+      nrow = 1,
+      ncol = 1,
+      dimnames = list("Singularities", NULL)
+    ))
   }
   if (nrow(note) > 0) {
     attr(ans$coefficients, "note") <- note

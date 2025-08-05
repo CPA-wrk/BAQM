@@ -24,11 +24,11 @@ lm_plot.infl <- function(mdl,
   # cutoffs <- 2:3 * (mdl$rank + 1) / nrow(df)
   #
   # Limits for high Influence points per studentized residuals outliers
-  infl_lims <- .outlier(df$.stud.resid, rpt = TRUE)
+  infl_lims <- outlier(df$.stud.resid, rpt = TRUE)
   #
   df$.attn <- ifelse(df$.stud.outl == "infl",
                      "infl",
-                     ifelse(df$.outlier == "outl", "outl", "reg"))
+                     ifelse(df$outlier == "outl", "outl", "reg"))
   # Plot of studentized residuals vs sequence
   plts$infl <- ggplot2::ggplot(data = df) +
     #
@@ -67,11 +67,11 @@ lm_plot.infl <- function(mdl,
         label = .id,
         color = .attn
       ),
-      nudge_y = -sign(df$.stud.resid) * offp_y,
+      nudge_y = -sign(df$.stud.resid) * df$offp_y,
       size = parms$pts$csz,
       show.legend = FALSE
     )
-  if (any(df$.outlier %in% "outl")) {
+  if (any(df$outlier %in% "outl")) {
     #
     # Add legend for outliers
     ggplot2::annotate(

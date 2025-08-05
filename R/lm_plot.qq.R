@@ -37,19 +37,19 @@ lm_plot.qq <- function(mdl,
     # Highlight axes within frame
     ggplot2::geom_hline(
       color = "white",
-      size = parms$lins$size_lg,
+      linewidth = parms$lins$size_lg,
       yintercept = 0
     ) +
     ggplot2::geom_vline(
       color = "white",
-      size = parms$lins$size_lg,
+      linewidth = parms$lins$size_lg,
       xintercept = 0
     )
   #
   # Plot points - vary color & shape for normal/outlier points
   plts$qq <- plts$qq +
     ggplot2::geom_point(
-      ggplot2::aes(shape = .outlier, color = .outlier),
+      ggplot2::aes(shape = outlier, color = outlier),
       size = parms$pts$size,
       show.legend = FALSE
     ) +
@@ -95,7 +95,7 @@ lm_plot.qq <- function(mdl,
   # ID outlier points if desired
   if (parms$pts$id$outl) {
     plts$qq <- plts$qq + ggrepel::geom_text_repel(
-      data = df[df$.outlier == "outl", ],
+      data = df[df$outlier == "outl", ],
       ggplot2::aes(x = .quantile, y = .resid, label = .id),
       color = parms$pts$colr$outl,
       size = parms$pts$csz
@@ -105,7 +105,7 @@ lm_plot.qq <- function(mdl,
   # ID regular points if desired
   if (parms$pts$id$reg) {
     plts$qq <- plts$qq + ggrepel::geom_text_repel(
-      data = df[df$.outlier == "reg", ],
+      data = df[df$outlier == "reg", ],
       ggplot2::aes(x = .quantile, y = .resid, label = .id),
       color = parms$pts$colr$reg,
       size = parms$pts$csz
@@ -119,7 +119,7 @@ lm_plot.qq <- function(mdl,
   #
   # Add Shapiro-Wilk normality test p-value if desired
   if (parms$opt$pval.SW) {
-    note_qq <- str_c("Normality: SW p-val=", round(parms$qq$SW$p.value, 4))
+    note_qq <- paste0("Normality: SW p-val=", round(parms$qq$SW$p.value, 4))
     plts$qq <- plts$qq +
       ggplot2::annotate(
         "test",
