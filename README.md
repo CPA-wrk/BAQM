@@ -57,7 +57,6 @@ stat_desc(swiss)
 #
 regs <- leaps::regsubsets(Fert ~ ., data = swiss, nbest = 3)
 sumry(regs)
-#> sumry:  regsubsets
 #>    k___best      rsq    adjr2      see       cp Agri Exam Educ Cath Infa
 #> 1  1  ( 1 ) 0.440616 0.428185  9.44603 35.20490              *          
 #> 2  1  ( 2 ) 0.417164 0.404213  9.64200 38.48349         *               
@@ -83,7 +82,6 @@ stat_desc(iris) # Includes non-numeric variable
 #
 mdl <- lm(Sepal.Length ~ ., data = iris)
 sumry(mdl)
-#> sumry:  lm 
 #> 
 #> Summary Statistics:
 #>                  Value      Performance    Measure  Err(Resids)    Metric
@@ -118,4 +116,4 @@ sumry(mdl)
 lm_plot.4way(mdl)
 ```
 
-<img src="man/figures/README-example-1.png" width="100%" />
+<img src="man/figures/README-example-1.png" width="80%" />

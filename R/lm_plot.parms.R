@@ -1,4 +1,5 @@
 lm_plot.parms <- function(parms = list()) {
+  # Copyright 2025, Peter Lert, All rights reserved.
   #
   # Default plot element parameters
   #

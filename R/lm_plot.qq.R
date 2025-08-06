@@ -2,6 +2,7 @@ lm_plot.qq <- function(mdl,
                        parms = list(),
                        df = lm_plot.df(mdl),
                        plts = list()) {
+  # Copyright 2025, Peter Lert, All rights reserved.
   #
   # Q-Q Plot of Residuals to test normality
   #
@@ -12,11 +13,11 @@ lm_plot.qq <- function(mdl,
   #
   # Add qqline elements
   qqlin <- list(probs = c(0.25, 0.75))
-  qqlin$theory <- qnorm(p = qqlin$probs)
-  qqlin$resid <- quantile(df$.resid,
-                          probs = qqlin$probs,
-                          names = FALSE,
-                          na.rm = TRUE)
+  qqlin$theory <- stats::qnorm(p = qqlin$probs)
+  qqlin$resid <- stats::quantile(df$.resid,
+                                 probs = qqlin$probs,
+                                 names = FALSE,
+                                 na.rm = TRUE)
   qqlin$slope <- diff(qqlin$resid) / diff(qqlin$theory)
   qqlin$int <- qqlin$resid[[1L]] - qqlin$slope * qqlin$theory[[1L]]
   #
@@ -115,7 +116,7 @@ lm_plot.qq <- function(mdl,
   # Return Q-Q results
   parms$qq <- list(lim = lim,
                    qqlin = qqlin,
-                   SW = shapiro.test(df$.resid))
+                   SW = stats::shapiro.test(df$.resid))
   #
   # Add Shapiro-Wilk normality test p-value if desired
   if (parms$opt$pval.SW) {

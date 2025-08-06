@@ -47,7 +47,7 @@ attrs_add <- function(x, attrs) {
   x
 }
 hd <- function(tbl, n = 30L) {
-  head(data.frame(tbl), n)
+  utils::head(data.frame(tbl), n)
 }
 "%of%" <- function(x, table) {
   x[x %in% table]
@@ -83,31 +83,24 @@ file_split <- function(fil, n, sep) {
   names(x_lst) <- names(fil)
   x_lst <- lapply(x_lst, function(x) {
     if (n == 1) {
-      return(tail(x, 1))
+      return(utils::tail(x, 1))
     }
     if ((i <- length(x) - n) <= 0) {
       return(c(rev(x), rep("", -i)))
     }
-    c(rev(tail(x, n - 1)), paste(head(x, i + 1), collapse = sep))
+    c(rev(utils::tail(x, n - 1)), paste(utils::head(x, i + 1), collapse = sep))
   })
   if (!is.list(fil) && length(fil) == 1) {
     return(unlist(x_lst))
   }
   x_lst
 }
-sumry <- function(object, ...) {
-  if (inherits(object, "regsubsets"))
-    return(sumry.regsubsets(object, ...))
-  if (inherits(object, "lm"))
-    return(print.sumry.lm(object, ...))
-  summary(object, ...)
-}
 permute <- function(n, k) {
   choose(n, k) * factorial(k)
 }
 # Outlier function - boxplot heuristic
 outlier <- function(x, rpt = FALSE) {
-  q <- quantile(x, c(0.25, 0, 0.75), na.rm = TRUE)
+  q <- stats::quantile(x, c(0.25, 0, 0.75), na.rm = TRUE)
   lims <- q[c(1, 3)] + c(-1.5, 1.5) * (q[3] - q[1])
   if (rpt)
     return(lims)

@@ -1,12 +1,13 @@
 lm_plot.df <- function(mdl) {
+  # Copyright 2025, Peter Lert, All rights reserved.
   #
   # Augmented model data for plots
   #
-  infl <- influence(mdl)
-  infl.msrs <- influence.measures(mdl, infl = infl)
-  x.dfbeta <- dfbeta(mdl, infl = infl)
-  x.dfbetas <- dfbetas(mdl, infl = infl)
-  pred <- suppressWarnings(predict(
+  infl <- stats::influence(mdl)
+  infl.msrs <- stats::influence.measures(mdl, infl = infl)
+  x.dfbeta <- stats::dfbeta(mdl, infl = infl)
+  x.dfbetas <- stats::dfbetas(mdl, infl = infl)
+  pred <- suppressWarnings(stats::predict(
     mdl,
     interval = "prediction",
     level = 0.95,
@@ -19,8 +20,8 @@ lm_plot.df <- function(mdl) {
     .resid = mdl$residuals,
     .obs = mdl$fitted.values + mdl$residuals,
     .sigma = infl$sigma,
-    .std.resid = rstandard(mdl, infl = infl),
-    .stud.resid = rstudent(mdl, infl = infl),
+    .std.resid = stats::rstandard(mdl, infl = infl),
+    .stud.resid = stats::rstudent(mdl, infl = infl),
     structure(cbind(
       pred$fit[, -1], infl.msrs$infmat[, c("cook.d", "hat")]), dimnames = list(
       NULL, c(".lower.pi", ".upper.pi", ".cooksd", ".hat")
@@ -40,7 +41,7 @@ lm_plot.df <- function(mdl) {
   # .upper.pi	  Upper bound on interval for fitted values
   #
   # Theoretical normal quantile
-  df$.quantile <- qqnorm(y = df$.resid, plot.it = FALSE)$x
+  df$.quantile <- stats::qqnorm(y = df$.resid, plot.it = FALSE)$x
   #
   # Outlier per ordinary residual, influential per studentized residual
   df$outlier <- ifelse(outlier(df$.resid), "outl", "reg")

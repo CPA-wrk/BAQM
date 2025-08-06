@@ -2,6 +2,7 @@ lm_plot.ac <- function(mdl,
                        parms = list(),
                        df = lm_plot.df(mdl),
                        plts = list()) {
+  # Copyright 2025, Peter Lert, All rights reserved.
   #
   # Plot of Residuals vs order to test independence (autocorrelation)
   #
@@ -12,13 +13,13 @@ lm_plot.ac <- function(mdl,
   #
   # Assure data
   if (!is.ok(df))
-    df <- data.frame(.resid = residuals(mdl))
+    df <- data.frame(.resid = stats::residuals(mdl))
   if (!is.ok(df$.resid))
-    df$.resid <- residuals(mdl)
+    df$.resid <- stats::residuals(mdl)
   if (!is.ok(df$.id))
     df$.id <- row.names(mdl$model)
   if (!is.ok(df$outlier))
-    df$outlier <- ifelse(df$.resid %in% boxplot(df$.resid, plot = FALSE)$out,
+    df$outlier <- ifelse(df$.resid %in% stats::boxplot(df$.resid, plot = FALSE)$out,
                          "outl",
                          "reg")
   if (!is.ok(df$.sequence))

@@ -1,15 +1,16 @@
-print.table.sumry.lm <- function (tbl,
-                                  digits = max(4, getOption("digits") - 2),
-                                  signif.stars = getOption("show.signif.stars"),
-                                  eps = .Machine$double.eps,
-                                  nsmall = 4,
-                                  na.print = "",
-                                  justify = "right",
-                                  quote = FALSE,
-                                  prnt.lgnd = c("coefficients"),
-                                  dig.test = max(1, min(5, digits - 2)),
-                                  ...) {
-  tbl_nm <- sub(".sumry.lm", "", grep("sumry.lm", class(tbl), value = TRUE))
+print.table.summary.lm <- function (tbl,
+                                    digits = max(4, getOption("digits") - 2),
+                                    signif.stars = getOption("show.signif.stars"),
+                                    eps = .Machine$double.eps,
+                                    nsmall = 4,
+                                    na.print = "",
+                                    justify = "right",
+                                    quote = FALSE,
+                                    prnt.lgnd = c("coefficients"),
+                                    dig.test = max(1, min(5, digits - 2)),
+                                    ...) {
+  # Copyright 2025, Peter Lert, All rights reserved.
+  tbl_nm <- sub(".summary.lm", "", grep("summary.lm", class(tbl), value = TRUE))
   tbl_nm <- tbl_nm[!tbl_nm %in% "table"]
   t.mat <- as.matrix(tbl)
   t.fmtd <- array("", dim = dim(t.mat), dimnames = dimnames(t.mat))
@@ -52,7 +53,7 @@ print.table.sumry.lm <- function (tbl,
         for (i.p in i.pval) {
           ij.p <- c((i.p - 1) %% 3 + 1, (i.p - 1) %/% 3 + 2)
           strs <- rep("   ", 3)
-          sig <- symnum(
+          sig <- stats::symnum(
             t.mat[, nms[i.p]],
             corr = FALSE,
             na = FALSE,
@@ -96,7 +97,7 @@ print.table.sumry.lm <- function (tbl,
       t.fmtd[is.na(t.mat)] <- NA
       if (signif.stars)
         for (i.p in i.pval) {
-          sig <- symnum(
+          sig <- stats::symnum(
             t.mat[, nms[i.p]],
             corr = FALSE,
             na = FALSE,

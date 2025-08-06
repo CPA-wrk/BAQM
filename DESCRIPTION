@@ -4,6 +4,7 @@ Title: Analytics Functions for Babson AQM Courses
 Version: 0.1.0
 Authors@R: 
     person("Peter", "Lert", , "plert@babson.edu", role = c("aut", "cre"))
+Copyright: Copyright Peter Lert, PhD, CFA
 Description: Functions developed by instructors for AQM 1000 and AQM 2000
     courses using R in the curriculum.
 License: GPL (>= 2)
@@ -16,11 +17,10 @@ Suggests:
 Config/testthat/edition: 3
 Encoding: UTF-8
 LazyData: true
-Imports: 
+Imports:
     cowplot,
     ggplot2,
     ggrepel,
-    graphics,
     lmtest,
     stats,
     utils

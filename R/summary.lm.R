@@ -1,5 +1,6 @@
-sumry.lm <- function (object, ...)
+summary.lm <- function (object, ...)
 {
+  # Copyright 2025, Peter Lert, All rights reserved.
   #
   z <- object
   p <- z$rank
@@ -93,7 +94,7 @@ sumry.lm <- function (object, ...)
     }
     resvar <- rss / rdf
     if (is.finite(resvar) &&
-        resvar < (mean(f)^2 + var(c(f))) * 1e-30)
+        resvar < (mean(f)^2 + stats::var(c(f))) * 1e-30)
       warning("essentially perfect fit: summary may be unreliable")
     p1 <- 1:p
     R <- chol2inv(Qr$qr[p1, p1, drop = FALSE])
@@ -122,17 +123,17 @@ sumry.lm <- function (object, ...)
         numdf = p - df.int,
         dendf = rdf
       )
-      ans$f.pval <- pf(ans$fstatistic["value"],
-                       ans$fstatistic["numdf"],
-                       ans$fstatistic["dendf"],
-                       lower.tail = FALSE)
+      ans$f.pval <- stats::pf(ans$fstatistic["value"],
+                              ans$fstatistic["numdf"],
+                              ans$fstatistic["dendf"],
+                              lower.tail = FALSE)
       #
       # Build table of fit data
       ans$fits <-  cbind(obs, f, r)
       colnames(ans$fits) = c("Obs.Value", "Fit.Value", "Residual")
       #
       # Build simplified ANOVA table - Sum of squares
-      anova_tbl <- anova(z)
+      anova_tbl <- stats::anova(z)
       anova_tbl <- data.frame(
         row.names = c("Regression", "Error(Resids)"),
         Deg.Frdm = c(sum(anova_tbl[-nrow(anova_tbl), "Df"]), anova_tbl[nrow(anova_tbl), "Df"]),
@@ -202,14 +203,14 @@ sumry.lm <- function (object, ...)
     }
     # Build regression coefficient table with VIFs
     if (length(attr(z$terms, "order")) > 1) {
-      m.mat <- as.data.frame(model.matrix(z))
+      m.mat <- as.data.frame(stats::model.matrix(z))
       if (!is.null(var_trans))
         names(m.mat) <- var_trans$new[match(names(m.mat), var_trans$old)]
       #
       m.mat <- m.mat[!ans$aliased]
       data <- m.mat[names(m.mat)[!names(m.mat) %in% "(Intercept)"]]
       # Build variable correlation table
-      ans$v.correlation <- cor(data)
+      ans$v.correlation <- stats::cor(data)
       #
       # require legal and unique names
       names(data) <- make.names(names(data), unique = TRUE)
@@ -218,9 +219,9 @@ sumry.lm <- function (object, ...)
       vif <- as.list(array(NA_real_, dim = ncol(data), dimnames <- list(names(data))))
       nms <- names(vif)
       vif[nms] <- lapply(nms, function(xvar, data) {
-        xvar.lm <- lm(as.formula(paste(xvar, "~ .")),
+        xvar.lm <- stats::lm(stats::as.formula(paste(xvar, "~ .")),
                       data = data,
-                      na.action = na.exclude)
+                      na.action = stats::na.exclude)
         res <- xvar.lm$residuals
         fits <- xvar.lm$fitted.values
         RDF <- xvar.lm$df.residual
@@ -232,7 +233,7 @@ sumry.lm <- function (object, ...)
         #
         vif <- 1 / (1 - xvar.r.squared)
         if (is.finite(res.var) &&
-            res.var < (mean(fits)^2 + var(c(fits))) * .Machine$double.eps)
+            res.var < (mean(fits)^2 + stats::var(c(fits))) * .Machine$double.eps)
           attr(vif, "note") <- matrix(
             "shows essentially perfect collinearity",
             nrow = 1,
@@ -253,7 +254,7 @@ sumry.lm <- function (object, ...)
       vif <- rep(NA_real_, length(coeffs))
     }
     # End VIF
-    pval <- 2 * pt(abs(tval), rdf, lower.tail = FALSE)
+    pval <- 2 * stats::pt(abs(tval), rdf, lower.tail = FALSE)
     ans$coefficients <- cbind(est, se, tval, pval, vif)
     colnames(ans$coefficients) <-
       c("Coefficient", "Std.Error", "t-stat", "p-value", "VIF")
@@ -291,9 +292,9 @@ sumry.lm <- function (object, ...)
       c("matrix", "data.frame"), class(ans[[nm]])
     )))) {
       class(ans[[nm]]) <-
-        c(paste(c(nm, "table"), "sumry.lm", sep = "."), class(ans[[nm]]))
+        c(paste(c(nm, "table"), "summary.lm", sep = "."), class(ans[[nm]]))
     }
   }
-  class(ans) <- "sumry.lm"
+  class(ans) <- "summary.lm"
   ans
 }

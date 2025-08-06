@@ -2,6 +2,7 @@ lm_plot.lev <- function(mdl,
                         parms = list(),
                         df = lm_plot.df(mdl),
                         plts = list()) {
+  # Copyright 2025, Peter Lert, All rights reserved.
   #
   # Plot Standard residuals vs. Leverage with Cook's distance contours
   #
@@ -23,7 +24,7 @@ lm_plot.lev <- function(mdl,
   parms$cook$cont <- list()
   parms$cook$level <- unique(abs(parms$cook$level))
   for (level in parms$cook$level) {
-    y <- sqrt(level * length(coef(mdl)) * (1 - x) / x)
+    y <- sqrt(level * length(stats::coef(mdl)) * (1 - x) / x)
     parms$cook$cont[paste0(c("pos.", "neg."), level)] <- data.frame(y, -y)
     parms$cook$labl <- c(parms$cook$labl, paste0("d = ", c("+", "-"), level))
   }
@@ -181,7 +182,7 @@ lm_plot.lev <- function(mdl,
         linewidth = parms$lins$size,
         color = parms$lins$colr$cook
       ) +
-      geom_text(
+      ggplot2::geom_text(
         x = tbl[[d_nm]]$.hat[k_mid],
         y = tbl[[d_nm]]$.std.resid[k_mid],
         label = parms$cook$labl[d_nm],

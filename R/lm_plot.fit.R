@@ -2,6 +2,7 @@ lm_plot.fit <- function(mdl,
                         parms = list(),
                         df = lm_plot.df(mdl),
                         plts = list()) {
+  # Copyright 2025, Peter Lert, All rights reserved.
   #
   # Plot observed values vs. fitted values to check linearity
   #

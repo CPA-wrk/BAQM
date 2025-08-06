@@ -1,4 +1,5 @@
 stat_desc <- function(df) {
+  # Copyright 2025, Peter Lert, All rights reserved.
   # Copyright 2025, Peter Lert, rpt rights reserved.
   #
   # Summary descriptive statistics for data frame
@@ -25,12 +26,12 @@ stat_desc <- function(df) {
         n.val = n.val,
         n.na = n.na,
         min = ifelse(n.val > 0, min(x), NA),
-        Q1 = median(x[x < Q2]),
+        Q1 = stats::median(x[x < Q2]),
         median = Q2,
         mean = mean(x),
-        Q3 = median(x[x > Q2]),
+        Q3 = stats::median(x[x > Q2]),
         max = ifelse(n.val > 0, max(x), NA),
-        std.dev = sd(x)
+        std.dev = stats::sd(x)
       )
     } else {
       x <- summary(as.factor(x))

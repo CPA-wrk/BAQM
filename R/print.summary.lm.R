@@ -1,10 +1,12 @@
-print.sumry.lm <- function (sumry,
+print.summary.lm <- function (sumry,
                             options = NULL,
                             na.print = "",
                             digits = max(5, getOption("digits") - 2),
                             signif.stars = getOption("show.signif.stars"),
                             eps = .Machine$double.eps,
                             ...) {
+  # Copyright 2025, Peter Lert, All rights reserved.
+  # Print a summary of an lm object
   #
   # Printing the summary of an lm object
   # Always print the following tables (in order):
@@ -14,7 +16,12 @@ print.sumry.lm <- function (sumry,
   # Summary output ends with 5-number+ summary of residuals and the call.
   #
   if (inherits(sumry, "lm")) {
-    sumry <- sumry.lm(sumry)
+    sumry <- summary.lm(sumry)
+  }
+  #
+  if (!inherits(sumry, "summary.lm")) {
+    print(sumry)
+    invisible(sumry)
   }
   #
   headings <- list(
@@ -32,7 +39,7 @@ print.sumry.lm <- function (sumry,
       next
     }
     cat("\n", headings[[tbl_nm]], "\n", sep = "")
-    print.table.sumry.lm(
+    print.table.summary.lm(
       sumry[[tbl_nm]],
       digits = digits,
       na.print = na.print,
@@ -48,7 +55,7 @@ print.sumry.lm <- function (sumry,
   if (res_df > 5) {
     nms <- c("Min", "1Q", "Median", "3Q", "Max", "Mean")
     r.sumry <- sort(structure(c(
-      quantile(res, names = FALSE), mean(res)
+      stats::quantile(res, names = FALSE), mean(res)
     ), names = nms))
     r.fmtd <- sapply(r.sumry, format, digits = digits + 1, nsmall = 1)
     if (!is.null(i <- which(abs(r.sumry) < res_df * eps))) {
@@ -58,7 +65,7 @@ print.sumry.lm <- function (sumry,
     dimnames(r.sumry) <-
       list(c("", "Residuals summary: "), rep(" ", ncol(r.sumry)))
   } else if (res_df > 0) {
-    r.sumry <- format(resid, digits = digits)
+    r.sumry <- format(res, digits = digits)
   }
   if (is.null(r.sumry)) {
     cat("ALL",

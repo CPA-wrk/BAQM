@@ -2,6 +2,7 @@ lm_plot.infl <- function(mdl,
                          parms = list(),
                          df = lm_plot.df(mdl),
                          plts = list()) {
+  # Copyright 2025, Peter Lert, All rights reserved.
   #
   # Comb plot of studentized residual vs sequence with influence level
   # set by robust outlier heuristic

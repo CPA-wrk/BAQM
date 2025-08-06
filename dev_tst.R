@@ -10,8 +10,7 @@ sumry(mdl)
 lm_plot.4way(mdl)
 #### End of example ####
 
-
-
+# attach(file.path(Sys.getenv("R_LIBS_USER"), "BAQM_lib.rda"), name = "BAQM_lib")
 
 
 print.default(sumry(lm(Sepal.Length ~ Sepal.Width, data = iris)))
@@ -22,8 +21,9 @@ print.sumry.lm(sumry(lm(Sepal.Length ~ Sepal.Width, data = iris)))
 mdl <- lm(Sepal.Length ~ Sepal.Width, data = iris)
 sumry.lm(mdl)
 
-
-
+expect_snapshot(
+  print.sumry.lm(sumry(lm(hwy ~ displ + year + cyl + fl, data = mpg)))
+)
 
 expect_snapshot(print.sumry.lm(sumry(lm(
   hwy ~ displ + year + cyl + fl, data = mpg

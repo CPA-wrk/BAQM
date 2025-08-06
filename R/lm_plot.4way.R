@@ -1,4 +1,5 @@
 lm_plot.4way <- function(mdl, opt = list()) {
+  # Copyright 2025, Peter Lert, All rights reserved.
   #
   # PLert, Spring 2025
   #

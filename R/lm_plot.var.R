@@ -2,6 +2,7 @@ lm_plot.var <- function(mdl,
                         parms = list(),
                         df = lm_plot.df(mdl),
                         plts = list()) {
+  # Copyright 2025, Peter Lert, All rights reserved.
   #
   # Plot Residuals vs Fitted Values to test Homoskedasticity
   #
@@ -18,7 +19,7 @@ lm_plot.var <- function(mdl,
   )
   #
   # Plot of Residuals vs Fitted Values
-  plts$var <- ggplot(data = df) +
+  plts$var <- ggplot2::ggplot(data = df) +
     ggplot2::aes(x = .fits, y = .resid) +
     #
     # PLot axis labels
