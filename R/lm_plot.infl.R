@@ -1,3 +1,31 @@
+#' Plot Studentized Residuals vs. Sequence with Influence Identification
+#'
+#' Creates a "comb" plot of studentized residuals versus sequence, highlighting influence and outlier points using a robust outlier heuristic.
+#'
+#' @param mdl An object of class \code{lm} or similar, representing the fitted model.
+#' @param parms List of plot customization parameters. Passed to \code{lm_plot.parms()}.
+#' @param df Data frame with augmented model data. Defaults to \code{lm_plot.df(mdl)}.
+#' @param plts List of ggplot objects to build upon. Defaults to empty list.
+#'
+#' @details
+#' The plot visualizes studentized residuals by sequence order, marking regular, outlier, and influential points. Influence thresholds are set using robust outlier detection. Influential and outlier points can be labeled, and influence threshold lines are shown.
+#'
+#' @return A list containing:
+#'   \item{mdl}{The model object}
+#'   \item{parms}{Parameters used for plotting}
+#'   \item{df}{Data frame used for plotting}
+#'   \item{plts}{A list of ggplot objects, including the influence plot}
+#'
+#' @seealso \code{\link{lm_plot.df}}, \code{\link{lm_plot.parms}}, \code{\link{outlier}}
+#' @import ggplot2 ggrepel
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' mdl <- lm(y ~ x, data = mydata)
+#' result <- lm_plot.infl(mdl)
+#' print(result$plts$infl)
+#' }
 lm_plot.infl <- function(mdl,
                          parms = list(),
                          df = lm_plot.df(mdl),

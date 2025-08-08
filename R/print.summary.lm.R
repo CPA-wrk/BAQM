@@ -1,10 +1,33 @@
+#' Print a Summary for Linear Model Objects
+#'
+#' Prints a comprehensive summary for objects of class \code{summary.lm} or \code{lm}, including model statistics, ANOVA table, coefficients, and optional tables (correlations, covariance, fits), followed by a five-number summary of residuals and the model call.
+#'
+#' @param sumry An object of class \code{summary.lm} or \code{lm}.
+#' @param options A character vector of optional summary tables to print (e.g., \code{"v.correlation"}, \code{"cov.unscaled"}, \code{"correlation"}, \code{"fits"}). Printed in the given order if present.
+#' @param na.print String to use for NA values in the tables.
+#' @param digits Minimal number of significant digits. Defaults to \code{max(5, getOption("digits") - 2)}.
+#' @param signif.stars Logical; whether to show significance stars in the coefficients table. Defaults to \code{getOption("show.signif.stars")}.
+#' @param eps Smallest positive floating-point value, used for formatting near-zero residuals. Defaults to \code{.Machine$double.eps}.
+#' @param ... Additional arguments (not currently used).
+#'
+#' @details
+#' The function prints summary statistics, ANOVA, and coefficients tables for a linear model in order, along with specified optional tables if provided. It concludes with a five-number-plus-mean summary of residuals and the model call.
+#' For objects not of class \code{summary.lm}, a default print method is used.
+#'
+#' @seealso \code{\link{summary.lm}}, \code{\link{print.table.summary.lm}}
+#' @export
+#'
+#' @examples
+#' mdl <- lm(y ~ x, data = mydata)
+#' print.summary.lm(summary(mdl))
+#' print.summary.lm(mdl, options = c("correlation", "fits"))
 print.summary.lm <- function (sumry,
-                            options = NULL,
-                            na.print = "",
-                            digits = max(5, getOption("digits") - 2),
-                            signif.stars = getOption("show.signif.stars"),
-                            eps = .Machine$double.eps,
-                            ...) {
+                              options = NULL,
+                              na.print = "",
+                              digits = max(5, getOption("digits") - 2),
+                              signif.stars = getOption("show.signif.stars"),
+                              eps = .Machine$double.eps,
+                              ...) {
   # Copyright 2025, Peter Lert, All rights reserved.
   # Print a summary of an lm object
   #

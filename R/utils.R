@@ -1,3 +1,47 @@
+#' General Purpose Internal Utility Functions
+#'
+#' This file contains a set of small, general-purpose helper functions used internally throughout the package. They cover data cleaning, vector and attribute manipulation, file name parsing, formatting, and basic statistical utilities. Most functions are designed for convenience and package-internal use, but some may be useful for end users.
+#' The final function contains code for the examples used in the package README file.
+#'
+#' Functions included:
+#' \itemize{
+#'   \item \code{char2dt}: Convert character to \code{Date}, trying multiple formats.
+#'   \item \code{dt2xlseq}: Convert R \code{Date} to Excel numeric date sequence.
+#'   \item \code{is.ok}: Test if an object is non-null, non-NA, and "okay".
+#'   \item \code{if.ok}: Return value if OK, else default.
+#'   \item \code{if.na}: Replace NA values with a default.
+#'   \item \code{if.blank}: Replace blank or NA strings with a default.
+#'   \item \code{pr}: Format numbers with thousands separator.
+#'   \item \code{attrs_get}: Get all attributes except names, row.names, class, dim, dimnames, tsp.
+#'   \item \code{attrs_add}: Add or update attributes to an object.
+#'   \item \code{hd}: Return a data frame head (first n rows).
+#'   \item \code{\%of\%}, \code{\%notof\%}: Vector inclusion/exclusion operators.
+#'   \item \code{rpt_space}: Utility for report formatting layout.
+#'   \item \code{trim}: Trim leading and trailing whitespace from strings.
+#'   \item \code{file_ext}, \code{file_lname}: Get file extensions or last name part.
+#'   \item \code{file_split}: General file path splitting utility.
+#'   \item \code{permute}: Calculate number of permutations (\eqn{nPk}).
+#'   \item \code{outlier}: Identify outliers in numeric vectors using boxplot heuristic.
+#' }
+#'
+#' @note Copyright 2025, Peter Lert, All rights reserved.
+#'
+#' @keywords internal utility
+#' @examples
+#' char2dt("08/06/2025")
+#' dt2xlseq(as.Date("2025-08-06"))
+#' is.ok(NA)
+#' if.ok(NULL, 1)
+#' pr(10000)
+#' trim("  text  ")
+#' file_ext("foo.bar.txt")
+#' outlier(c(1,2,3,100))
+#'
+#' @name tools.R
+#' @author Peter Lert
+#' @seealso base, utils
+#'
+#' @noRd
 # General purpose tools
 # Copyright 2025, Peter Lert, All rights reserved.
 char2dt <- function(chr, d = "/") {
@@ -105,4 +149,77 @@ outlier <- function(x, rpt = FALSE) {
   if (rpt)
     return(lims)
   x < lims[1] | x > lims[2]
+}
+#
+# Testing code for these utility fns
+# Example code for README file
+utils_tst <- function(i_tst) {
+  if (missing(i_tst))
+    i_tst <- 1:8
+  if (1 %in% i_tst) {
+    print(char2dt("08/06/2025"))
+    print(char2dt("2025-08-06"))
+    print(dt2xlseq(as.Date("2025-08-06")))
+  }
+  if (2 %in% i_tst) {
+    print(is.ok(NA))
+    print(is.ok(c(NA, 1)))
+    print(is.ok(c(NA, 1)))
+    print(is.ok(NULL))
+    print(is.ok(list(a = NA, b = NULL)))
+    print(if.ok(NULL, 1))
+    print(if.ok(c(NA, 2), 1))
+    print(if.ok(c(3, NA), 1))
+    print(if.ok(c(NA, NA), 1))
+    print(if.na(c(1, NA, 3), 0))
+    print(if.blank(c("a", "", "c", NA), "b"))
+    print(pr(10000))
+    print(pr(1000000.1234, digits = 4))
+    print(trim("  text  "))
+  }
+  if (3 %in% i_tst) {
+    attrs <- list(a = 1, b = "text", c = Sys.Date())
+    x <- 1:10
+    print(attrs_get(x))
+    x <- attrs_add(x, attrs)
+    print(attrs_get(x))
+    print(hd(iris))
+    print(1:10 %of% c(3, 5, 7))
+    print(1:10 %notof% c(3, 5, 7))
+    print(rpt_space(c(1, 14, 5)))
+    print(rpt_space(c(1, 15, 5)))
+    print(rpt_space(c(2, 14, 5)))
+    print(rpt_space(c(2, 15, 5)))
+    print(file_ext("foo.bar.txt"))
+    print(file_ext(c("foo.bar.txt", "data.csv", "report.pdf"), n = 2))
+    print(file_lname("/path/to/my/file.txt"))
+    print(file_lname(c("/path/to/my/file.txt", "file2.txt"), n = 2))
+    print(file_split(c("/path/to/my/file.txt", "file2.txt"), n = 2, sep = "/"))
+    print(permute(5, 3))
+    print(permute(10, 4))
+    print(outlier(c(1, 2, 3, 100)))
+    print(outlier(c(1, 2, 3, 4), rpt = TRUE))
+  }
+  if (4 %in% i_tst) {
+    names(swiss) # Show original variable names
+    names(swiss) <- substr(names(swiss), 1, 4) # Narrows output
+    stat_desc(swiss)
+  }
+  #
+  if (5 %in% i_tst) {
+    regs <- leaps::regsubsets(Fert ~ ., data = swiss, nbest = 3)
+    print.summary.regsubsets(regs)
+  }
+  #
+  if (6 %in% i_tst) {
+    stat_desc(iris) # Includes non-numeric variable
+  }
+  #
+  if (7 %in% i_tst) {
+    mdl <- lm(Sepal.Length ~ ., data = iris)
+    print.summary.lm(summary.lm(mdl))
+  }
+  if (8 %in% i_tst) {
+    lm_plot.4way(mdl)
+  }
 }

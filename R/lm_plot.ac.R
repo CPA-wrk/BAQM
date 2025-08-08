@@ -1,3 +1,34 @@
+
+#' Plot Residuals vs. Observation Order (Autocorrelation Check)
+#'
+#' Creates a plot of residuals against the sequence/order of observations to visually
+#' assess independence and detect autocorrelation. Optionally overlays results from the
+#' Durbin–Watson test and labels outliers.
+#'
+#' @param mdl A fitted model object (typically from \code{\link[stats]{lm}}).
+#' @param parms A list of plotting and option parameters, usually from \code{lm_plot.parms()}.
+#' @param df An augmented model data frame; if missing, is generated via \code{lm_plot.df(mdl)}.
+#' @param plts A list of existing plots to which this plot will be added.
+#'
+#' @details
+#' Points are colored and shaped according to whether they are residual outliers
+#' (as determined by Tukey's boxplot rule). The function can label points using
+#' \pkg{ggrepel} if \code{parms$pts$id$outl} or \code{parms$pts$id$reg} are set to \code{TRUE}.
+#'
+#' @return A list containing:
+#' \itemize{
+#'   \item \code{mdl} – the fitted model object,
+#'   \item \code{parms} – the parameter list with autocorrelation test results added,
+#'   \item \code{df} – the data frame used for plotting,
+#'   \item \code{plts} – the plot list with an \code{$ac} ggplot element.
+#' }
+#'
+#' @examples
+#' \dontrun{
+#' fit <- lm(mpg ~ wt + hp, data = mtcars)
+#' lm_plot.ac(fit)
+#' }
+#' @export
 lm_plot.ac <- function(mdl,
                        parms = list(),
                        df = lm_plot.df(mdl),

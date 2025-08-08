@@ -1,3 +1,29 @@
+#' Q-Q Plot of Residuals to Assess Normality
+#'
+#' Produces a Q-Q plot of residuals from a linear model to test for normality, optionally annotating outlier points and adding the Shapiro-Wilk test p-value.
+#'
+#' @param mdl An object of class \code{lm}, representing the fitted linear model.
+#' @param parms List of plot customization parameters. Passed to \code{lm_plot.parms()}.
+#' @param df Data frame with augmented model data. Defaults to \code{lm_plot.df(mdl)}.
+#' @param plts List of ggplot objects to build upon. Defaults to empty list.
+#'
+#' @details
+#' The plot visualizes the distribution of residuals against theoretical normal quantiles. Points are colored and shaped by outlier status, and a reference Q-Q line is added. Optionally, outlier and regular points can be labeled. If enabled, the Shapiro-Wilk normality test p-value is displayed.
+#'
+#' @return A list containing:
+#'   \item{mdl}{The model object}
+#'   \item{parms}{Parameters used for plotting, including Q-Q line and test results}
+#'   \item{df}{Data frame used for plotting}
+#'   \item{plts}{A list of ggplot objects, including the Q-Q plot}
+#'
+#' @seealso \code{\link{lm_plot.df}}, \code{\link{lm_plot.parms}}, \code{\link[stats]{shapiro.test}}
+#' @import ggplot2 ggrepel stats
+#' @export
+#'
+#' @examples
+#' mdl <- lm(y ~ x, data = mydata)
+#' result <- lm_plot.qq(mdl)
+#' print(result$plts$qq)
 lm_plot.qq <- function(mdl,
                        parms = list(),
                        df = lm_plot.df(mdl),

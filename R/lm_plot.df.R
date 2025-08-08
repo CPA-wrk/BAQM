@@ -1,3 +1,38 @@
+#' Augment Model Data for Diagnostic Plots
+#'
+#' Generates an augmented data frame from a linear model object, including fitted values, residuals, leverage, Cook's distance, prediction intervals, and outlier/influence flags. This function prepares model diagnostics for plotting.
+#'
+#' @param mdl An object of class \code{lm}, representing the fitted linear model.
+#'
+#' @details
+#' The returned data frame contains key statistics for each observation:
+#' \itemize{
+#'   \item \code{.id}: Observation identifier
+#'   \item \code{.sequence}: Sequence index
+#'   \item \code{.fits}: Fitted/predicted values
+#'   \item \code{.resid}: Residuals
+#'   \item \code{.obs}: Observed values
+#'   \item \code{.sigma}: Estimated standard deviation for each residual
+#'   \item \code{.std.resid}: Standardized residuals
+#'   \item \code{.stud.resid}: Studentized residuals
+#'   \item \code{.lower.pi}, \code{.upper.pi}: Lower/upper 95\% prediction interval bounds
+#'   \item \code{.cooksd}: Cook's distance
+#'   \item \code{.hat}: Leverage (diagonal of the hat matrix)
+#'   \item \code{.cooksd.is.infl}, \code{.hat.is.infl}: Logical flags for influential points
+#'   \item \code{.quantile}: Theoretical normal quantile of residuals
+#'   \item \code{outlier}: Flag for ordinary residual outlier ("outl" or "reg")
+#'   \item \code{.stud.outl}: Flag for studentized residual influential point ("infl" or "reg")
+#' }
+#'
+#' @return A data frame with augmented diagnostic variables, one row per observation.
+#'
+#' @seealso \code{\link[stats]{influence}}, \code{\link[stats]{influence.measures}}, \code{\link[stats]{rstandard}}, \code{\link[stats]{rstudent}}, \code{\link{outlier}}
+#' @export
+#'
+#' @examples
+#' mdl <- lm(y ~ x, data = mydata)
+#' df <- lm_plot.df(mdl)
+#' head(df)
 lm_plot.df <- function(mdl) {
   # Copyright 2025, Peter Lert, All rights reserved.
   #
@@ -24,8 +59,8 @@ lm_plot.df <- function(mdl) {
     .stud.resid = stats::rstudent(mdl, infl = infl),
     structure(cbind(
       pred$fit[, -1], infl.msrs$infmat[, c("cook.d", "hat")]), dimnames = list(
-      NULL, c(".lower.pi", ".upper.pi", ".cooksd", ".hat")
-    )),
+        NULL, c(".lower.pi", ".upper.pi", ".cooksd", ".hat")
+      )),
     structure(infl.msrs$is.inf[, c("cook.d", "hat")], dimnames = list(
       NULL, c(".cooksd.is.infl", ".hat.is.infl")
     ))

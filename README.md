@@ -15,11 +15,11 @@ functions include:
 
 - `stat_desc()` - a function to produce descriptive statistics for data
   frames
-- `sumry.lm()` - a function to summarize linear model results
+- `summary.lm()` - a function to summarize linear model results
 - `lm_plot.4way()` - a function to produce diagnostic plots for linear
   models
-- `sumry.regsubsets()` - a function to format a “best subsets”
-  regression analysis
+- `print.summary.regsubsets()` - a function to format a “best subsets”
+  report created by the `regsubsets` function from the leaps package
 
 ## Installation
 
@@ -56,21 +56,23 @@ stat_desc(swiss)
 #> Infa    47    0  10.80  18.00  20.00  19.9426  22.2   26.6   2.91270
 #
 regs <- leaps::regsubsets(Fert ~ ., data = swiss, nbest = 3)
-sumry(regs)
-#>    k___best      rsq    adjr2      see       cp Agri Exam Educ Cath Infa
-#> 1  1  ( 1 ) 0.440616 0.428185  9.44603 35.20490              *          
-#> 2  1  ( 2 ) 0.417164 0.404213  9.64200 38.48349         *               
-#> 3  1  ( 3 ) 0.215004 0.197559 11.18995 66.74667                   *     
-#> 4  2  ( 1 ) 0.574507 0.555167  8.33144 18.48616              *    *     
-#> 5  2  ( 2 ) 0.564780 0.544997  8.42614 19.84606              *         *
-#> 6  2  ( 3 ) 0.536302 0.515224  8.69745 23.82749         *              *
-#> 7  3  ( 1 ) 0.662544 0.639000  7.50542  8.17816              *    *    *
-#> 8  3  ( 2 ) 0.642254 0.617295  7.72776 11.01477    *         *    *     
-#> 9  3  ( 3 ) 0.619096 0.592521  7.97396 14.25240         *    *         *
-#> 10 4  ( 1 ) 0.699348 0.670714  7.16817  5.03280    *         *    *    *
-#> 11 4  ( 2 ) 0.663865 0.631853  7.57936  9.99340         *    *    *    *
-#> 12 4  ( 3 ) 0.649790 0.616436  7.73642 11.96125    *    *    *    *     
-#> 13 5  ( 1 ) 0.706735 0.670971  7.16537  6.00000    *    *    *    *    *
+print.summary.regsubsets(regs)
+#>                                                            
+#> Call: regsubsets.formula(Fert ~ ., data = swiss, nbest = 3)
+#>    _k_i.best    rsq  adjr2      see    cp aic Agri Exam Educ Cath Infa
+#> 1   1  ( 1 ) 0.4406 0.4282  9.44603 35.20 -21              *          
+#> 2   1  ( 2 ) 0.4172 0.4042  9.64200 38.48 -20         *               
+#> 3   1  ( 3 ) 0.2150 0.1976 11.18995 66.75  -6                   *     
+#> 4   2  ( 1 ) 0.5745 0.5552  8.33144 18.49 -32              *    *     
+#> 5   2  ( 2 ) 0.5648 0.5450  8.42614 19.85 -31              *         *
+#> 6   2  ( 3 ) 0.5363 0.5152  8.69745 23.83 -28         *              *
+#> 7   3  ( 1 ) 0.6625 0.6390  7.50542  8.18 -41              *    *    *
+#> 8   3  ( 2 ) 0.6423 0.6173  7.72776 11.01 -38    *         *    *     
+#> 9   3  ( 3 ) 0.6191 0.5925  7.97396 14.25 -36         *    *         *
+#> 10  4  ( 1 ) 0.6993 0.6707  7.16817  5.03 -45    *         *    *    *
+#> 11  4  ( 2 ) 0.6639 0.6319  7.57936  9.99 -39         *    *    *    *
+#> 12  4  ( 3 ) 0.6498 0.6164  7.73642 11.96 -37    *    *    *    *     
+#> 13  5  ( 1 ) 0.7067 0.6710  7.16537  6.00 -44    *    *    *    *    *
 #
 stat_desc(iris) # Includes non-numeric variable
 #>              n.val n.na  min   Q1 median     mean    Q3  max   std.dev
@@ -81,7 +83,7 @@ stat_desc(iris) # Includes non-numeric variable
 #> Species        150    0 setosa: 50, versicolor: 50, virginica: 50
 #
 mdl <- lm(Sepal.Length ~ ., data = iris)
-sumry(mdl)
+print.summary.lm(summary.lm(mdl))
 #> 
 #> Summary Statistics:
 #>                  Value      Performance    Measure  Err(Resids)    Metric
@@ -116,4 +118,4 @@ sumry(mdl)
 lm_plot.4way(mdl)
 ```
 
-<img src="man/figures/README-example-1.png" width="80%" />
+<img src="man/figures/README-example-1.png" width="100%" />

@@ -9,6 +9,7 @@ Description: Functions developed by instructors for AQM 1000 and AQM 2000
     courses using R in the curriculum.
 License: GPL (>= 2)
 Suggests: 
+    leaps,
     shiny,
     testthat (>= 3.0.0),
     utf8,

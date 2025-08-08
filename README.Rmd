@@ -9,7 +9,7 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   fig.path = "man/figures/README-",
-  out.width = "80%"
+  out.width = "100%"
 )
 ```
 
@@ -26,9 +26,9 @@ for AQM 1000 and AQM 2000 courses using R in the curriculum.
 The primary functions include:
 
 * `stat_desc()` - a function to produce descriptive statistics for data frames
-* `sumry.lm()` - a function to summarize linear model results
+* `summary.lm()` - a function to summarize linear model results
 * `lm_plot.4way()` - a function to produce diagnostic plots for linear models
-* `sumry.regsubsets()` - a function to format a "best subsets" regression analysis
+* `print.summary.regsubsets()` - a function to format a "best subsets" report created by the `regsubsets` function from the leaps package
 
 ## Installation
 
@@ -57,12 +57,12 @@ names(swiss) <- substr(names(swiss), 1, 4) # Narrows output
 stat_desc(swiss)
 #
 regs <- leaps::regsubsets(Fert ~ ., data = swiss, nbest = 3)
-sumry(regs)
+print.summary.regsubsets(regs)
 #
 stat_desc(iris) # Includes non-numeric variable
 #
 mdl <- lm(Sepal.Length ~ ., data = iris)
-sumry(mdl)
+print.summary.lm(summary.lm(mdl))
 lm_plot.4way(mdl)
 ```
 

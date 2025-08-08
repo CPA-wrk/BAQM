@@ -75,6 +75,10 @@ object <- lm(hwy ~ displ + year + cyl + trans * fl, data = mpg)
 sumry.lm(object)
 
 
+stat_desc(airquality)
+
+
+
 
 ## check of default printing of a complex object ----
 fil <- tempfile("sumry")
@@ -87,3 +91,23 @@ lins <- readLines(fil)
 lins <- sub(".*nvironment.*", "", lins)
 cat(paste(lins, "\n"))
 file.remove(fil)
+
+
+
+## build file with all scripts for AI documentation ----
+fil_out <- "BAQM_all.R"
+fils <- list.files("R")
+fils <- fils[!fils %in% c(".DS_Store", "utils.R")]
+for (fil in fils) {
+  fil_in <- file.path("R", fil)
+  if (file.exists(fil_in)) {
+    cat(paste0("# ", fil, "\n"), file = fil_out, append = TRUE)
+    cat(paste0(readLines(fil_in), "\n"), file = fil_out, append = TRUE)
+    cat("\n\n", file = fil_out, append = TRUE)
+  }
+}
+
+
+
+
+

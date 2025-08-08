@@ -1,3 +1,31 @@
+#' Plot Standard Residuals vs. Leverage with Cook's Distance Contours
+#'
+#' Creates a plot of standard residuals versus leverage values, including Cook's distance contours to visualize influential observations.
+#'
+#' @param mdl An object of class \code{lm} or similar, representing the fitted model.
+#' @param parms List of plot customization parameters. Passed to \code{lm_plot.parms()}.
+#' @param df Data frame with augmented model data. Defaults to \code{lm_plot.df(mdl)}.
+#' @param plts List of ggplot objects to build upon. Defaults to empty list.
+#'
+#' @details
+#' The plot displays standard residuals against leverage, overlays Cook's distance contours, and marks outliers based on residuals and Cook's distance. Outlier and influential points can be labeled, and a loess fit line is optionally added.
+#'
+#' @return A list containing:
+#'   \item{mdl}{The model object}
+#'   \item{parms}{Parameters used for plotting}
+#'   \item{df}{Data frame used for plotting}
+#'   \item{plts}{A list of ggplot objects, including the leverage plot}
+#'
+#' @seealso \code{\link{lm_plot.df}}, \code{\link{lm_plot.parms}}
+#' @import ggplot2 ggrepel stats
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' mdl <- lm(y ~ x, data = mydata)
+#' result <- lm_plot.lev(mdl)
+#' print(result$plts$lev)
+#' }
 lm_plot.lev <- function(mdl,
                         parms = list(),
                         df = lm_plot.df(mdl),

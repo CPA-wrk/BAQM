@@ -1,3 +1,37 @@
+#' Summary Method for Linear Model (\code{lm}) Objects
+#'
+#' Computes a comprehensive summary for an object of class \code{lm}, including performance statistics, ANOVA, coefficients with VIFs, and correlation/covariance tables. Handles factor variable recoding and collinearity/singularity warnings.
+#'
+#' @param object An object of class \code{lm}.
+#' @param ... Additional arguments (currently unused).
+#'
+#' @details
+#' The returned summary object includes:
+#' \itemize{
+#'   \item \strong{stats}: Performance statistics (F-statistic, R-squared, RMSE, etc.)
+#'   \item \strong{anova}: Simplified ANOVA table (Sum of squares, mean squares, F-statistic, p-value)
+#'   \item \strong{coefficients}: Table of regression coefficients with standard errors, t-stats, p-values, and VIFs
+#'   \item \strong{cov.unscaled}, \strong{correlation}: Covariance and correlation matrices for coefficients
+#'   \item \strong{v.correlation}: Variable correlation matrix (for models with interaction terms)
+#'   \item \strong{fits}: Observed, fitted, and residual values
+#'   \item \strong{aliased}: Logical vector indicating aliased coefficients
+#'   \item \strong{df}: Degrees of freedom
+#'   \item \strong{sigma}: Estimated standard deviation of residuals
+#'   \item \strong{r.squared}, \strong{adj.r.squared}: R-squared and adjusted R-squared
+#'   \item \strong{fstatistic}, \strong{f.pval}: F-statistic and p-value for overall regression
+#'   \item \strong{notes}: Warnings, singularity, and collinearity notes (attached as attribute)
+#' }
+#' Factor variable names are recoded for clarity, and coefficients for aliased or singular variables are omitted with notes produced as attributes.
+#'
+#' @return An object of class \code{summary.lm} containing tables and statistics described above.
+#'
+#' @seealso \code{\link{print.summary.lm}}, \code{\link{lm}}
+#' @export
+#'
+#' @examples
+#' mdl <- lm(y ~ x1 + x2, data = mydata)
+#' sumry <- summary.lm(mdl)
+#' print.summary.lm(sumry)
 summary.lm <- function (object, ...)
 {
   # Copyright 2025, Peter Lert, All rights reserved.
@@ -220,8 +254,8 @@ summary.lm <- function (object, ...)
       nms <- names(vif)
       vif[nms] <- lapply(nms, function(xvar, data) {
         xvar.lm <- stats::lm(stats::as.formula(paste(xvar, "~ .")),
-                      data = data,
-                      na.action = stats::na.exclude)
+                             data = data,
+                             na.action = stats::na.exclude)
         res <- xvar.lm$residuals
         fits <- xvar.lm$fitted.values
         RDF <- xvar.lm$df.residual

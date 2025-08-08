@@ -1,3 +1,29 @@
+#' Plot Observed vs. Fitted Values to Check Linearity
+#'
+#' Generates a scatter plot of observed values versus fitted values from a linear model, with optional prediction intervals and identification of outlier points. The plot includes a reference line \code{y = x} for assessing linearity.
+#'
+#' @param mdl An object of class \code{lm}, representing the fitted linear model.
+#' @param parms List of plot customization parameters. Passed to \code{lm_plot.parms()}.
+#' @param df Data frame with augmented model data. Defaults to \code{lm_plot.df(mdl)}.
+#' @param plts List of ggplot objects to build upon. Defaults to empty list.
+#'
+#' @details
+#' The plot visualizes observed versus fitted values, includes a diagonal reference line, marks outliers, and can optionally display loess-smoothed prediction intervals. Outlier and regular points can be labeled. This plot is useful for visually assessing linearity and model fit quality.
+#'
+#' @return A list containing:
+#'   \item{mdl}{The model object}
+#'   \item{parms}{Parameters used for plotting, including plot limits}
+#'   \item{df}{Data frame used for plotting}
+#'   \item{plts}{A list of ggplot objects, including the fit plot}
+#'
+#' @seealso \code{\link{lm_plot.df}}, \code{\link{lm_plot.parms}}
+#' @import ggplot2 ggrepel
+#' @export
+#'
+#' @examples
+#' mdl <- lm(y ~ x, data = mydata)
+#' result <- lm_plot.fit(mdl)
+#' print(result$plts$fit)
 lm_plot.fit <- function(mdl,
                         parms = list(),
                         df = lm_plot.df(mdl),
