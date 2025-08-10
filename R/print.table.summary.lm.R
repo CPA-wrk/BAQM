@@ -20,7 +20,7 @@
 #' @return Invisibly returns the input table.
 #'
 #' @seealso \code{\link{print.summary.lm}}
-#' @export
+#' @exportS3Method BAQM::print
 #'
 #' @examples
 #' mdl <- lm(y ~ x, data = mydata)

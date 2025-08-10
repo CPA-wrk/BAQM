@@ -1,0 +1,6 @@
+S3method(summary, lm)
+S3method(print, summary.lm)
+S3method(print, table.summary.lm)
+S3method(print, summary.regsubsets)
+exportPattern("^[[:alpha:]]+")
+

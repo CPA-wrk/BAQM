@@ -34,7 +34,7 @@ print.summary.regsubsets <- function(object, ...) {
     adjr2 = round(object$adjr2, 4),
     see = sqrt(object$rss / (n - k - 1)),
     cp = round(object$cp, 2),
-    aic = round(object$bic + 2 * k - log(n) * k, 2),
+    # aic = round(object$bic + 2 * k - log(n) * k, 2),
     object$outmat,
     row.names = NULL
   )
