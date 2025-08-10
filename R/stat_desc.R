@@ -86,7 +86,7 @@ stat_desc <- function(data,
     )
     smry$rpt[[nm]] <- format(as.list(smry$cnt[[nm]])[-1])
     if (is.numeric(x.inp)) {
-      Q2 <- median(x)
+      Q2 <- stats::median(x)
       smry$num[[nm]] <- c(
         min = ifelse(n.val > 0, min(x), NA),
         Q1 = stats::median(x[x < Q2]),
