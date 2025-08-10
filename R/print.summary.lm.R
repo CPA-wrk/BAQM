@@ -74,28 +74,40 @@ print.summary.lm <- function (sumry,
   # Residuals summary
   res <- sumry$residuals
   res_df <- sumry$df[2]
+  if (diff(range(res)) > 1e07) {
+    r.scipen <- -2
+    r.digits <- max(3, digits - 2)
+  } else {
+    r.scipen <- getOption("scipen")
+    r.digits <- digits - 1
+  }
   r.sumry <- NULL
   if (res_df > 5) {
     nms <- c("Min", "1Q", "Median", "3Q", "Max", "Mean")
     r.sumry <- sort(structure(c(
       stats::quantile(res, names = FALSE), mean(res)
     ), names = nms))
-    r.fmtd <- sapply(r.sumry, format, digits = digits + 1, nsmall = 1)
-    if (!is.null(i <- which(abs(r.sumry) < res_df * eps))) {
-      r.fmtd[i] <- paste0("<", format(res_df * eps, digits = 2))
+    r.fmtd <- sapply(r.sumry, format, digits = r.digits,
+                     nsmall = 0, big.mark = ",", scientific = r.scipen)
+    if (r.digits > 2 && !is.null(i <- grep("e-", r.fmtd))) {
+      r.fmtd[i] <- format(r.sumry[i], digits = 2, scientific = r.scipen)
     }
-    r.sumry <- format(rbind(names(r.fmtd), r.fmtd), justify = "c")
-    dimnames(r.sumry) <-
-      list(c("", "Residuals summary: "), rep(" ", ncol(r.sumry)))
+    if (!is.null(i <- which(abs(r.sumry) < res_df * eps))) {
+      r.fmtd[i] <- paste0("<", format(res_df * eps, digits = 1))
+    }
+    r.fmtd <- format(rbind(names(r.fmtd), r.fmtd), justify = "c")
+    dimnames(r.fmtd) <- list(c("Summary of", "Residuals:"),
+                              rep(" ", ncol(r.fmtd)))
   } else if (res_df > 0) {
-    r.sumry <- format(res, digits = digits)
+    r.fmtd <- format(res, digits = r.digits,
+                     nsmall = 0, big.mark = ",", scientific = r.scipen)
   }
-  if (is.null(r.sumry)) {
+  if (is.null(r.fmtd)) {
     cat("ALL",
         sumry$df[1],
         "residuals are 0: no residual degrees of freedom!\n")
   } else {
-    print.default(r.sumry, quote = FALSE, print.gap = 2)
+    print.default(r.fmtd, quote = FALSE, print.gap = 1)
   }
   #
   # Lastly report the lm Call

@@ -50,9 +50,7 @@ lm_plot.ac <- function(mdl,
   if (!is.ok(df$.id))
     df$.id <- row.names(mdl$model)
   if (!is.ok(df$outlier))
-    df$outlier <- ifelse(df$.resid %in% stats::boxplot(df$.resid, plot = FALSE)$out,
-                         "outl",
-                         "reg")
+    df$outlier <- ifelse(outlier(df$.resid), "outl", "reg")
   if (!is.ok(df$.sequence))
     df$.sequence <- 1:nrow(df)
   #

@@ -28,7 +28,7 @@
 #' stat_desc(data.frame(a = rnorm(100), b = sample(letters[1:3], 100, TRUE)))
 stat_desc <- function(data,
                       opts = list(digits = 4, scipen = 8),
-                      pad = 1,
+                      pad = 2,
                       t.rpt = FALSE) {
   # Copyright 2025, Peter Lert, All rights reserved.
   # Copyright 2025, Peter Lert, rpt rights reserved.
@@ -50,35 +50,44 @@ stat_desc <- function(data,
   if (inherits(data, "data frame"))
     data <- as.list(data)
   if (!is.list(data)) {
-    if (length(dim(data)) > 0) {
-      # If data is a matrix or array or table, convert to data frame
-      data <- as.list(as.data.frame(data))
-    } else {
-      # If it's a vector, convert to single-column data frame with actual name
-      nm <- deparse(substitute(data))
-      data <- list(data)
-      names(data) <- nm
+    aparm <- substitute(data)  # For vector actual parm
+    data <- as.data.frame(data)
+    if (ncol(data) == 1) {
+      if (class(aparm) == "name") {
+        names(data) <- deparse(aparm)
+      } else names(data) <- "V1"
     }
+    data <- as.list(data)
   }
-  for (x.inp in data) {
-    if (is.null(names(x.inp))) {
-      names(x.inp) <- paste0("V", seq_along(x.inp))
-    }
-  }
+  if (length(i <- is.null(names(data))) > 0)
+    names(data)[i] <- paste0("V", seq_along(data))[i] # Assign generic names
   #
-  # Build summary data for either format
-  stats <- lapply(data, function(x.inp) {
-    x.inp <- unlist(x.inp)
+
+  #
+  # Build summary data for either format in tables by type.
+  # Since variables have different scales, the most useful formatting
+  # approach usually is to report each variable in its own column.
+  # This means that wide variable names may be problematic.
+  smry <- list(
+    cnt = NULL,
+    num = NULL,
+    fctr = NULL,
+    rpt = NULL
+  )
+  n.f <- list()
+  for (nm in names(data)) {
+    x.inp <- unlist(data[[nm]])
     x <- x.inp[!is.na(x.inp)]
     n.val = length(x)
-    cnt <- c(
+    smry$cnt[[nm]] <- c(
       i.num = ifelse(is.numeric(x.inp), 1, 0),
       n.val = n.val,
       n.na = length(x.inp) - n.val
     )
-    if (cnt["i.num"] == 1) {
+    smry$rpt[[nm]] <- format(as.list(smry$cnt[[nm]])[-1])
+    if (is.numeric(x.inp)) {
       Q2 <- median(x)
-      num <- c(
+      smry$num[[nm]] <- c(
         min = ifelse(n.val > 0, min(x), NA),
         Q1 = stats::median(x[x < Q2]),
         median = Q2,
@@ -87,87 +96,44 @@ stat_desc <- function(data,
         max = ifelse(n.val > 0, max(x), NA),
         std.dev = stats::sd(x)
       )
-      list(cnt = cnt,
-           num = c(cnt, num),
-           fctr = NULL)
+      smry$rpt[[nm]] <- c(smry$rpt[[nm]], format(as.list(smry$num[[nm]])))
     } else {
       x <- as.factor(x)
-      fctr <- c(n.lvls = length(levels(x)), sort(summary(x), decreasing = TRUE))
-      list(cnt = cnt,
-           num = NULL,
-           fctr = c(cnt, fctr))
-    }
-  })
-  #
-  # Build returned summary tables by type
-  #
-  smry <- list(
-    cnt = NULL,
-    num = NULL,
-    fctr = NULL,
-    rpt = NULL
-  )
-  for (nm in names(stats)) {
-    smry$cnt <- cbind(smry$cnt, stats[[nm]]$cnt)
-    if (!is.null(stats[[nm]]$num))
-      smry$num <- cbind(smry$num, stats[[nm]]$num)
-    if (!is.null(stats[[nm]]$fctr)) {
-      smry$fctr <- c(smry$fctr, list(stats[[nm]]$fctr))
+      n.f[[nm]] <- length(levels(x)) + 1
+      smry$fctr[[nm]] <- c(n.lvls = n.f[[nm]],
+                           sort(summary(x), decreasing = TRUE))
     }
   }
-  colnames(smry$cnt) <- names(stats)
-  if (!is.null(smry$num))
-    colnames(smry$num) <- names(stats)[smry$cnt["i.num", ] == 1]
-  if (!is.null(smry$fctr))
-    names(smry$fctr) <- names(stats)[!smry$cnt["i.num", ] == 1]
-  #
-  # Since variables have different scales, the most useful formatting
-  # approach usually is to report each variable in its own column.
-  # This means that wide variable names may be problematic.
-  smry$rpt <- data.frame(t(apply(smry$cnt[-1, ], 1, format)))
+  f.nms <- ""
   if (!is.null(smry$num)) {
-    rpt.t <- data.frame(t(apply(smry$num[-(1:3), ], 1, format))) # numeric columns
-    for (nm in names(smry$fctr))
-      rpt.t[[nm]] <- ""
+    f.n <- length(smry$num[[1]]) - 1
+    f.nms <- names(smry$num[[1]])
   } else {
-    f.n <- min(smry$fctr[[nm]][4], 25) # report not more than 25 levels
-    rpt.t <- matrix(
-      "",
-      ncol = ncol(smry$rpt),
-      nrow = f.n + 1,
-      dimnames = list(c(
-        names(smry$fctr[[nm]][4]), "Top_1", if (f.n > 1)
-          2:f.n
-      ), colnames(smry$rpt))
-    )
+    f.n <- min(25, max(unlist(n.f)))   # report not more than 25 levels
+    f.nms <- c("n.lvls", "Top_1", if (f.n > 1) paste0("Lvl_", 2:f.n) else NULL)
   }
-  smry$rpt <- rbind(smry$rpt, rpt.t)
-  for (nm in names(smry$fctr)) {
-    # Add non-numeric columns
-    if (rownames(smry$rpt)[3] == names(smry$fctr[[nm]][4])) {
-      smry$rpt[3, nm] <- smry$fctr[[nm]][4]
-    } else {
-      smry$rpt[3, nm] <-  paste0(names(smry$fctr[[nm]][4]), "=", smry$fctr[[nm]][4])
+  if (!is.null(smry$fctr)) {
+    # If no numeric variables, just use factor levels
+    for (nm in names(smry$fctr)) {
+      f.nlvl <- smry$fctr[[nm]]["n.lvls"]
+      if (!is.null(smry$num)) f.nlvl <- paste0("n.lvls=", f.nlvl)
+      f.cnt <- format(smry$fctr[[nm]][-1])
+      f.cnt <- f.cnt[1:min(f.n, length(f.cnt))]
+      width <- max(8, if (!t.rpt) nchar(c(nm, f.nlvl))) - 1 - nchar(f.cnt)[1]
+      # If level names are too long, shorten
+      lvls <- abbreviate(names(f.cnt), minlength = width)
+      smry$rpt[[nm]] <- c(
+        smry$rpt[[nm]], f.nlvl,
+        paste0(format(lvls, width = width, justify = "left"), ":", f.cnt),
+        rep("", f.n - length(f.cnt)))
+      names(smry$rpt[[nm]]) <- f.nms
     }
-    width <- max(8, nchar(c(nm, smry$rpt[3, nm]))) - nchar(smry$fctr[[nm]][5]) - 1
-    f.n <- min(smry$fctr[[nm]][4], nrow(smry$rpt) - 3)
-    f.cnt <- smry$fctr[[nm]][5:(4 + f.n)]
-    lvls <- names(f.cnt) # If level names are too long, shorten
-    if (max(nchar(lvls)) > width)
-      lvls <- abbreviate(lvls, minlength = width)
-    smry$rpt[3 + 1:f.n, nm] <- paste0(substr(format(
-      lvls[1:f.n], width = nchar(nm), justify = "left"
-    ), 1, width), ":", f.cnt)
   }
-  rpt.t <- as.matrix(smry$rpt)
-  if (t.rpt) rpt.t <- t(rpt.t) # Transpose report called for
-  print.default(
-    rpt.t,
-    right = TRUE,
-    quote = FALSE,
-    na.print = "",
-    print.gap = pad
-  )
+  smry$rpt <- do.call(cbind, smry$rpt)
+  smry$rpt <- as.matrix(smry$rpt)
+  if (t.rpt) smry$rpt <- t(smry$rpt)
+  print.default(smry$rpt, right = TRUE,
+                quote = FALSE, na.print = "", print.gap = pad)
   #
   # restore options
   options(opt.input)

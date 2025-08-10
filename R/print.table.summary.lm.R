@@ -58,6 +58,8 @@ print.table.summary.lm <- function (tbl,
   } else {
     nms <- colnames(t.mat)
     i.pval <- which(substr(nms, 1, 3) %in% c("Pr(", "p-v"))
+    #
+    # Format top level summary regression statistics
     if (tbl_nm %in% "stats") {
       s.cols <- c("R-Squared", "Adj-R2", "MAPE")
       for (nm in  nms[i.pval])
@@ -77,6 +79,7 @@ print.table.summary.lm <- function (tbl,
                  "Measure",
                  "Err(Resids)",
                  "Metric")
+      # Generate significance stars for F-stat p-value, and legend
       if (signif.stars)
         for (i.p in i.pval) {
           ij.p <- c((i.p - 1) %% 3 + 1, (i.p - 1) %/% 3 + 2)
@@ -98,19 +101,14 @@ print.table.summary.lm <- function (tbl,
           t.grpd[, ij.p[2]] <- paste(t.grpd[, ij.p[2]], strs)
           c.nms[ij.p[2]] <- paste(c.nms[ij.p[2]], "   ")
         }
-      # spce <- rep("", 3)
-      # t.grpd <- cbind(t.grpd[, 1:2], spce, t.grpd[, 3:4], spce, t.grpd[, 5:6])
-      # c.nms <- c(c.nms[1:2], spce[1], c.nms[3:4], spce[1], c.nms[5:6])
-      # t.fmtd <- matrix(t.grpd[, -1],
-      #                  nrow = 3,
-      #                  dimnames = list(t.grpd[, 1], c.nms[-1]))
+      # reformat into 3 columns
       t.grpd <- cbind(t.grpd[, 1:2], t.grpd[, 3:4], t.grpd[, 5:6])
       c.nms <- c(c.nms[1:2], c.nms[3:4], c.nms[5:6])
       t.fmtd <- matrix(t.grpd[, -1],
                        nrow = 3,
                        dimnames = list(t.grpd[, 1], c.nms[-1]))
     } else {
-      # for coefficients and anova
+      # Format Coefficients or ANOVA tables
       i.tval <- which(substr(nms, 1, 3) %in% c("t-s", "t v"))
       for (nm in nms[i.tval])
         t.fmtd[, nm] <-

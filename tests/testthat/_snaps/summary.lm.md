@@ -1,7 +1,7 @@
-# summary.lm: reporting simple regression (iris)
+# summary.lm: simple regression (iris) works
 
     Code
-      sumry
+      summary(lm(Sepal.Length ~ Sepal.Width, data = iris))
     Output
       
       Summary Statistics:
@@ -22,19 +22,16 @@
       Sepal.Width     -0.22336    0.15508  -1.4403    0.152         
                                                                            
       Signif.Levels:  0 '***' 0.001 '** ' 0.01 '*  ' 0.05 '.  ' 0.1 '   ' 1
-                                                                                
-                              Min        1Q       Median      Mean        3Q    
-      Residuals summary:   -1.55614   -0.633291  -0.11198   <3.3e-14   0.557949 
-                                    
-                              Max   
-      Residuals summary:    2.22255 
+                                                                
+      Summary of   Min     1Q    Median   Mean     3Q      Max  
+      Residuals: -1.556  -0.6333 -0.112  <3e-14  0.5579   2.223 
                                                                   
       Call:  lm(formula = Sepal.Length ~ Sepal.Width, data = iris)
 
-# summary.lm: reporting regression with numeric and faactor variables
+# summary.lm: numeric and factor variables (iris)
 
     Code
-      sumry
+      summary(mdl <- lm(Sepal.Length ~ ., data = iris))
     Output
       
       Summary Statistics:
@@ -59,19 +56,16 @@
       Species_virginica      -1.02350   0.333726  -3.0669   0.00258 **   39.4344
                                                                            
       Signif.Levels:  0 '***' 0.001 '** ' 0.01 '*  ' 0.05 '.  ' 0.1 '   ' 1
-                                                                                     
-                              Min          1Q         Mean       Median        3Q    
-      Residuals summary:   -0.794236   -0.218743    <3.2e-14   0.00898723   0.202546 
-                                     
-                              Max    
-      Residuals summary:    0.731034 
+                                                                      
+      Summary of   Min       1Q      Mean    Median     3Q      Max   
+      Residuals: -0.7942  -0.2187   <3e-14  0.008987  0.2025   0.731  
                                                         
       Call:  lm(formula = Sepal.Length ~ ., data = iris)
 
-# summary.lm: regression with interaction term
+# summary.lm: with interaction term (iris)
 
     Code
-      sumry
+      summary(lm(Sepal.Length ~ Sepal.Width + Petal.Width * Petal.Length, data = iris))
     Output
       
       Summary Statistics:
@@ -95,12 +89,9 @@
       Petal.Width:Petal.Length      0.06164   0.033153   1.8593     0.065 .    37.375
                                                                            
       Signif.Levels:  0 '***' 0.001 '** ' 0.01 '*  ' 0.05 '.  ' 0.1 '   ' 1
-                                                                                
-                              Min        1Q        Mean      Median       3Q    
-      Residuals summary:   -0.807554  -0.237164  <3.2e-14   0.0217044  0.185934 
-                                    
-                              Max   
-      Residuals summary:   0.755997 
+                                                                
+      Summary of   Min     1Q     Mean   Median    3Q      Max  
+      Residuals: -0.8076 -0.2372 <3e-14  0.0217  0.1859   0.756 
                                                                                    
       Call:  lm(formula = Sepal.Length ~ Sepal.Width + Petal.Width * Petal.Length, 
       :          data = iris)                                                      

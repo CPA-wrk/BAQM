@@ -3,38 +3,64 @@
 stat_desc(swiss)
 names(swiss) <- substr(names(swiss), 1, 4) # Narrows output
 regs <- leaps::regsubsets(Fert ~ ., data = swiss, nbest = 3)
-sumry(regs)
+summary(regs)
 stat_desc(iris) # Includes non-numeric variable
 mdl <- lm(Sepal.Length ~ ., data = iris)
-sumry(mdl)
+summary(mdl)
 lm_plot.4way(mdl)
 #### End of example ####
 
-# attach(file.path(Sys.getenv("R_LIBS_USER"), "BAQM_lib.rda"), name = "BAQM_lib")
+### test-summary.lm.R ###
+# Snapshot tests for custom summary.lm method
+# library(testthat)
+
+test_that("summary.lm: reporting simple regression (iris)", {
+  mdl <- lm(Sepal.Length ~ Sepal.Width, data = iris)
+  sumry <- summary.lm(mdl)
+  expect_snapshot(sumry)
+})
+
+test_that("summary.lm: reporting regression with numeric and faactor variables", {
+  mdl <- lm(Sepal.Length ~ ., data = iris)
+  sumry <- summary.lm(mdl)
+  expect_snapshot(sumry)
+})
+
+test_that("summary.lm: regression with interaction term", {
+  mdl <- lm(Sepal.Length ~ Sepal.Width + Petal.Width * Petal.Length, data = iris)
+  sumry <- summary.lm(mdl)
+  expect_snapshot(sumry)
+})
+### End of test-summary.lm.R ###
 
 
-print.default(sumry(lm(Sepal.Length ~ Sepal.Width, data = iris)))
-print.default(sumry(lm(Sepal.Length ~ Sepal.Length, data = iris)))
+test_options <- list(scipen = 2, digits = 6, width = 80)
 
-print.sumry.lm(sumry(lm(Sepal.Length ~ Sepal.Width, data = iris)))
+
+
+
+print.default(summary(lm(Sepal.Length ~ Sepal.Width, data = iris)))
+print.default(summary(lm(Sepal.Length ~ Sepal.Length, data = iris)))
+
+print.summary.lm(summary(lm(Sepal.Length ~ Sepal.Width, data = iris)))
 
 mdl <- lm(Sepal.Length ~ Sepal.Width, data = iris)
-sumry.lm(mdl)
+summary.lm(mdl)
 
 expect_snapshot(
-  print.sumry.lm(sumry(lm(hwy ~ displ + year + cyl + fl, data = mpg)))
+  print.summary.lm(summary(lm(hwy ~ displ + year + cyl + fl, data = mpg)))
 )
 
-expect_snapshot(print.sumry.lm(sumry(lm(
+expect_snapshot(print.summary.lm(summary(lm(
   hwy ~ displ + year + cyl + fl, data = mpg
 ))))
-expect_snapshot(print.sumry.lm(sumry(lm(
+expect_snapshot(print.summary.lm(summary(lm(
   hwy ~ displ + year + cyl * fl, data = mpg
 ))))
-expect_snapshot(print.sumry.lm(sumry(
+expect_snapshot(print.summary.lm(summary(
   lm(hwy ~ displ + year + cyl + trans * fl, data = mpg)
 )))
-expect_snapshot(print.sumry.lm(sumry(
+expect_snapshot(print.summary.lm(summary(
   lm(hwy ~ displ + year + cyl * trans * fl, data = mpg)
 )))
 
@@ -64,15 +90,15 @@ lm_plot.4way
 infl <- influence.measures(mdl)
 
 object <- mdl
-sumry <- sumry.lm(mdl)
-print.sumry.lm(sumry)
+summary <- summary.lm(mdl)
+print.summary.lm(summary)
 
 object <- lm(hwy ~ displ + year + cyl * fl, data = mpg)
-sumry.lm(object)
+summary.lm(object)
 
 
 object <- lm(hwy ~ displ + year + cyl + trans * fl, data = mpg)
-sumry.lm(object)
+summary.lm(object)
 
 
 stat_desc(airquality)
@@ -81,11 +107,11 @@ stat_desc(airquality)
 
 
 ## check of default printing of a complex object ----
-fil <- tempfile("sumry")
+fil <- tempfile("summary")
 sink(file = fil)
-print.default((sumry(lm(
+print(summary(lm(
   Sepal.Length ~ Sepal.Width, data = iris
-))), width = 75)
+)), width = 75)
 sink()
 lins <- readLines(fil)
 lins <- sub(".*nvironment.*", "", lins)
