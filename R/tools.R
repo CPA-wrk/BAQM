@@ -142,11 +142,3 @@ file_split <- function(fil, n, sep) {
 permute <- function(n, k) {
   choose(n, k) * factorial(k)
 }
-# Outlier function - boxplot heuristic
-outlier <- function(x, rpt = FALSE) {
-  q <- stats::quantile(x, c(0.25, 0, 0.75), na.rm = TRUE)
-  lims <- q[c(1, 3)] + c(-1.5, 1.5) * (q[3] - q[1])
-  if (rpt)
-    return(lims)
-  x < lims[1] | x > lims[2]
-}

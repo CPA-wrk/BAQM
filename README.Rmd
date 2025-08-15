@@ -42,8 +42,8 @@ from [GitHub](https://github.com/) with:
 
 ## Example
 
-Here are summaries of the built-in R data sets
-'swiss' and `iris`, with
+Here are summaries of built-in R data sets
+'swiss' and `iris`, with 
 
 * a best-subsets analysis of modeling Fertility in 'swiss' and
 * a linear model with analytics of Sepal Length in 'iris'.
@@ -65,4 +65,3 @@ mdl <- lm(Sepal.Length ~ ., data = iris)
 print.summary.lm(summary.lm(mdl))
 lm_plot.4way(mdl)
 ```
-

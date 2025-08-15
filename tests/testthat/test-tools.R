@@ -1,4 +1,4 @@
-# test-utils.R -- testthat unit tests for general purpose tools
+# test-tools.R -- testthat unit tests for general purpose tools
 test_options <- list(scipen = 2, digits = 6, width = 80)
 
 test_that("char2dt converts MM/DD/YYYY to Date", {
