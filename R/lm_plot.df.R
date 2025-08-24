@@ -30,7 +30,7 @@
 #' @export
 #'
 #' @examples
-#' mdl <- lm(y ~ x, data = mydata)
+#' mdl <- lm(Sepal.Length ~ Sepal.Width, data = iris)
 #' df <- lm_plot.df(mdl)
 #' head(df)
 lm_plot.df <- function(mdl) {

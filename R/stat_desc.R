@@ -53,7 +53,7 @@ stat_desc <- function(data,
     aparm <- substitute(data)  # For vector actual parm
     data <- as.data.frame(data)
     if (ncol(data) == 1) {
-      if (class(aparm) == "name") {
+      if (inherits(aparm, "name")) {
         names(data) <- deparse(aparm)
       } else names(data) <- "V1"
     }

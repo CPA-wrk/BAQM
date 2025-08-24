@@ -4,12 +4,14 @@
 #'
 #' @param tbl A table object from a linear model summary (e.g., coefficients, ANOVA, statistics, correlation matrices).
 #' @param digits Number of significant digits to print. Defaults to \code{max(4, getOption("digits") - 2)}.
+#' @param quote Logical; whether to print with quotes (default: FALSE).
+#' @param na.print String to use for NA values (default: ").
+#' @param zero.print String to use for 0 values (default: 0).
+#' @param right Logical, indicating whether or not strings should be right aligned (default: TRUE).
+#' @param justify Justification for columns ("right" or "left"; default: "right").
 #' @param signif.stars Logical; whether to show significance stars for p-values (default: \code{getOption("show.signif.stars")}).
 #' @param eps Smallest positive floating-point value for formatting near-zero p-values (default: \code{.Machine$double.eps}).
 #' @param nsmall Minimum number of digits to the right of the decimal point (default: 4).
-#' @param na.print String to use for NA values.
-#' @param justify Justification for columns ("right" or "left"; default: "right").
-#' @param quote Logical; whether to print with quotes (default: FALSE).
 #' @param prnt.lgnd Character vector naming tables to print significance legends for (default: \code{"coefficients"}).
 #' @param dig.test Digits for hypothesis test statistics (default: \code{max(1, min(5, digits - 2))}).
 #' @param ... Additional arguments (not currently used).
@@ -28,12 +30,14 @@
 #' print.table.summary.lm(sumry$coefficients)
 print.table.summary.lm <- function (tbl,
                                     digits = max(4, getOption("digits") - 2),
+                                    quote = FALSE,
+                                    na.print = "",
+                                    zero.print = "0",
+                                    right = TRUE,
+                                    justify = "right",
                                     signif.stars = getOption("show.signif.stars"),
                                     eps = .Machine$double.eps,
                                     nsmall = 4,
-                                    na.print = "",
-                                    justify = "right",
-                                    quote = FALSE,
                                     prnt.lgnd = c("coefficients"),
                                     dig.test = max(1, min(5, digits - 2)),
                                     ...) {
@@ -146,7 +150,7 @@ print.table.summary.lm <- function (tbl,
     t.fmtd,
     print.gap = 2,
     quote = quote,
-    right = justify == "right",
+    right = right,
     na.print = na.print
   )
   #
