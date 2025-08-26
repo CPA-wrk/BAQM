@@ -4,16 +4,21 @@
 \alias{stat_desc}
 \title{Summary Descriptive Statistics for List or Data Frame}
 \usage{
-stat_desc(data, opts = list(digits = 4, scipen = 8), pad = 2, t.rpt = FALSE)
+stat_desc(
+  data,
+  transpose = FALSE,
+  pad = 2,
+  opts = list(digits = 4, scipen = 8)
+)
 }
 \arguments{
 \item{data}{A vector, list or data frame containing variables to summarize. A vector is treated as a single variable data frame. Unnamed variables receive generic names like \code{V1}, \code{V2}, etc.}
 
-\item{opts}{A key=value tupe list, optional input for "\code{options}" values on output. Existing values are restored on exit.}
+\item{transpose}{A logical concerning report format. By default the summary printed and returned is organized to show variables in columns and their statistic values in rows. Setting \code{transpose = TRUE} generates a transposed report with variables in rows and statistics in columns.}
 
 \item{pad}{A positive integer for the number of spaces between output columns..}
 
-\item{t.rpt}{A logical concerning report format. By default the summary printed and returned is organized to show variables in columns and their statistic values in rows. Setting \code{t.rpt = TRUE} generates a transposed report with variables in rows and statistics in columns.}
+\item{opts}{A key=value tupe list, optional input for "\code{options}" values on output. Existing values are restored on exit.}
 }
 \value{
 Invisibly returns a list of summary tables for counts, numeric, and factor variables.

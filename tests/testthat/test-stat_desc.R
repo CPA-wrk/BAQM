@@ -18,7 +18,7 @@ test_that("Call with matrix works", {
 #
 test_that("Call with vector works", {
   withr::local_options(test_options)
-  expect_type(stat_desc(1:10, t.rpt = TRUE), "list")
+  expect_type(stat_desc(1:10, transpose = TRUE), "list")
 })
 #
 test_that("Call with missing data", {
@@ -38,6 +38,6 @@ test_that("Check printed results: mixed types", {
 #
 test_that("Check printed results: vector, and transopose", {
   withr::local_options(test_options)
-  expect_snapshot(stat_desc(1:10, t.rpt = TRUE))
+  expect_snapshot(stat_desc(1:10, transpose = TRUE))
 })
 

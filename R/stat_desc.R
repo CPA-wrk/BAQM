@@ -4,11 +4,11 @@
 #'
 #' @param data A vector, list or data frame containing variables to summarize. A vector is treated as a single variable data frame. Unnamed variables receive generic names like \code{V1}, \code{V2}, etc.
 #'
+#' @param transpose A logical concerning report format. By default the summary printed and returned is organized to show variables in columns and their statistic values in rows. Setting \code{transpose = TRUE} generates a transposed report with variables in rows and statistics in columns.
+#'
 #' @param opts A key=value tupe list, optional input for "\code{options}" values on output. Existing values are restored on exit.
 #'
 #' @param pad A positive integer for the number of spaces between output columns..
-#'
-#' @param t.rpt A logical concerning report format. By default the summary printed and returned is organized to show variables in columns and their statistic values in rows. Setting \code{t.rpt = TRUE} generates a transposed report with variables in rows and statistics in columns.
 #'
 #' @details
 #' For each variable in \code{data}, the function computes the count of non-missing and missing values. Numeric variables are summarized by minimum, first quartile, median, mean, third quartile, maximum, and standard deviation. Factor and character variables are summarized by level frequencies. Results are formatted in a table and printed. The function returns a list containing:
@@ -27,17 +27,17 @@
 #' stat_desc(mtcars)
 #' stat_desc(data.frame(a = rnorm(100), b = sample(letters[1:3], 100, TRUE)))
 stat_desc <- function(data,
-                      opts = list(digits = 4, scipen = 8),
+                      transpose = FALSE,
                       pad = 2,
-                      t.rpt = FALSE) {
+                      opts = list(digits = 4, scipen = 8)
+                      ) {
   # Copyright 2025, Peter Lert, All rights reserved.
-  # Copyright 2025, Peter Lert, rpt rights reserved.
   #
   # Summary descriptive statistics for "data" list or data frame
   # Optional arguments:
   #   opts:   list of R options, e.g., digits, scipen
   #   pad:    integer; number of spaces to pad output table columns
-  #   t.rpt:  logical; if TRUE, return a transposed summary table
+  #   transpose:  logical; if TRUE, return a transposed summary table
   #
   if (missing(data))
     return()
@@ -119,7 +119,7 @@ stat_desc <- function(data,
       if (!is.null(smry$num)) f.nlvl <- paste0("n.lvls=", f.nlvl)
       f.cnt <- format(smry$fctr[[nm]][-1])
       f.cnt <- f.cnt[1:min(f.n, length(f.cnt))]
-      width <- max(8, if (!t.rpt) nchar(c(nm, f.nlvl))) - 1 - nchar(f.cnt)[1]
+      width <- max(8, if (!transpose) nchar(c(nm, f.nlvl))) - 1 - nchar(f.cnt)[1]
       # If level names are too long, shorten
       lvls <- abbreviate(names(f.cnt), minlength = width)
       smry$rpt[[nm]] <- c(
@@ -131,7 +131,7 @@ stat_desc <- function(data,
   }
   smry$rpt <- do.call(cbind, smry$rpt)
   smry$rpt <- as.matrix(smry$rpt)
-  if (t.rpt) smry$rpt <- t(smry$rpt)
+  if (transpose) smry$rpt <- t(smry$rpt)
   print.default(smry$rpt, right = TRUE,
                 quote = FALSE, na.print = "", print.gap = pad)
   #

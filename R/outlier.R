@@ -4,9 +4,9 @@
 #' Handles missing values (NA) automatically.
 #'
 #' @param x Numeric vector for which outliers are to be detected.
-#' @param rpt Logical. If \code{TRUE}, returns the calculated lower and upper limits for outlier detection. If \code{FALSE} (default), returns a logical vector indicating which elements of \code{x} are outliers.
+#' @param rpt Logical. If \code{FALSE} (default), returns a logical vector indicating which elements of \code{x} are outliers. If \code{TRUE}, returns the calculated lower and upper limits for outlier detection, identified by \code{x < rpt[1] | x > rpt[2]}.
 #'
-#' @return If \code{rpt = FALSE}, returns a logical vector indicating outliers. If \code{rpt = TRUE}, returns a numeric vector of length 2 giving the lower and upper limits.
+#' @return If \code{rpt = FALSE}, returns a logical vector indicating outliers. If \code{rpt = TRUE}, returns a numeric vector of length 2 giving lower and upper limits for outlier detection
 #'
 #' @examples
 #' set.seed(1)

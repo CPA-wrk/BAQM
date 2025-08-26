@@ -33,12 +33,12 @@ You can install the development version of BAQM from
 
 ## Example
 
-Here are summaries of built-in R data sets ‘swiss’ and `iris`, with
+Here are summaries of built-in R data sets `swiss` and `iris`, with
 
-- a best-subsets analysis of modeling Fertility in ‘swiss’ and
-- a linear model with analytics of Sepal Length in ‘iris’.
+- a best-subsets analysis of modeling Fertility in `swiss` and
+- a linear model with analytics of Sepal Length in `iris`.
 
-(Variable names are truncated in ‘swiss’ to narrow the output.)
+(Variable names are truncated in `swiss` to narrow the output.)
 
 ``` r
 # library(BAQM)
