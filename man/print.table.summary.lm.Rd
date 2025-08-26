@@ -5,7 +5,7 @@
 \title{Print a Table from Linear Model Summary}
 \usage{
 \method{print}{table.summary.lm}(
-  tbl,
+  x,
   digits = max(4, getOption("digits") - 2),
   quote = FALSE,
   na.print = "",
@@ -21,7 +21,7 @@
 )
 }
 \arguments{
-\item{tbl}{A table object from a linear model summary (e.g., coefficients, ANOVA, statistics, correlation matrices).}
+\item{x}{A table object from a linear model summary (e.g., coefficients, ANOVA, statistics, correlation matrices).}
 
 \item{digits}{Number of significant digits to print. Defaults to \code{max(4, getOption("digits") - 2)}.}
 

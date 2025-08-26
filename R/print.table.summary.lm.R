@@ -2,7 +2,7 @@
 #'
 #' Prints a formatted table from a summary of a linear model, including coefficients, ANOVA, correlation matrices, or summary statistics. Significance stars and legends are added as appropriate.
 #'
-#' @param tbl A table object from a linear model summary (e.g., coefficients, ANOVA, statistics, correlation matrices).
+#' @param x A table object from a linear model summary (e.g., coefficients, ANOVA, statistics, correlation matrices).
 #' @param digits Number of significant digits to print. Defaults to \code{max(4, getOption("digits") - 2)}.
 #' @param quote Logical; whether to print with quotes (default: FALSE).
 #' @param na.print String to use for NA values (default: ").
@@ -28,7 +28,7 @@
 #' mdl <- lm(Sepal.Length ~ Sepal.Width, data = iris)
 #' sumry <- summary(mdl)
 #' print(sumry$coefficients)
-print.table.summary.lm <- function (tbl,
+print.table.summary.lm <- function (x,
                                     digits = max(4, getOption("digits") - 2),
                                     quote = FALSE,
                                     na.print = "",
@@ -42,11 +42,11 @@ print.table.summary.lm <- function (tbl,
                                     dig.test = max(1, min(5, digits - 2)),
                                     ...) {
   # Copyright 2025, Peter Lert, All rights reserved.
-  tbl_nm <- sub(".summary.lm", "", grep("summary.lm", class(tbl), value = TRUE))
+  tbl_nm <- sub(".summary.lm", "", grep("summary.lm", class(x), value = TRUE))
   tbl_nm <- tbl_nm[!tbl_nm %in% "table"]
-  t.mat <- as.matrix(tbl)
+  t.mat <- as.matrix(x)
   t.fmtd <- array("", dim = dim(t.mat), dimnames = dimnames(t.mat))
-  t.note <- rbind(matrix(character(0), nrow = 0, ncol = 1), attr(tbl, "note"))
+  t.note <- rbind(matrix(character(0), nrow = 0, ncol = 1), attr(x, "note"))
   #
   if (tbl_nm %in% c("v.correlation", "cov.unscaled", "correlation")) {
     p <- NCOL(t.mat)
@@ -162,7 +162,7 @@ print.table.summary.lm <- function (tbl,
       print.default(matrix(p.note, dimnames = list(paste0(
         rownames(p.note), ": "
       ), "")), quote = FALSE)
-    attr(tbl, "note") <- t.note
+    attr(x, "note") <- t.note
   }
-  invisible(tbl)
+  invisible(x)
 }

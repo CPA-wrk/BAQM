@@ -5,25 +5,28 @@
 \title{Print a Summary for Linear Model Objects}
 \usage{
 \method{print}{summary.lm}(
-  sumry,
+  x,
+  digits = max(5, getOption("digits") - 2),
+  symbolic.cor = NULL,
+  signif.stars = getOption("show.signif.stars"),
   options = NULL,
   na.print = "",
-  digits = max(5, getOption("digits") - 2),
-  signif.stars = getOption("show.signif.stars"),
   eps = .Machine$double.eps,
   ...
 )
 }
 \arguments{
-\item{sumry}{An object of class \code{summary.lm} or \code{lm}.}
+\item{x}{An object of class \code{summary.lm} or \code{lm}.}
+
+\item{digits}{Minimal number of significant digits. Defaults to \code{max(5, getOption("digits") - 2)}.}
+
+\item{symbolic.cor}{Not implemented. Defaults to \code{NULL}.}
+
+\item{signif.stars}{Logical; whether to show significance stars in the coefficients table. Defaults to \code{getOption("show.signif.stars")}.}
 
 \item{options}{A character vector of optional summary tables to print (e.g., \code{"v.correlation"}, \code{"cov.unscaled"}, \code{"correlation"}, \code{"fits"}). Printed in the given order if present.}
 
 \item{na.print}{String to use for NA values in the tables.}
-
-\item{digits}{Minimal number of significant digits. Defaults to \code{max(5, getOption("digits") - 2)}.}
-
-\item{signif.stars}{Logical; whether to show significance stars in the coefficients table. Defaults to \code{getOption("show.signif.stars")}.}
 
 \item{eps}{Smallest positive floating-point value, used for formatting near-zero residuals. Defaults to \code{.Machine$double.eps}.}
 

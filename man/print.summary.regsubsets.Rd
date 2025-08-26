@@ -4,10 +4,10 @@
 \alias{print.summary.regsubsets}
 \title{Print Summary for Subset Selection (\code{regsubsets}) Objects}
 \usage{
-\method{print}{summary.regsubsets}(object, ...)
+\method{print}{summary.regsubsets}(x, ...)
 }
 \arguments{
-\item{object}{An object of class \code{summary.regsubsets} or \code{regsubsets}.}
+\item{x}{An object of class \code{summary.regsubsets} or \code{regsubsets}.}
 
 \item{...}{Additional arguments (not currently used).}
 }
@@ -15,7 +15,7 @@
 Prints a summary for objects of class \code{summary.regsubsets} or \code{regsubsets} (from the \code{leaps} package), showing model selection statistics for best subsets, including R-squared, adjusted R-squared, standard error of estimate, Mallows' Cp, and AIC.
 }
 \details{
-The function prints the model call and a table summarizing the best models selected, including the number of predictors, R-squared, adjusted R-squared, standard error of estimate (SEE), Mallows' Cp, AIC, and included variables.
+The function prints the model call and a table summarizing the best models selected, including the number of predictors, R-squared, adjusted R-squared, standard error of estimate (SEE), Mallows' Cp, and included variables.
 If the input is a \code{regsubsets} object, it is converted to a summary with \code{summary()}. If not, the object is returned unmodified.
 }
 \examples{
