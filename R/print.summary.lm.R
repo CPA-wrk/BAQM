@@ -18,9 +18,9 @@
 #' @export
 #'
 #' @examples
-#' mdl <- lm(y ~ x, data = mydata)
-#' print.summary.lm(summary(mdl))
-#' print.summary.lm(mdl, options = c("correlation", "fits"))
+#' mdl <- lm(Sepal.Length ~ Sepal.Width, data = iris)
+#' summary(mdl)
+#' summary(mdl, options = c("correlation", "fits"))
 print.summary.lm <- function (sumry,
                               options = NULL,
                               na.print = "",

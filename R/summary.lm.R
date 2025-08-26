@@ -29,9 +29,9 @@
 #' @export
 #'
 #' @examples
-#' mdl <- lm(y ~ x1 + x2, data = mydata)
-#' sumry <- summary.lm(mdl)
-#' print.summary.lm(sumry)
+#' mdl <- lm(Sepal.Length ~ Sepal.Width + Petal.Length, data = iris)
+#' sumry <- summary(mdl)
+#' sumry
 summary.lm <- function (object, ...)
 {
   # Copyright 2025, Peter Lert, All rights reserved.

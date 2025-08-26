@@ -29,7 +29,7 @@ Produces a Q-Q plot of residuals from a linear model to test for normality, opti
 The plot visualizes the distribution of residuals against theoretical normal quantiles. Points are colored and shaped by outlier status, and a reference Q-Q line is added. Optionally, outlier and regular points can be labeled. If enabled, the Shapiro-Wilk normality test p-value is displayed.
 }
 \examples{
-mdl <- lm(y ~ x, data = mydata)
+mdl <- lm(Sepal.Length ~ Sepal.Width, data = iris)
 result <- lm_plot.qq(mdl)
 print(result$plts$qq)
 }

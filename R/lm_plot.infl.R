@@ -22,7 +22,7 @@
 #'
 #' @examples
 #' \dontrun{
-#' mdl <- lm(y ~ x, data = mydata)
+#' mdl <- lm(Sepal.Length ~ Sepal.Width, data = iris)
 #' result <- lm_plot.infl(mdl)
 #' print(result$plts$infl)
 #' }

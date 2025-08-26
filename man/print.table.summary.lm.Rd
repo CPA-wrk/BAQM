@@ -57,9 +57,9 @@ Prints a formatted table from a summary of a linear model, including coefficient
 This method handles tabular output from linear model summaries, including coefficients, ANOVA, statistics, and correlation/covariance matrices. It formats p-values, adds significance stars, and prints appropriate legends for hypothesis tests.
 }
 \examples{
-mdl <- lm(y ~ x, data = mydata)
+mdl <- lm(Sepal.Length ~ Sepal.Width, data = iris)
 sumry <- summary(mdl)
-print.table.summary.lm(sumry$coefficients)
+print(sumry$coefficients)
 }
 \seealso{
 \code{\link{print.summary.lm}}

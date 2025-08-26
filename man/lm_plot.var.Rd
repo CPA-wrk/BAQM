@@ -29,7 +29,7 @@ Produces a scatter plot of residuals against fitted values from a linear model, 
 The plot visualizes residuals versus fitted values to assess homoskedasticity (constant variance). Points are colored and shaped by outlier status, and outlier/regular points can be labeled. If enabled, the Breusch-Pagan test for heteroskedasticity is run and its p-value is annotated on the plot.
 }
 \examples{
-mdl <- lm(y ~ x, data = mydata)
+mdl <- lm(Sepal.Length ~ Sepal.Width, data = iris)
 result <- lm_plot.var(mdl)
 print(result$plts$var)
 }

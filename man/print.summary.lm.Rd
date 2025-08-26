@@ -37,9 +37,9 @@ The function prints summary statistics, ANOVA, and coefficients tables for a lin
 For objects not of class \code{summary.lm}, a default print method is used.
 }
 \examples{
-mdl <- lm(y ~ x, data = mydata)
-print.summary.lm(summary(mdl))
-print.summary.lm(mdl, options = c("correlation", "fits"))
+mdl <- lm(Sepal.Length ~ Sepal.Width, data = iris)
+summary(mdl)
+summary(mdl, options = c("correlation", "fits"))
 }
 \seealso{
 \code{\link{summary.lm}}, \code{\link{print.table.summary.lm}}

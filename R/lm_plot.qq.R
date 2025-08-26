@@ -21,7 +21,7 @@
 #' @export
 #'
 #' @examples
-#' mdl <- lm(y ~ x, data = mydata)
+#' mdl <- lm(Sepal.Length ~ Sepal.Width, data = iris)
 #' result <- lm_plot.qq(mdl)
 #' print(result$plts$qq)
 lm_plot.qq <- function(mdl,

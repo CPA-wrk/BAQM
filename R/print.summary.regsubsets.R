@@ -15,7 +15,7 @@
 #' @examples
 #' \dontrun{
 #' library(leaps)
-#' fit <- regsubsets(y ~ ., data = mydata)
+#' fit <- leaps::regsubsets(Fertility ~ ., data = swiss, nbest = 3)
 #' print.summary.regsubsets(fit)
 #' }
 print.summary.regsubsets <- function(object, ...) {

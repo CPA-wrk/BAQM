@@ -25,9 +25,9 @@
 #' @exportS3Method BAQM::print
 #'
 #' @examples
-#' mdl <- lm(y ~ x, data = mydata)
+#' mdl <- lm(Sepal.Length ~ Sepal.Width, data = iris)
 #' sumry <- summary(mdl)
-#' print.table.summary.lm(sumry$coefficients)
+#' print(sumry$coefficients)
 print.table.summary.lm <- function (tbl,
                                     digits = max(4, getOption("digits") - 2),
                                     quote = FALSE,

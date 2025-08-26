@@ -36,9 +36,9 @@ The returned summary object includes:
 Factor variable names are recoded for clarity, and coefficients for aliased or singular variables are omitted with notes produced as attributes.
 }
 \examples{
-mdl <- lm(y ~ x1 + x2, data = mydata)
-sumry <- summary.lm(mdl)
-print.summary.lm(sumry)
+mdl <- lm(Sepal.Length ~ Sepal.Width + Petal.Length, data = iris)
+sumry <- summary(mdl)
+sumry
 }
 \seealso{
 \code{\link{print.summary.lm}}, \code{\link{lm}}

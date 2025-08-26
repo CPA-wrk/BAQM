@@ -21,7 +21,7 @@
 #' @export
 #'
 #' @examples
-#' mdl <- lm(y ~ x, data = mydata)
+#' mdl <- lm(Sepal.Length ~ Sepal.Width, data = iris)
 #' result <- lm_plot.fit(mdl)
 #' print(result$plts$fit)
 lm_plot.fit <- function(mdl,

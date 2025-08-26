@@ -29,7 +29,7 @@ Generates a scatter plot of observed values versus fitted values from a linear m
 The plot visualizes observed versus fitted values, includes a diagonal reference line, marks outliers, and can optionally display loess-smoothed prediction intervals. Outlier and regular points can be labeled. This plot is useful for visually assessing linearity and model fit quality.
 }
 \examples{
-mdl <- lm(y ~ x, data = mydata)
+mdl <- lm(Sepal.Length ~ Sepal.Width, data = iris)
 result <- lm_plot.fit(mdl)
 print(result$plts$fit)
 }
