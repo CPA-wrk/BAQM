@@ -4,6 +4,7 @@
 ^\.Rproj\.user$
 ^LICENSE\.md$
 ^dev_tst\.R$
+^publish\.R$
 ^.*\.DS_Store\.R$
 ^\.Rbuildignore$
 ^\.github$

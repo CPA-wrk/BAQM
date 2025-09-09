@@ -62,8 +62,6 @@ stat_desc <- function(data,
   if (length(i <- is.null(names(data))) > 0)
     names(data)[i] <- paste0("V", seq_along(data))[i] # Assign generic names
   #
-
-  #
   # Build summary data for either format in tables by type.
   # Since variables have different scales, the most useful formatting
   # approach usually is to report each variable in its own column.
@@ -122,11 +120,11 @@ stat_desc <- function(data,
       width <- max(8, if (!transpose) nchar(c(nm, f.nlvl))) - 1 - nchar(f.cnt)[1]
       # If level names are too long, shorten
       lvls <- abbreviate(names(f.cnt), minlength = width)
-      smry$rpt[[nm]] <- c(
-        smry$rpt[[nm]], f.nlvl,
-        paste0(format(lvls, width = width, justify = "left"), ":", f.cnt),
-        rep("", f.n - length(f.cnt)))
-      names(smry$rpt[[nm]]) <- f.nms
+      s_fctr <- c(f.nlvl,
+                  paste0(format(lvls, width = width, justify = "left"), ":", f.cnt),
+                  rep("", f.n - length(f.cnt)))
+      names(s_fctr) <- f.nms
+      smry$rpt[[nm]] <- c(smry$rpt[[nm]], s_fctr)
     }
   }
   smry$rpt <- do.call(cbind, smry$rpt)
