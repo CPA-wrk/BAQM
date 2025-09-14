@@ -19,11 +19,17 @@
 #' print.summary.regsubsets(fit)
 #' }
 print.summary.regsubsets <- function(x, ...) {
+  #
   # Copyright 2025, Peter Lert, All rights reserved.
-  if (inherits(x, "regsubsets"))
+  #
+  # Method to print a formatted summary of a regsubsets object
+  #
+  if (inherits(x, "regsubsets")) {
     x <- summary(x)
-  if (!inherits(x, "summary.regsubsets"))
+  }
+  if (!inherits(x, "summary.regsubsets")) {
     return(x)
+  }
   #
   # Print the summary of a regsubsets x
   n <- x$obj$nn
@@ -42,8 +48,10 @@ print.summary.regsubsets <- function(x, ...) {
   #
   # Report the regsubsets Call and then the best models table
   cl <- format(x$obj$call)
-  s.note <- matrix(cl, nrow = length(cl), ncol = 1,
-                   dimnames = list(c("Call:", rep("", length(cl) - 1)), ""))
+  s.note <- matrix(cl,
+    nrow = length(cl), ncol = 1,
+    dimnames = list(c("Call:", rep("", length(cl) - 1)), "")
+  )
   print.default(s.note, quote = FALSE)
   print(best)
 }

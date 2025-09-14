@@ -46,7 +46,7 @@ lm_plot.var <- function(mdl,
   #
   # Plot of Residuals vs Fitted Values
   plts$var <- ggplot2::ggplot(data = df) +
-    ggplot2::aes(x = .fits, y = .resid) +
+    ggplot2::aes(x = df$.fits, y = df$.resid) +
     #
     # PLot axis labels
     ggplot2::labs(x = "Fitted Value", y = "Residual") +
@@ -58,13 +58,14 @@ lm_plot.var <- function(mdl,
       yintercept = 0
     )
   #
-  if (prod(sign(lim$x)) %in% -1)
+  if (prod(sign(lim$x)) %in% -1) {
     plts$var <- plts$var +
-    ggplot2::geom_vline(
-      color = "white",
-      linewidth = parms$lins$size_lg,
-      xintercept = 0
-    )
+      ggplot2::geom_vline(
+        color = "white",
+        linewidth = parms$lins$size_lg,
+        xintercept = 0
+      )
+  }
   #
   # Plot points - vary color & shape for normal/outlier points
   plts$var <- plts$var +
@@ -105,22 +106,30 @@ lm_plot.var <- function(mdl,
   #
   # ID outlier points if desired
   if (parms$pts$id$outl) {
-    plts$var <- plts$var + ggrepel::geom_text_repel(
-      data = df[df$outlier == "outl", ],
-      ggplot2::aes(x = .fits, y = .resid, label = .id),
-      color = parms$pts$colr$outl,
-      size = parms$pts$csz
-    )
+    df.outl <- df[df$outlier == "outl", , drop = FALSE]
+    plts$var <- plts$var +
+      ggrepel::geom_text_repel(
+        data = df.outl,
+        ggplot2::aes(x = df.outl$.fits,
+                     y = df.outl$.resid,
+                     label = df.outl$.id),
+        color = parms$pts$colr$outl,
+        size = parms$pts$csz
+      )
   }
   #
   # ID regular points if desired
   if (parms$pts$id$reg) {
-    plts$var <- plts$var + ggrepel::geom_text_repel(
-      data = df[df$outlier == "reg", ],
-      ggplot2::aes(x = .fits, y = .resid, label = .id),
-      color = parms$pts$colr$reg,
-      size = parms$pts$csz
-    )
+    df.reg <- df[df$outlier == "reg", , drop = FALSE]
+    plts$var <- plts$var +
+      ggrepel::geom_text_repel(
+        data = df.reg,
+        ggplot2::aes(x = df.reg$.fits,
+                     y = df.reg$.resid,
+                     label = df.reg$.id),
+        color = parms$pts$colr$reg,
+        size = parms$pts$csz
+      )
   }
   #
   # Return variance results

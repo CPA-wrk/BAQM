@@ -22,16 +22,17 @@
 #' mdl <- lm(Sepal.Length ~ Sepal.Width, data = iris)
 #' summary(mdl)
 #' summary(mdl, options = c("correlation", "fits"))
-print.summary.lm <- function (x,
-                              digits = max(5, getOption("digits") - 2),
-                              symbolic.cor = NULL,
-                              signif.stars = getOption("show.signif.stars"),
-                              options = NULL,
-                              na.print = "",
-                              eps = .Machine$double.eps,
-                              ...) {
+print.summary.lm <- function(x,
+                             digits = max(5, getOption("digits") - 2),
+                             symbolic.cor = NULL,
+                             signif.stars = getOption("show.signif.stars"),
+                             options = NULL,
+                             na.print = "",
+                             eps = .Machine$double.eps,
+                             ...) {
   # Copyright 2025, Peter Lert, All rights reserved.
-  # Print a summary of an lm object
+  #
+  # Method to print a more detailed summary of an lm object
   #
   # Printing the summary of an lm object
   # Always print the following tables (in order):
@@ -89,8 +90,10 @@ print.summary.lm <- function (x,
     r.x <- sort(structure(c(
       stats::quantile(res, names = FALSE), mean(res)
     ), names = nms))
-    r.fmtd <- sapply(r.x, format, digits = r.digits,
-                     nsmall = 0, big.mark = ",", scientific = r.scipen)
+    r.fmtd <- sapply(r.x, format,
+      digits = r.digits,
+      nsmall = 0, big.mark = ",", scientific = r.scipen
+    )
     if (r.digits > 2 && !is.null(i <- grep("e-", r.fmtd))) {
       r.fmtd[i] <- format(r.x[i], digits = 2, scientific = r.scipen)
     }
@@ -98,16 +101,22 @@ print.summary.lm <- function (x,
       r.fmtd[i] <- paste0("<", format(res_df * eps, digits = 1))
     }
     r.fmtd <- format(rbind(names(r.fmtd), r.fmtd), justify = "c")
-    dimnames(r.fmtd) <- list(c("Summary of", "Residuals:"),
-                              rep(" ", ncol(r.fmtd)))
+    dimnames(r.fmtd) <- list(
+      c("Summary of", "Residuals:"),
+      rep(" ", ncol(r.fmtd))
+    )
   } else if (res_df > 0) {
-    r.fmtd <- format(res, digits = r.digits,
-                     nsmall = 0, big.mark = ",", scientific = r.scipen)
+    r.fmtd <- format(res,
+      digits = r.digits,
+      nsmall = 0, big.mark = ",", scientific = r.scipen
+    )
   }
   if (is.null(r.fmtd)) {
-    cat("ALL",
-        x$df[1],
-        "residuals are 0: no residual degrees of freedom!\n")
+    cat(
+      "ALL",
+      x$df[1],
+      "residuals are 0: no residual degrees of freedom!\n"
+    )
   } else {
     print.default(r.fmtd, quote = FALSE, print.gap = 1)
   }

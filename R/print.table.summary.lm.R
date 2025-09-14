@@ -28,20 +28,23 @@
 #' mdl <- lm(Sepal.Length ~ Sepal.Width, data = iris)
 #' sumry <- summary(mdl)
 #' print(sumry$coefficients)
-print.table.summary.lm <- function (x,
-                                    digits = max(4, getOption("digits") - 2),
-                                    quote = FALSE,
-                                    na.print = "",
-                                    zero.print = "0",
-                                    right = TRUE,
-                                    justify = "right",
-                                    signif.stars = getOption("show.signif.stars"),
-                                    eps = .Machine$double.eps,
-                                    nsmall = 4,
-                                    prnt.lgnd = c("coefficients"),
-                                    dig.test = max(1, min(5, digits - 2)),
-                                    ...) {
+print.table.summary.lm <- function(x,
+                                   digits = max(4, getOption("digits") - 2),
+                                   quote = FALSE,
+                                   na.print = "",
+                                   zero.print = "0",
+                                   right = TRUE,
+                                   justify = "right",
+                                   signif.stars = getOption("show.signif.stars"),
+                                   eps = .Machine$double.eps,
+                                   nsmall = 4,
+                                   prnt.lgnd = c("coefficients"),
+                                   dig.test = max(1, min(5, digits - 2)),
+                                   ...) {
   # Copyright 2025, Peter Lert, All rights reserved.
+  #
+  # Method to print a table component of an lm object summary
+  #
   tbl_nm <- sub(".summary.lm", "", grep("summary.lm", class(x), value = TRUE))
   tbl_nm <- tbl_nm[!tbl_nm %in% "table"]
   t.mat <- as.matrix(x)
@@ -66,25 +69,31 @@ print.table.summary.lm <- function (x,
     # Format top level summary regression statistics
     if (tbl_nm %in% "stats") {
       s.cols <- c("R-Squared", "Adj-R2", "MAPE")
-      for (nm in  nms[i.pval])
+      for (nm in nms[i.pval]) {
         t.fmtd[, nm] <-
           format.pval(t.mat[, nm], digits = dig.test, eps = eps)
-      for (nm in  nms[nms %in% s.cols])
+      }
+      for (nm in nms[nms %in% s.cols]) {
         t.fmtd[, nm] <- format(t.mat[, nm], digits = digits, nsmall = nsmall)
-      for (nm in nms[!nms %in% c(nms[i.pval], s.cols)])
+      }
+      for (nm in nms[!nms %in% c(nms[i.pval], s.cols)]) {
         t.fmtd[, nm] <- format(t.mat[, nm], digits = digits)
+      }
       t.fmtd <- cbind(paste(nms, "="), as.character(t.fmtd[1, ]))
       t.grpd <- cbind(t.fmtd[1:3, ], t.fmtd[4:6, ], t.fmtd[7:9, ])
-      for (i in 1:6)
+      for (i in 1:6) {
         t.grpd[, i] <- format(t.grpd[, i], justify = c("r", "l")[1 + (i %% 2)])
-      c.nms <- c("Fit",
-                 "Value",
-                 "Performance  ",
-                 "Measure",
-                 "Err(Resids)",
-                 "Metric")
+      }
+      c.nms <- c(
+        "Fit",
+        "Value",
+        "Performance  ",
+        "Measure",
+        "Err(Resids)",
+        "Metric"
+      )
       # Generate significance stars for F-stat p-value, and legend
-      if (signif.stars)
+      if (signif.stars) {
         for (i.p in i.pval) {
           ij.p <- c((i.p - 1) %% 3 + 1, (i.p - 1) %/% 3 + 2)
           strs <- rep("   ", 3)
@@ -105,27 +114,33 @@ print.table.summary.lm <- function (x,
           t.grpd[, ij.p[2]] <- paste(t.grpd[, ij.p[2]], strs)
           c.nms[ij.p[2]] <- paste(c.nms[ij.p[2]], "   ")
         }
+      }
       # reformat into 3 columns
       t.grpd <- cbind(t.grpd[, 1:2], t.grpd[, 3:4], t.grpd[, 5:6])
       c.nms <- c(c.nms[1:2], c.nms[3:4], c.nms[5:6])
       t.fmtd <- matrix(t.grpd[, -1],
-                       nrow = 3,
-                       dimnames = list(t.grpd[, 1], c.nms[-1]))
+        nrow = 3,
+        dimnames = list(t.grpd[, 1], c.nms[-1])
+      )
     } else {
       # Format Coefficients or ANOVA tables
       i.tval <- which(substr(nms, 1, 3) %in% c("t-s", "t v"))
-      for (nm in nms[i.tval])
+      for (nm in nms[i.tval]) {
         t.fmtd[, nm] <-
           format(round(t.mat[, nm], digits = dig.test + 1),
-                 digits = digits,
-                 eps = eps)
-      for (nm in nms[i.pval])
+            digits = digits,
+            eps = eps
+          )
+      }
+      for (nm in nms[i.pval]) {
         t.fmtd[, nm] <-
           format.pval(t.mat[, nm], digits = dig.test, eps = eps)
-      for (nm in nms[!nms %in% nms[c(i.pval, i.tval)]])
+      }
+      for (nm in nms[!nms %in% nms[c(i.pval, i.tval)]]) {
         t.fmtd[, nm] <- format(t.mat[, nm], digits = digits, justify = justify)
+      }
       t.fmtd[is.na(t.mat)] <- NA
-      if (signif.stars)
+      if (signif.stars) {
         for (i.p in i.pval) {
           sig <- stats::symnum(
             t.mat[, nms[i.p]],
@@ -144,6 +159,7 @@ print.table.summary.lm <- function (x,
           t.fmtd[i, nms[i.p]] <- paste(t.fmtd[i, nms[i.p]], sig[i])
           colnames(t.fmtd)[i.p] <- paste(colnames(t.fmtd)[i.p], "   ")
         }
+      }
     }
   }
   print.default(
@@ -156,12 +172,14 @@ print.table.summary.lm <- function (x,
   #
   if (nrow(t.note) > 0) {
     p.note <- t.note
-    if (!tbl_nm %in% prnt.lgnd)
+    if (!tbl_nm %in% prnt.lgnd) {
       p.note <- p.note[!rownames(p.note) %in% "Signif.Levels", ]
-    if (length(p.note) > 0)
+    }
+    if (length(p.note) > 0) {
       print.default(matrix(p.note, dimnames = list(paste0(
         rownames(p.note), ": "
       ), "")), quote = FALSE)
+    }
     attr(x, "note") <- t.note
   }
   invisible(x)

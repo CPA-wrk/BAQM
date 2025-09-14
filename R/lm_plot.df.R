@@ -48,6 +48,15 @@ lm_plot.df <- function(mdl) {
     level = 0.95,
     se.fit = TRUE
   ))
+  # .cooksd	    Cooks distance
+  # .fits	      Fitted or predicted value
+  # .hat	      Diagonal of the hat matrix = Leverage
+  # .resid	    The difference between observed and fitted values
+  # .se.fit	    Standard errors of fitted values
+  # .stud.resid	Studentized residuals
+  # .std.resid	Standardised residuals
+  # .lower.pi	  Lower bound on interval for fitted values
+  # .upper.pi	  Upper bound on interval for fitted values
   df <- data.frame(
     .id = names(mdl$residuals),
     .sequence = 1:length(mdl$residuals),
@@ -58,22 +67,14 @@ lm_plot.df <- function(mdl) {
     .std.resid = stats::rstandard(mdl, infl = infl),
     .stud.resid = stats::rstudent(mdl, infl = infl),
     structure(cbind(
-      pred$fit[, -1], infl.msrs$infmat[, c("cook.d", "hat")]), dimnames = list(
-        NULL, c(".lower.pi", ".upper.pi", ".cooksd", ".hat")
-      )),
+      pred$fit[, -1], infl.msrs$infmat[, c("cook.d", "hat")]
+    ), dimnames = list(
+      NULL, c(".lower.pi", ".upper.pi", ".cooksd", ".hat")
+    )),
     structure(infl.msrs$is.inf[, c("cook.d", "hat")], dimnames = list(
       NULL, c(".cooksd.is.infl", ".hat.is.infl")
     ))
   )
-  # .cooksd	    Cooks distance
-  # .fits	      Fitted or predicted value
-  # .hat	      Diagonal of the hat matrix = Leverage
-  # .resid	    The difference between observed and fitted values
-  # .se.fit	    Standard errors of fitted values
-  # .stud.resid	Studentized residuals
-  # .std.resid	Standardised residuals
-  # .lower.pi	  Lower bound on interval for fitted values
-  # .upper.pi	  Upper bound on interval for fitted values
   #
   # Theoretical normal quantile
   df$.quantile <- stats::qqnorm(y = df$.resid, plot.it = FALSE)$x

@@ -1,6 +1,6 @@
 #' General Purpose Internal Utility Functions
 #'
-#' This file contains a set of small, general-purpose helper functions used internally throughout the package. They cover data cleaning, vector and attribute manipulation, file name parsing, formatting, and basic statistical utilities. Most functions are designed for convenience and package-internal use, but some may be useful for end users.
+#' This file contains a set of small, general-purpose helper functions used internally throughout the package. They cover data cleaning, vector and attribute manipulation, file name parsing, formatting, and basic statistical utilities. These functions are designed for convenience and package-internal use, and are not exported for direct use by package users.
 #' The final function contains code for the examples used in the package README file.
 #'
 #' Functions included:
@@ -35,7 +35,7 @@
 #' pr(10000)
 #' trim("  text  ")
 #' file_ext("foo.bar.txt")
-#' outlier(c(1,2,3,100))
+#' outlier(c(1, 2, 3, 100))
 #'
 #' @name tools.R
 #' @author Peter Lert
@@ -46,7 +46,7 @@
 # Copyright 2025, Peter Lert, All rights reserved.
 char2dt <- function(chr, d = "/") {
   if (!is.na(dt <-
-             as.Date(chr, format = paste("%m", "%d", "%Y", sep = d)))[1]) {
+    as.Date(chr, format = paste("%m", "%d", "%Y", sep = d)))[1]) {
     dt
   } else {
     as.Date(chr)
@@ -62,16 +62,18 @@ is.ok <- function(x) {
   if (is.list(x)) {
     return(any(!is.na(x)))
   }
-  if (is.numeric(x))
+  if (is.numeric(x)) {
     any(is.finite(x))
-  else
+  } else {
     any(!is.na(x))
+  }
 }
 if.ok <- function(x, def = 0) {
-  if (is.ok(x))
+  if (is.ok(x)) {
     x
-  else
+  } else {
     def
+  }
 }
 if.na <- function(x, def = NA) {
   ifelse(!is.na(x), x, def)
@@ -86,8 +88,9 @@ attrs_get <- function(x) {
   attributes(x)[names(attributes(x)) %notof% c("names", "row.names", "class", "dim", "dimnames", "tsp")]
 }
 attrs_add <- function(x, attrs) {
-  for (nm in names(attrs))
+  for (nm in names(attrs)) {
     attr(x, nm) <- attrs[[nm]]
+  }
   x
 }
 hd <- function(tbl, n = 30L) {
@@ -107,12 +110,16 @@ rpt_space <- function(loc, last.col = 15) {
   }
 }
 trim <- function(s) {
-  s <- sub(pattern = "^ +",
-           replacement = "",
-           x = s)
-  s <- sub(pattern = " +$",
-           replacement = "",
-           x = s)
+  s <- sub(
+    pattern = "^ +",
+    replacement = "",
+    x = s
+  )
+  s <- sub(
+    pattern = " +$",
+    replacement = "",
+    x = s
+  )
   s
 }
 file_ext <- function(fil, n = 2) {

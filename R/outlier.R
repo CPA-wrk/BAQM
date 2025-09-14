@@ -15,11 +15,19 @@
 #' outlier(vals, rpt = TRUE)
 #'
 #' @export
-outlier <- function(x, rpt = FALSE) {
+outlier <- function(x,
+                    rpt = FALSE) {
+  # Copyright 2025, Peter Lert, All rights reserved.
+  #
+  # Identify possible outliers in numeric vector x using boxplot heuristic
+  #
+  # x: numeric vector
+  #
   q <- stats::quantile(x, probs = c(0.25, 0.75), na.rm = TRUE)
   lims <- q + c(-1.5, 1.5) * (q[2] - q[1])
   names(lims) <- c("lower", "upper")
-  if (rpt)
+  if (rpt) {
     return(lims)
+  }
   (x < lims[1] | x > lims[2])
 }

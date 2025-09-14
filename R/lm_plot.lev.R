@@ -65,11 +65,9 @@ lm_plot.lev <- function(mdl,
   parms$cook$cont <- data.frame(parms$cook$cont)
   #
   plts$lev <- ggplot2::ggplot(df) +
-    ggplot2::aes(x = .hat, y = .std.resid)  +
-    #
+    ggplot2::aes(x = df$.hat, y = df$.std.resid) +
     # PLot axis labels
     ggplot2::labs(x = "Leverage", y = "Standard Residual") +
-    #
     # Highlight axes within frame
     ggplot2::geom_hline(
       colour = "white",
@@ -120,36 +118,48 @@ lm_plot.lev <- function(mdl,
     )
   #
   # Add loess line
-  if (parms$opt$cook.loess)
+  if (parms$opt$cook.loess) {
     plts$lev <- plts$lev +
-    ggplot2::geom_smooth(
-      linetype = parms$lins$ltyp,
-      se = FALSE,
-      method = "loess",
-      formula = y ~ x,
-      color = parms$lins$colr$lev,
-      linewidth = parms$lins$size
-    )
+      ggplot2::geom_smooth(
+        linetype = parms$lins$ltyp,
+        se = FALSE,
+        method = "loess",
+        formula = y ~ x,
+        color = parms$lins$colr$lev,
+        linewidth = parms$lins$size
+      )
+  }
   #
   # ID large(Cook's Distance) points if desired
   if (parms$pts$id$cook &&
       is.ok(i_d <- which(abs(df$.cooksd) >= min(abs(parms$cook$level))))) {
+    df.i_d <- df[i_d, , drop = FALSE]
     plts$lev <- plts$lev +
       ggrepel::geom_text_repel(
-        data = df[i_d, ],
-        ggplot2::aes(x = .hat, y = .std.resid, label = .id),
+        data = df.i_d,
+        ggplot2::aes(
+          x = df.i_d$.hat,
+          y = df.i_d$.std.resid,
+          label = df.i_d$.id
+        ),
         color = parms$pts$colr$cook,
         size = parms$pts$csz
       )
-  } else
+  } else {
     i_d <- 0
+  }
   #
-  # ID outlier points if desired
+  # ID outlier points not large(Cook's Distance) if desired
   if (parms$pts$id$outl) {
     i_out <- which(df$outlier == "outl")
+    df.outl <- df[i_out[!i_out %in% i_d], , drop = FALSE]
     plts$lev <- plts$lev + ggrepel::geom_text_repel(
-      data = df[i_out[!i_out %in% i_d], ],
-      ggplot2::aes(x = .hat, y = .std.resid, label = .id),
+      data = df.outl,
+      ggplot2::aes(
+        x = df.outl$.hat,
+        y = df.outl$.std.resid,
+        label = df.outl$.id
+      ),
       color = parms$pts$colr$outl,
       size = parms$pts$csz
     )
@@ -158,12 +168,18 @@ lm_plot.lev <- function(mdl,
   # ID regular points if desired
   if (parms$pts$id$reg) {
     i_reg <- which(df$outlier == "reg")
-    plts$lev <- plts$lev + ggrepel::geom_text_repel(
-      data = df[i_reg[!i_reg %in% i_d], ],
-      ggplot2::aes(x = .hat, y = .std.resid, label = .id),
-      color = parms$pts$colr$reg,
-      size = parms$pts$csz
-    )
+    df.reg <- df[i_reg[!i_reg %in% i_d], , drop = FALSE]
+    plts$lev <- plts$lev +
+      ggrepel::geom_text_repel(
+        data = df.reg,
+        ggplot2::aes(
+          x = df.reg$.hat,
+          y = df.reg$.std.resid,
+          label = df.reg$.id
+        ),
+        color = parms$pts$colr$reg,
+        size = parms$pts$csz
+      )
   }
   #
   # Add CooksD legend
@@ -194,25 +210,26 @@ lm_plot.lev <- function(mdl,
   # Plot Cook's distance contours
   tbl <- list()
   for (d_nm in names(parms$cook$labl)) {
-    tbl[[d_nm]] <- data.frame(.hat = parms$cook$cont$x,
-                              .std.resid = parms$cook$cont[[d_nm]])
-    i_cont <- which(tbl[[d_nm]]$.std.resid >= lim["min", "y"] &
-                      tbl[[d_nm]]$.std.resid <= lim["max", "y"])
-    if (length(i_cont) <= 1)
+    tbl[[d_nm]] <- t_nm <- data.frame(.hat = parms$cook$cont$x,
+                                      .std.resid = parms$cook$cont[[d_nm]])
+    i_cont <- which(t_nm$.std.resid >= lim["min", "y"] &
+                      t_nm$.std.resid <= lim["max", "y"])
+    if (length(i_cont) <= 1) {
       # next
-      tbl[[d_nm]] <- tbl[[d_nm]][i_cont, ]
+      tbl[[d_nm]] <- t_nm <- t_nm[i_cont, ]
+    }
     k_mid <- ceiling(length(i_cont) / 2)
-    plts$lev <- plts$lev  +
+    plts$lev <- plts$lev +
       ggplot2::geom_line(
-        data = tbl[[d_nm]],
-        ggplot2::aes(x = .hat, y = .std.resid),
+        data = t_nm,
+        ggplot2::aes(x = t_nm$.hat, y = t_nm$.std.resid),
         linetype = parms$cook$ltyp,
         linewidth = parms$lins$size,
         color = parms$lins$colr$cook
       ) +
       ggplot2::geom_text(
-        x = tbl[[d_nm]]$.hat[k_mid],
-        y = tbl[[d_nm]]$.std.resid[k_mid],
+        x = t_nm$.hat[k_mid],
+        y = t_nm$.std.resid[k_mid],
         label = parms$cook$labl[d_nm],
         hjust = 0,
         vjust = ifelse(parms$cook$level[[d_nm]] < 0, 1, 0),

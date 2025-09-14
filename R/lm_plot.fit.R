@@ -47,26 +47,28 @@ lm_plot.fit <- function(mdl,
   # Plot Fitted vs. Observed
   note_fit <- "y = x"
   plts$fit <- ggplot2::ggplot(data = df) +
-    ggplot2::aes(x = .fits, y = .obs) +
+    ggplot2::aes(x = df$.fits, y = df$.obs) +
     #
     # PLot axis labels
     ggplot2::labs(x = "Fitted Value", y = "Observed Value")
   #
   # Highlight axes, if within frame
-  if (prod(sign(lim$y)) %in% -1)
+  if (prod(sign(lim$y)) %in% -1) {
     plts$fit <- plts$fit +
-    ggplot2::geom_hline(
-      color = "white",
-      linewidth = parms$lins$size_lg,
-      yintercept = 0
-    )
-  if (prod(sign(lim$x)) %in% -1)
+      ggplot2::geom_hline(
+        color = "white",
+        linewidth = parms$lins$size_lg,
+        yintercept = 0
+      )
+  }
+  if (prod(sign(lim$x)) %in% -1) {
     plts$fit <- plts$fit +
-    ggplot2::geom_vline(
-      color = "white",
-      linewidth = parms$lins$size_lg,
-      xintercept = 0
-    )
+      ggplot2::geom_vline(
+        color = "white",
+        linewidth = parms$lins$size_lg,
+        xintercept = 0
+      )
+  }
   #
   # Plot points - vary color & shape for normal/outlier points
   plts$fit <- plts$fit +
@@ -109,7 +111,7 @@ lm_plot.fit <- function(mdl,
   plts$fit <- plts$fit +
     ggplot2::geom_line(
       data = lim,
-      ggplot2::aes(x = x, y = x),
+      ggplot2::aes(x = lim$x, y = lim$x),
       linetype = parms$lins$ltyp,
       color = parms$lins$colr$fit,
       linewidth = parms$lins$size
@@ -122,7 +124,7 @@ lm_plot.fit <- function(mdl,
       ggplot2::scale_y_continuous(expand = c(0, 0)) +
       ggplot2::geom_smooth(
         data = p.int,
-        ggplot2::aes(x = .fits, y = .upper.pi),
+        ggplot2::aes(x = p.int$.fits, y = p.int$.upper.pi),
         method = "loess",
         formula = y ~ x,
         color = parms$lins$colr$fit,
@@ -130,7 +132,7 @@ lm_plot.fit <- function(mdl,
       ) +
       ggplot2::geom_smooth(
         data = p.int,
-        ggplot2::aes(x = .fits, y = .lower.pi),
+        ggplot2::aes(x = p.int$.fits, y = p.int$.lower.pi),
         method = "loess",
         formula = y ~ x,
         color = parms$lins$colr$fit,
@@ -140,19 +142,30 @@ lm_plot.fit <- function(mdl,
   #
   # ID outlier points if desired
   if (parms$pts$id$outl) {
-    plts$fit <- plts$fit + ggrepel::geom_text_repel(
-      data = df[df$outlier == "outl", ],
-      ggplot2::aes(x = .fits, y = .obs, label = .id),
-      color = parms$pts$colr$outl,
-      size = parms$pts$csz
-    )
+    df.outl <- df[df$outlier == "outl", ]
+    plts$fit <- plts$fit +
+      ggrepel::geom_text_repel(
+        data = df.outl,
+        ggplot2::aes(
+          x = df.outl$.fits,
+          y = df.outl$.obs,
+          label = df.outl$.id
+        ),
+        color = parms$pts$colr$outl,
+        size = parms$pts$csz
+      )
   }
   #
   # ID regular points if desired
   if (parms$pts$id$reg) {
+    df.reg <- df[df$outlier == "reg", ]
     plts$fit <- plts$fit + ggrepel::geom_text_repel(
-      data = df[df$outlier == "reg", ],
-      ggplot2::aes(x = .fits, y = .obs, label = .id),
+      data = df.reg,
+      ggplot2::aes(
+        x = df.reg$.fits,
+        y = df.reg$.obs,
+        label = df.reg$.id
+      ),
       color = parms$pts$colr$reg,
       size = parms$pts$csz
     )

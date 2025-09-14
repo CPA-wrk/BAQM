@@ -56,13 +56,12 @@ lm_plot.infl <- function(mdl,
   infl_lims <- outlier(df$.stud.resid, rpt = TRUE)
   #
   df$.attn <- ifelse(df$.stud.outl == "infl",
-                     "infl",
-                     ifelse(df$outlier == "outl", "outl", "reg"))
+    "infl",
+    ifelse(df$outlier == "outl", "outl", "reg")
+  )
   # Plot of studentized residuals vs sequence
   plts$infl <- ggplot2::ggplot(data = df) +
-    #
-    ggplot2::aes(x = .sequence, y = .stud.resid) +
-    #
+    ggplot2::aes(x = df$.sequence, y = df$.stud.resid) +
     # Plot axis labels
     ggplot2::labs(x = "Sequence", y = "Studentized Residual") +
     # Highlight axes within frame
@@ -74,12 +73,14 @@ lm_plot.infl <- function(mdl,
   #
   # Drop lines for influence measure
   plts$infl <- plts$infl +
-    ggplot2::geom_segment(ggplot2::aes(
-      xend = .sequence,
-      yend = 0,
-      color = .attn
-    ),
-    show.legend = FALSE) +
+    ggplot2::geom_segment(
+      ggplot2::aes(
+        xend = df$.sequence,
+        yend = 0,
+        color = df$.attn
+      ),
+      show.legend = FALSE
+    ) +
     ggplot2::scale_color_manual(values = c(
       outl = parms$pts$colr$outl,
       infl = parms$pts$colr$infl,
@@ -87,19 +88,20 @@ lm_plot.infl <- function(mdl,
     ))
   #
   # ID outlier and influential points if requested
+  df.reg <- df[df$.attn == "reg", , drop = FALSE]
   plts$infl <- plts$infl +
-    ggrepel::geom_text_repel(
-      data = df[df$.attn != "reg", , drop = FALSE],
-      ggplot2::aes(
-        x = .sequence,
-        y = .stud.resid,
-        label = .id,
-        color = .attn
-      ),
-      nudge_y = -sign(df$.stud.resid) * df$offp_y,
-      size = parms$pts$csz,
-      show.legend = FALSE
-    )
+  ggrepel::geom_text_repel(
+    data = df.reg,
+    ggplot2::aes(
+      x = df.reg$.sequence,
+      y = df.reg$.stud.resid,
+      label = df.reg$.id,
+      color = df.reg$.attn
+    ),
+    nudge_y = -sign(df.reg$.stud.resid) * offp_y,
+    size = parms$pts$csz,
+    show.legend = FALSE
+  )
   if (any(df$outlier %in% "outl")) {
     #
     # Add legend for outliers

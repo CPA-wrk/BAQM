@@ -1,4 +1,3 @@
-
 #' Plot Residuals vs. Observation Order (Autocorrelation Check)
 #'
 #' Creates a plot of residuals against the sequence/order of observations to visually
@@ -43,16 +42,21 @@ lm_plot.ac <- function(mdl,
   parms <- lm_plot.parms(parms)
   #
   # Assure data
-  if (!is.ok(df))
+  if (!is.ok(df)) {
     df <- data.frame(.resid = stats::residuals(mdl))
-  if (!is.ok(df$.resid))
+  }
+  if (!is.ok(df$.resid)) {
     df$.resid <- stats::residuals(mdl)
-  if (!is.ok(df$.id))
+  }
+  if (!is.ok(df$.id)) {
     df$.id <- row.names(mdl$model)
-  if (!is.ok(df$outlier))
+  }
+  if (!is.ok(df$outlier)) {
     df$outlier <- ifelse(outlier(df$.resid), "outl", "reg")
-  if (!is.ok(df$.sequence))
+  }
+  if (!is.ok(df$.sequence)) {
     df$.sequence <- 1:nrow(df)
+  }
   #
   # Find x, y limits for placing elements
   lim <- data.frame(
@@ -63,7 +67,7 @@ lm_plot.ac <- function(mdl,
   #
   # Plot of Residuals vs order
   plts$ac <- ggplot2::ggplot(data = df) +
-    ggplot2::aes(x = .sequence, y = .resid) +
+    ggplot2::aes(x = df$.sequence, y = df$.resid) +
     #
     # PLot axis labels
     ggplot2::labs(x = "Order", y = "Residual") +
@@ -75,13 +79,14 @@ lm_plot.ac <- function(mdl,
       yintercept = 0
     )
   #
-  if (prod(sign(lim$x)) %in% -1)
+  if (prod(sign(lim$x)) %in% -1) {
     plts$ac <- plts$ac +
-    ggplot2::geom_vline(
-      color = "white",
-      linewidth = parms$lins$size_lg,
-      xintercept = 0
-    )
+      ggplot2::geom_vline(
+        color = "white",
+        linewidth = parms$lins$size_lg,
+        xintercept = 0
+      )
+  }
   #
   # Plot points - vary color & shape for normal/outlier points
   plts$ac <- plts$ac +
@@ -130,9 +135,14 @@ lm_plot.ac <- function(mdl,
   #
   # ID outlier points if desired
   if (parms$pts$id$outl) {
+    df.outl <- df[df$outlier == "outl", , drop = FALSE]
     plts$ac <- plts$ac + ggrepel::geom_text_repel(
-      data = df[df$outlier == "outl", ],
-      ggplot2::aes(x = .quantile, y = .resid, label = .id),
+      data = df.outl,
+      ggplot2::aes(
+        x = df.outl$.quantile,
+        y = df.outl$.resid,
+        label = df.outl$.id
+      ),
       color = parms$pts$colr$outl,
       size = parms$pts$csz
     )
@@ -140,9 +150,14 @@ lm_plot.ac <- function(mdl,
   #
   # ID regular points if desired
   if (parms$pts$id$reg) {
+    df.reg <- df[df$.attn == "reg", , drop = FALSE]
     plts$ac <- plts$ac + ggrepel::geom_text_repel(
-      data = df[df$outlier == "reg", ],
-      ggplot2::aes(x = .quantile, y = .resid, label = .id),
+      data = df.reg,
+      ggplot2::aes(
+        x = df.reg$.quantile,
+        y = df.reg$.resid,
+        label = df.reg$.id
+      ),
       color = parms$pts$colr$reg,
       size = parms$pts$csz
     )
@@ -153,8 +168,10 @@ lm_plot.ac <- function(mdl,
   #
   # Add Durbin-Watson autocorrelation test p-value if desired
   if (parms$opt$pval.DW) {
-    note_ac <- paste0("Autocorrelation: DW p-val=",
-                      round(parms$ac$DW$p.value, 4))
+    note_ac <- paste0(
+      "Autocorrelation: DW p-val=",
+      round(parms$ac$DW$p.value, 4)
+    )
     plts$ac <- plts$ac +
       ggplot2::annotate(
         "text",

@@ -32,8 +32,7 @@
 #' mdl <- lm(Sepal.Length ~ Sepal.Width + Petal.Length, data = iris)
 #' sumry <- summary(mdl)
 #' sumry
-summary.lm <- function (object, ...)
-{
+summary.lm <- function(object, ...) {
   # Copyright 2025, Peter Lert, All rights reserved.
   #
   z <- object
@@ -47,8 +46,10 @@ summary.lm <- function (object, ...)
       lapply(names(levels), function(xvar, levels) {
         x <- levels[[xvar]]
         if (length(x) > 1) {
-          xvars <- data.frame(old = paste0(xvar, x),
-                              new = paste(xvar, x, sep = "_"))
+          xvars <- data.frame(
+            old = paste0(xvar, x),
+            new = paste(xvar, x, sep = "_")
+          )
         } else {
           xvars <- data.frame(old = paste0(xvar, x), new = paste0(xvar, x))
         }
@@ -76,14 +77,14 @@ summary.lm <- function (object, ...)
     w <- z$weights
     if (is.null(w)) {
       rss <- sum(r^2)
-    }
-    else {
+    } else {
       rss <- sum(w * r^2)
       r <- sqrt(w) * r
     }
     resvar <- rss / rdf
-    ans <- z[c("call", "terms", if (!is.null(z$weights))
-      "weights")]
+    ans <- z[c("call", "terms", if (!is.null(z$weights)) {
+      "weights"
+    })]
     ans$aliased <- is.na(coeffs)
     ans$residuals <- r
     ans$df <- c(0L, n, length(ans$aliased))
@@ -92,17 +93,23 @@ summary.lm <- function (object, ...)
     ans$cov.unscaled <- matrix(NA_real_, 0L, 0L)
     ans$correlation <- ans$cov.unscaled
   } else {
-    if (is.null(z$terms))
+    if (is.null(z$terms)) {
       stop("invalid 'lm' object:  no 'terms' component")
-    if (!inherits(object, "lm"))
+    }
+    if (!inherits(object, "lm")) {
       warning("calling summary.lm(<fake-lm-object>) ...")
+    }
     Qr <- qr(object)
-    if (!is.null(var_trans))
+    if (!is.null(var_trans)) {
       colnames(Qr$qr) <- var_trans$new[match(colnames(Qr$qr), var_trans$old)]
+    }
     n <- NROW(Qr$qr)
-    if (is.na(z$df.residual) || n - p != z$df.residual)
-      warning("residual degrees of freedom in object",
-              "suggest this is not an \"lm\" fit")
+    if (is.na(z$df.residual) || n - p != z$df.residual) {
+      warning(
+        "residual degrees of freedom in object",
+        "suggest this is not an \"lm\" fit"
+      )
+    }
     r <- z$residuals
     f <- z$fitted.values
     obs <- f + r
@@ -111,25 +118,27 @@ summary.lm <- function (object, ...)
     }
     w <- z$weights
     if (is.null(w)) {
-      mss <- if (attr(z$terms, "intercept"))
+      mss <- if (attr(z$terms, "intercept")) {
         sum((f - mean(f))^2)
-      else
+      } else {
         sum(f^2)
+      }
       rss <- sum(r^2)
     } else {
       mss <- if (attr(z$terms, "intercept")) {
         m <- sum(w * f / sum(w))
         sum(w * (f - m)^2)
-      }
-      else
+      } else {
         sum(w * f^2)
+      }
       rss <- sum(w * r^2)
       r <- sqrt(w) * r
     }
     resvar <- rss / rdf
     if (is.finite(resvar) &&
-        resvar < (mean(f)^2 + stats::var(c(f))) * 1e-30)
+      resvar < (mean(f)^2 + stats::var(c(f))) * 1e-30) {
       warning("essentially perfect fit: summary may be unreliable")
+    }
     p1 <- 1:p
     R <- chol2inv(Qr$qr[p1, p1, drop = FALSE])
     se <- sqrt(diag(R) * resvar)
@@ -137,19 +146,22 @@ summary.lm <- function (object, ...)
     tval <- est / se
     #
     # Build summary object to return
-    ans <- z[c("call", "terms", if (!is.null(z$weights))
-      "weights")]
+    ans <- z[c("call", "terms", if (!is.null(z$weights)) {
+      "weights"
+    })]
     ans$residuals <- r
     ans$sigma <- sqrt(resvar)
     ans$aliased <- is.na(coeffs)
     ans$df <- c(p, rdf, NCOL(Qr$qr))
-    if (!is.null(z$na.action))
+    if (!is.null(z$na.action)) {
       ans$na.action <- z$na.action
+    }
     if (p != attr(z$terms, "intercept")) {
-      df.int <- if (attr(z$terms, "intercept"))
+      df.int <- if (attr(z$terms, "intercept")) {
         1L
-      else
+      } else {
         0L
+      }
       ans$r.squared <- mss / (mss + rss)
       ans$adj.r.squared <- 1 - (1 - ans$r.squared) * ((n - df.int) / rdf)
       ans$fstatistic <- c(
@@ -158,13 +170,14 @@ summary.lm <- function (object, ...)
         dendf = rdf
       )
       ans$f.pval <- stats::pf(ans$fstatistic["value"],
-                              ans$fstatistic["numdf"],
-                              ans$fstatistic["dendf"],
-                              lower.tail = FALSE)
+        ans$fstatistic["numdf"],
+        ans$fstatistic["dendf"],
+        lower.tail = FALSE
+      )
       #
       # Build table of fit data
-      ans$fits <-  cbind(obs, f, r)
-      colnames(ans$fits) = c("Obs.Value", "Fit.Value", "Residual")
+      ans$fits <- cbind(obs, f, r)
+      colnames(ans$fits) <- c("Obs.Value", "Fit.Value", "Residual")
       #
       # Build simplified ANOVA table - Sum of squares
       anova_tbl <- stats::anova(z)
@@ -178,9 +191,11 @@ summary.lm <- function (object, ...)
       anova_tbl$Mean.Sum.Sqs <-
         c(anova_tbl$Sum.of.Sqs[1:2] / anova_tbl$Deg.Frdm[1:2], NA)
       anova_tbl$F.statistic <-
-        c(anova_tbl$Mean.Sum.Sqs[1] / anova_tbl$Mean.Sum.Sqs[2],
+        c(
+          anova_tbl$Mean.Sum.Sqs[1] / anova_tbl$Mean.Sum.Sqs[2],
           NA,
-          NA)
+          NA
+        )
       anova_tbl$"p-value(F)" <- c(ans$f.pval, NA, NA)
       ans$anova <- as.matrix(anova_tbl)
       #
@@ -217,7 +232,7 @@ summary.lm <- function (object, ...)
         mean(abs(r)),
         sqrt(mean(r^2))
       )
-      dimnames(ans$stats) = list(
+      dimnames(ans$stats) <- list(
         NULL,
         c(
           "Observations",
@@ -238,8 +253,9 @@ summary.lm <- function (object, ...)
     # Build regression coefficient table with VIFs
     if (length(attr(z$terms, "order")) > 1) {
       m.mat <- as.data.frame(stats::model.matrix(z))
-      if (!is.null(var_trans))
+      if (!is.null(var_trans)) {
         names(m.mat) <- var_trans$new[match(names(m.mat), var_trans$old)]
+      }
       #
       m.mat <- m.mat[!ans$aliased]
       data <- m.mat[names(m.mat)[!names(m.mat) %in% "(Intercept)"]]
@@ -254,8 +270,9 @@ summary.lm <- function (object, ...)
       nms <- names(vif)
       vif[nms] <- lapply(nms, function(xvar, data) {
         xvar.lm <- stats::lm(stats::as.formula(paste(xvar, "~ .")),
-                             data = data,
-                             na.action = stats::na.exclude)
+          data = data,
+          na.action = stats::na.exclude
+        )
         res <- xvar.lm$residuals
         fits <- xvar.lm$fitted.values
         RDF <- xvar.lm$df.residual
@@ -267,23 +284,24 @@ summary.lm <- function (object, ...)
         #
         vif <- 1 / (1 - xvar.r.squared)
         if (is.finite(res.var) &&
-            res.var < (mean(fits)^2 + stats::var(c(fits))) * .Machine$double.eps)
+          res.var < (mean(fits)^2 + stats::var(c(fits))) * .Machine$double.eps) {
           attr(vif, "note") <- matrix(
             "shows essentially perfect collinearity",
             nrow = 1,
             ncol = 1,
             dimnames = list(paste("VIF for", xvar), NULL)
           )
+        }
         vif
       }, data = data)
-      for (nm in names(vif))
+      for (nm in names(vif)) {
         note <- rbind(note, attr(vif[[nm]], "note"))
+      }
       vif <- unlist(vif)
       names(vif) <- names(m.mat)[!names(m.mat) %in% "(Intercept)"]
       vif <- vif[names(m.mat)]
       names(vif) <- names(m.mat)
       vif[!is.finite(vif)] <- NA
-
     } else {
       vif <- rep(NA_real_, length(coeffs))
     }
@@ -296,7 +314,7 @@ summary.lm <- function (object, ...)
     # Build coefficients covariance and correlation tables
     ans$cov.unscaled <- R
     dimnames(ans$cov.unscaled) <- dimnames(ans$coefficients)[c(1, 1)]
-    ans$correlation <-  (R * resvar) / outer(se, se)
+    ans$correlation <- (R * resvar) / outer(se, se)
     dimnames(ans$correlation) <- dimnames(ans$cov.unscaled)
   }
   if (any(aliased <- ans$aliased)) {

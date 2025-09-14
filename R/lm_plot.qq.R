@@ -41,9 +41,10 @@ lm_plot.qq <- function(mdl,
   qqlin <- list(probs = c(0.25, 0.75))
   qqlin$theory <- stats::qnorm(p = qqlin$probs)
   qqlin$resid <- stats::quantile(df$.resid,
-                                 probs = qqlin$probs,
-                                 names = FALSE,
-                                 na.rm = TRUE)
+    probs = qqlin$probs,
+    names = FALSE,
+    na.rm = TRUE
+  )
   qqlin$slope <- diff(qqlin$resid) / diff(qqlin$theory)
   qqlin$int <- qqlin$resid[[1L]] - qqlin$slope * qqlin$theory[[1L]]
   #
@@ -56,7 +57,8 @@ lm_plot.qq <- function(mdl,
   #
   # Q-Q Plot of Residuals
   plts$qq <- ggplot2::ggplot(data = df) +
-    ggplot2::aes(x = .quantile, y = .resid, sample = .resid) +
+    ggplot2::aes(x = df$.quantile,
+                 y = df$.resid) +
     #
     # PLot axis labels
     ggplot2::labs(x = "Theoretical Quantile", y = "Residual") +
@@ -121,28 +123,38 @@ lm_plot.qq <- function(mdl,
   #
   # ID outlier points if desired
   if (parms$pts$id$outl) {
-    plts$qq <- plts$qq + ggrepel::geom_text_repel(
-      data = df[df$outlier == "outl", ],
-      ggplot2::aes(x = .quantile, y = .resid, label = .id),
-      color = parms$pts$colr$outl,
-      size = parms$pts$csz
-    )
+    df.outl <- df[df$outlier == "outl", , drop = FALSE]
+    plts$qq <- plts$qq +
+      ggrepel::geom_text_repel(
+        data = df.outl,
+        ggplot2::aes(x = df.outl$.quantile,
+                     y = df.outl$.resid,
+                     label = df.outl$.id),
+        color = parms$pts$colr$outl,
+        size = parms$pts$csz
+      )
   }
   #
   # ID regular points if desired
   if (parms$pts$id$reg) {
-    plts$qq <- plts$qq + ggrepel::geom_text_repel(
-      data = df[df$outlier == "reg", ],
-      ggplot2::aes(x = .quantile, y = .resid, label = .id),
-      color = parms$pts$colr$reg,
-      size = parms$pts$csz
-    )
+    df.reg <- df[df$outlier == "reg", , drop = FALSE]
+    plts$qq <- plts$qq +
+      ggrepel::geom_text_repel(
+        data = df.reg,
+        ggplot2::aes(x = df.reg$.quantile,
+                     y = df.reg$.resid,
+                     label = df.reg$.id),
+        color = parms$pts$colr$reg,
+        size = parms$pts$csz
+      )
   }
   #
   # Return Q-Q results
-  parms$qq <- list(lim = lim,
-                   qqlin = qqlin,
-                   SW = stats::shapiro.test(df$.resid))
+  parms$qq <- list(
+    lim = lim,
+    qqlin = qqlin,
+    SW = stats::shapiro.test(df$.resid)
+  )
   #
   # Add Shapiro-Wilk normality test p-value if desired
   if (parms$opt$pval.SW) {

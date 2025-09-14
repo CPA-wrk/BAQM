@@ -29,8 +29,7 @@
 stat_desc <- function(data,
                       transpose = FALSE,
                       pad = 2,
-                      opts = list(digits = 4, scipen = 8)
-                      ) {
+                      opts = list(digits = 4, scipen = 8)) {
   # Copyright 2025, Peter Lert, All rights reserved.
   #
   # Summary descriptive statistics for "data" list or data frame
@@ -39,28 +38,33 @@ stat_desc <- function(data,
   #   pad:    integer; number of spaces to pad output table columns
   #   transpose:  logical; if TRUE, return a transposed summary table
   #
-  if (missing(data))
+  if (missing(data)) {
     return()
+  }
   #  Set options for output and save current values to restore later
   opt.input <- options(opts)
   #
   pad <- as.integer(max(pad, 1)) # Ensure pad is at least 1
   #
   # Coerce data to a list as needed
-  if (inherits(data, "data frame"))
+  if (inherits(data, "data frame")) {
     data <- as.list(data)
+  }
   if (!is.list(data)) {
-    aparm <- substitute(data)  # For vector actual parm
+    aparm <- substitute(data) # For vector actual parm
     data <- as.data.frame(data)
     if (ncol(data) == 1) {
       if (inherits(aparm, "name")) {
         names(data) <- deparse(aparm)
-      } else names(data) <- "V1"
+      } else {
+        names(data) <- "V1"
+      }
     }
     data <- as.list(data)
   }
-  if (length(i <- is.null(names(data))) > 0)
-    names(data)[i] <- paste0("V", seq_along(data))[i] # Assign generic names
+  if (length(i <- is.null(names(data))) > 0) {
+    names(data)[i] <- paste0("V", seq_along(data))[i]
+  } # Assign generic names
   #
   # Build summary data for either format in tables by type.
   # Since variables have different scales, the most useful formatting
@@ -76,7 +80,7 @@ stat_desc <- function(data,
   for (nm in names(data)) {
     x.inp <- unlist(data[[nm]])
     x <- x.inp[!is.na(x.inp)]
-    n.val = length(x)
+    n.val <- length(x)
     smry$cnt[[nm]] <- c(
       i.num = ifelse(is.numeric(x.inp), 1, 0),
       n.val = n.val,
@@ -98,8 +102,10 @@ stat_desc <- function(data,
     } else {
       x <- as.factor(x)
       n.f[[nm]] <- length(levels(x)) + 1
-      smry$fctr[[nm]] <- c(n.lvls = n.f[[nm]],
-                           sort(summary(x), decreasing = TRUE))
+      smry$fctr[[nm]] <- c(
+        n.lvls = n.f[[nm]],
+        sort(summary(x), decreasing = TRUE)
+      )
     }
   }
   f.nms <- ""
@@ -107,7 +113,7 @@ stat_desc <- function(data,
     f.n <- length(smry$num[[1]]) - 1
     f.nms <- names(smry$num[[1]])
   } else {
-    f.n <- min(25, max(unlist(n.f)))   # report not more than 25 levels
+    f.n <- min(25, max(unlist(n.f))) # report not more than 25 levels
     f.nms <- c("n.lvls", "Top_1", if (f.n > 1) paste0("Lvl_", 2:f.n) else NULL)
   }
   if (!is.null(smry$fctr)) {
@@ -120,9 +126,11 @@ stat_desc <- function(data,
       width <- max(8, if (!transpose) nchar(c(nm, f.nlvl))) - 1 - nchar(f.cnt)[1]
       # If level names are too long, shorten
       lvls <- abbreviate(names(f.cnt), minlength = width)
-      s_fctr <- c(f.nlvl,
-                  paste0(format(lvls, width = width, justify = "left"), ":", f.cnt),
-                  rep("", f.n - length(f.cnt)))
+      s_fctr <- c(
+        f.nlvl,
+        paste0(format(lvls, width = width, justify = "left"), ":", f.cnt),
+        rep("", f.n - length(f.cnt))
+      )
       names(s_fctr) <- f.nms
       smry$rpt[[nm]] <- c(smry$rpt[[nm]], s_fctr)
     }
@@ -130,8 +138,10 @@ stat_desc <- function(data,
   smry$rpt <- do.call(cbind, smry$rpt)
   smry$rpt <- as.matrix(smry$rpt)
   if (transpose) smry$rpt <- t(smry$rpt)
-  print.default(smry$rpt, right = TRUE,
-                quote = FALSE, na.print = "", print.gap = pad)
+  print.default(smry$rpt,
+    right = TRUE,
+    quote = FALSE, na.print = "", print.gap = pad
+  )
   #
   # restore options
   options(opt.input)
