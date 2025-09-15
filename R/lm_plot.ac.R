@@ -5,22 +5,25 @@
 #' Durbin–Watson test and labels outliers.
 #'
 #' @param mdl A fitted model object (typically from \code{\link[stats]{lm}}).
-#' @param parms A list of plotting and option parameters, usually from \code{lm_plot.parms()}.
-#' @param df An augmented model data frame; if missing, is generated via \code{lm_plot.df(mdl)}.
-#' @param plts A list of existing plots to which this plot will be added.
+#' @param opt List of options, where \code{pval.DW} (logical, default = FALSE) indicates whether to include Durbin-Watson p-value on the plot.
+#' @param parm A list of plotting parameters, usually from \code{lm_plot.parms()}.
+#' @param df Data frame with augmented model data. Defaults to \code{lm_plot.df(mdl)}.
+#' @param plts A list of ggplot objects to which this plot will be added.
 #'
 #' @details
 #' Points are colored and shaped according to whether they are residual outliers
 #' (as determined by Tukey's boxplot rule). The function can label points using
-#' \pkg{ggrepel} if \code{parms$pts$id$outl} or \code{parms$pts$id$reg} are set to \code{TRUE}.
+#' \pkg{ggrepel} if \code{parm$pts$id$outl} or \code{parm$pts$id$reg} are set to \code{TRUE}.
 #'
 #' @return A list containing:
 #' \itemize{
-#'   \item \code{mdl} – the fitted model object,
-#'   \item \code{parms} – the parameter list with autocorrelation test results added,
-#'   \item \code{df} – the data frame used for plotting,
-#'   \item \code{plts} – the plot list with an \code{$ac} ggplot element.
+#'   \item \code{mdl} Fitted model object,
+#'   \item \code{opt} Options used, including \code{pval.DW},
+#'   \item \code{parm} Parameter list with Durbin-Watson test results added,
+#'   \item \code{df} Data frame used for plotting,
+#'   \item \code{plts} List of ggplot objects, including the \code{$ac} element.
 #' }
+
 #'
 #' @examples
 #' \dontrun{

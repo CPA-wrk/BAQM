@@ -2,19 +2,23 @@
 #'
 #' Produces a scatter plot of residuals against fitted values from a linear model, highlighting outlier points and optionally displaying the Breusch-Pagan test p-value for heteroskedasticity.
 #'
-#' @param mdl An object of class \code{lm}, representing the fitted linear model.
-#' @param parms List of plot customization parameters. Passed to \code{lm_plot.parms()}.
+#' @param mdl A fitted model object (typically from \code{\link[stats]{lm}}).
+#' @param opt List of options, where \code{pval.BP} (logical, default = FALSE) indicates whether to include Breusch-Pagan p-value on the plot.
+#' @param parm List of plotting parameters, usually from \code{lm_plot.parms()}.
 #' @param df Data frame with augmented model data. Defaults to \code{lm_plot.df(mdl)}.
-#' @param plts List of ggplot objects to build upon. Defaults to empty list.
+#' @param plts List of ggplot objects to which this plot will be added.
 #'
 #' @details
 #' The plot visualizes residuals versus fitted values to assess homoskedasticity (constant variance). Points are colored and shaped by outlier status, and outlier/regular points can be labeled. If enabled, the Breusch-Pagan test for heteroskedasticity is run and its p-value is annotated on the plot.
 #'
 #' @return A list containing:
-#'   \item{mdl}{The model object}
-#'   \item{parms}{Parameters used for plotting, including Breusch-Pagan test results}
-#'   \item{df}{Data frame used for plotting}
-#'   \item{plts}{A list of ggplot objects, including the variance plot}
+#' \itemize{
+#'   \item \code{mdl} Fitted model object,
+#'   \item \code{opt} Options used, including \code{pval.BP},
+#'   \item \code{parm} Parameter list with Breusch-Pagan test results added,
+#'   \item \code{df} Data frame used for plotting,
+#'   \item \code{plts} List of ggplot objects, including the \code{$var} element.
+#' }
 #'
 #' @seealso \code{\link{lm_plot.df}}, \code{\link{lm_plot.parms}}, \code{\link[lmtest]{bptest}}
 #' @import ggplot2 ggrepel lmtest

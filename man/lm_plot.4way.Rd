@@ -12,7 +12,7 @@ lm_plot.4way(
 )
 }
 \arguments{
-\item{mdl}{A fitted model object (typically from \code{\link[stats]{lm}}) to be analyzed.}
+\item{mdl}{A fitted model object (typically from \code{\link[stats]{lm}}).}
 
 \item{opt}{A named \code{list} of options. Recognized elements include:
 \describe{
@@ -22,6 +22,10 @@ lm_plot.4way(
     Breusch–Pagan, and Durbin–Watson tests in the plots.}
   \item{\code{cook.loess}}{Logical; whether to overlay Cook's distance loess curve.}
 }}
+
+\item{parm}{List of plot formatting parameters (see \code{\link{lm_plot.parms}}).}
+
+\item{plt_nms}{Character vector of which panels to plot. Defaults to fit, var, qq, and ac/infl depending on \code{opt$ts}.}
 }
 \value{
 A \code{ggplot} object representing the 4-way diagnostic panel.

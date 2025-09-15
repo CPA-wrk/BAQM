@@ -13,20 +13,25 @@ lm_plot.infl(
 )
 }
 \arguments{
-\item{mdl}{An object of class \code{lm} or similar, representing the fitted model.}
+\item{mdl}{A fitted model object (typically from \code{\link[stats]{lm}}).}
+
+\item{opt}{List of options (not used).}
+
+\item{parm}{List of plotting parameters, usually from \code{lm_plot.parms()}.}
 
 \item{df}{Data frame with augmented model data. Defaults to \code{lm_plot.df(mdl)}.}
 
-\item{plts}{List of ggplot objects to build upon. Defaults to empty list.}
-
-\item{parms}{List of plot customization parameters. Passed to \code{lm_plot.parms()}.}
+\item{plts}{List of ggplot objects to which this plot will be added.}
 }
 \value{
 A list containing:
-  \item{mdl}{The model object}
-  \item{parms}{Parameters used for plotting}
-  \item{df}{Data frame used for plotting}
-  \item{plts}{A list of ggplot objects, including the influence plot}
+\itemize{
+  \item \code{mdl} Fitted model object,
+  \item \code{opt} List of options (unchanged),
+  \item \code{parm} Parameter list for plotting,
+  \item \code{df} Data frame used for plotting,
+  \item \code{plts} List of ggplot objects, including the \code{$infl} element.
+}
 }
 \description{
 Creates a "comb" plot of studentized residuals versus sequence, highlighting influence and outlier points using a robust outlier heuristic.

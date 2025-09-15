@@ -6,7 +6,7 @@
 #' 3) Residuals vs. fitted values (check for heteroskedasticity),
 #' 4) Autocorrelation or influence plot depending on whether data are time series.
 #'
-#' @param mdl A fitted model object (typically from \code{\link[stats]{lm}}) to be analyzed.
+#' @param mdl A fitted model object (typically from \code{\link[stats]{lm}}).
 #' @param opt A named \code{list} of options. Recognized elements include:
 #'   \describe{
 #'     \item{\code{ts}}{Logical; \code{TRUE} if data are time series, \code{FALSE} otherwise.}
@@ -15,6 +15,9 @@
 #'       Breusch–Pagan, and Durbin–Watson tests in the plots.}
 #'     \item{\code{cook.loess}}{Logical; whether to overlay Cook's distance loess curve.}
 #'   }
+#' @param parm List of plot formatting parameters (see \code{\link{lm_plot.parms}}).
+#' @param plt_nms Character vector of which panels to plot. Defaults to fit, var, qq, and ac/infl depending on \code{opt$ts}.
+
 #'
 #' @details
 #' This function is a high-level wrapper that calls internal plotting functions

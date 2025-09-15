@@ -2,19 +2,23 @@
 #'
 #' Generates a scatter plot of observed values versus fitted values from a linear model, with optional prediction intervals and identification of outlier points. The plot includes a reference line \code{y = x} for assessing linearity.
 #'
-#' @param mdl An object of class \code{lm}, representing the fitted linear model.
-#' @param parms List of plot customization parameters. Passed to \code{lm_plot.parms()}.
+#' @param mdl A fitted model object (typically from \code{\link[stats]{lm}}).
+#' @param opt List of options, where \code{pred_intvl_pts} (numeric, default = 100) is used for prediction interval bounds of fitted values (0 to skip).
+#' @param parm List of plotting parameters, usually from \code{lm_plot.parms()}.
 #' @param df Data frame with augmented model data. Defaults to \code{lm_plot.df(mdl)}.
-#' @param plts List of ggplot objects to build upon. Defaults to empty list.
+#' @param plts List of ggplot objects to which this plot will be added.
 #'
 #' @details
 #' The plot visualizes observed versus fitted values, includes a diagonal reference line, marks outliers, and can optionally display loess-smoothed prediction intervals. Outlier and regular points can be labeled. This plot is useful for visually assessing linearity and model fit quality.
 #'
 #' @return A list containing:
-#'   \item{mdl}{The model object}
-#'   \item{parms}{Parameters used for plotting, including plot limits}
-#'   \item{df}{Data frame used for plotting}
-#'   \item{plts}{A list of ggplot objects, including the fit plot}
+#' \itemize{
+#'   \item \code{mdl} Fitted model object,
+#'   \item \code{opt} Options used, including \code{pred_intvl_pts},
+#'   \item \code{parm} Parameter list with autocorrelation test results added,
+#'   \item \code{df} Data frame used for plotting,
+#'   \item \code{plts} List of ggplot objects, including the \code{$fit} element.
+#' }
 #'
 #' @seealso \code{\link{lm_plot.df}}, \code{\link{lm_plot.parms}}
 #' @import ggplot2 ggrepel

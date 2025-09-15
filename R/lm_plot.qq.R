@@ -2,19 +2,23 @@
 #'
 #' Produces a Q-Q plot of residuals from a linear model to test for normality, optionally annotating outlier points and adding the Shapiro-Wilk test p-value.
 #'
-#' @param mdl An object of class \code{lm}, representing the fitted linear model.
-#' @param parms List of plot customization parameters. Passed to \code{lm_plot.parms()}.
+#' @param mdl A fitted model object (typically from \code{\link[stats]{lm}}).
+#' @param opt List of options, where \code{pval.SW} (logical, default = FALSE) indicates whether to include Shapiro-Wilk p-value on the plot.
+#' @param parm List of plotting parameters, usually from \code{lm_plot.parms()}.
 #' @param df Data frame with augmented model data. Defaults to \code{lm_plot.df(mdl)}.
-#' @param plts List of ggplot objects to build upon. Defaults to empty list.
+#' @param plts List of ggplot objects to which this plot will be added.
 #'
 #' @details
 #' The plot visualizes the distribution of residuals against theoretical normal quantiles. Points are colored and shaped by outlier status, and a reference Q-Q line is added. Optionally, outlier and regular points can be labeled. If enabled, the Shapiro-Wilk normality test p-value is displayed.
 #'
 #' @return A list containing:
-#'   \item{mdl}{The model object}
-#'   \item{parms}{Parameters used for plotting, including Q-Q line and test results}
-#'   \item{df}{Data frame used for plotting}
-#'   \item{plts}{A list of ggplot objects, including the Q-Q plot}
+#' \itemize{
+#'   \item \code{mdl} Fitted model object,
+#'   \item \code{opt} Options used, including \code{pval.SW},
+#'   \item \code{parm} Parameter list with Shapiro-Wilk test results added,
+#'   \item \code{df} Data frame used for plotting,
+#'   \item \code{plts} List of ggplot objects, including the \code{$qq} element.
+#' }
 #'
 #' @seealso \code{\link{lm_plot.df}}, \code{\link{lm_plot.parms}}, \code{\link[stats]{shapiro.test}}
 #' @import ggplot2 ggrepel stats
