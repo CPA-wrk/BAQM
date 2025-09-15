@@ -12,6 +12,7 @@ Functions developed by instructors for AQM 1000 and AQM 2000 courses using R in 
 Useful links:
 \itemize{
   \item \url{https://github.com/CPA-wrk/BAQM}
+  \item \url{https://cpa-wrk.github.io/BAQM/}
   \item Report bugs at \url{https://github.com/CPA-wrk/BAQM/issues}
 }
 

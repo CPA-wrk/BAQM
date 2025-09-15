@@ -26,6 +26,6 @@ Imports:
     lmtest,
     stats,
     utils
-URL: https://github.com/CPA-wrk/BAQM
+URL: https://github.com/CPA-wrk/BAQM, https://cpa-wrk.github.io/BAQM/
 BugReports: https://github.com/CPA-wrk/BAQM/issues
 RoxygenNote: 7.3.2
