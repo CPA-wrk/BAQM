@@ -15,9 +15,9 @@ knitr::opts_chunk$set(
 
 # BAQM
 
-  <!-- badges: start -->
-  [![R-CMD-check](https://github.com/CPA-wrk/BAQM/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/CPA-wrk/BAQM/actions/workflows/R-CMD-check.yaml)
-  <!-- badges: end -->
+<!-- badges: start -->
+[![R-CMD-check](https://github.com/CPA-wrk/BAQM/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/CPA-wrk/BAQM/actions/workflows/R-CMD-check.yaml)
+<!-- badges: end -->
 
 <!-- R_LIBS_USER='/Users/peter/Library/Caches/org.R-project.R/R/renv/library/BAQM-8c6b0fb8/macos/R-4.5/aarch64-apple-darwin20' -->
   
@@ -50,6 +50,7 @@ Here are summaries of built-in R data sets `swiss` and `iris`, with
 (Variable names are truncated in `swiss` to narrow the output.)
 
 ```{r example}
+load_all()
 # library(BAQM)
 names(swiss) # Show original variable names
 names(swiss) <- substr(names(swiss), 1, 4) # Narrows output
@@ -61,6 +62,8 @@ print.summary.regsubsets(regs)
 stat_desc(iris) # Includes non-numeric variable
 #
 mdl <- lm(Sepal.Length ~ ., data = iris)
+# mdl <- lm(mpg ~ wt + hp, data = mtcars)
 print.summary.lm(summary.lm(mdl))
-lm_plot.4way(mdl)
+lm_plot.lst <- lm_plot.4way(mdl)
+lm_plot.lst$p_4way
 ```

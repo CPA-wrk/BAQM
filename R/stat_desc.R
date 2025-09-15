@@ -3,12 +3,9 @@
 #' Computes and prints summary descriptive statistics for each variable in a list or  data frame, including counts, numeric summaries (min, quartiles, mean, max, standard deviation), and factor summaries (levels and frequencies).
 #'
 #' @param data A vector, list or data frame containing variables to summarize. A vector is treated as a single variable data frame. Unnamed variables receive generic names like \code{V1}, \code{V2}, etc.
-#'
 #' @param transpose A logical concerning report format. By default the summary printed and returned is organized to show variables in columns and their statistic values in rows. Setting \code{transpose = TRUE} generates a transposed report with variables in rows and statistics in columns.
-#'
-#' @param opts A key=value tupe list, optional input for "\code{options}" values on output. Existing values are restored on exit.
-#'
 #' @param pad A positive integer for the number of spaces between output columns..
+#' @param opts A key=value tupe list, optional input for "\code{options}" values on output. Existing values are restored on exit.
 #'
 #' @details
 #' For each variable in \code{data}, the function computes the count of non-missing and missing values. Numeric variables are summarized by minimum, first quartile, median, mean, third quartile, maximum, and standard deviation. Factor and character variables are summarized by level frequencies. Results are formatted in a table and printed. The function returns a list containing:
@@ -34,9 +31,9 @@ stat_desc <- function(data,
   #
   # Summary descriptive statistics for "data" list or data frame
   # Optional arguments:
-  #   opts:   list of R options, e.g., digits, scipen
-  #   pad:    integer; number of spaces to pad output table columns
   #   transpose:  logical; if TRUE, return a transposed summary table
+  #   pad:    integer; number of spaces to pad output table columns
+  #   opts:   list of R options, e.g., digits, scipen
   #
   if (missing(data)) {
     return()
