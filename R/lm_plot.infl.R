@@ -27,7 +27,8 @@
 #' print(result$plts$infl)
 #' }
 lm_plot.infl <- function(mdl,
-                         parms = list(),
+                         opt = list(),
+                         parm = list(),
                          df = lm_plot.df(mdl),
                          plts = list()) {
   # Copyright 2025, Peter Lert, All rights reserved.
@@ -35,10 +36,14 @@ lm_plot.infl <- function(mdl,
   # Comb plot of studentized residual vs sequence with influence level
   # set by robust outlier heuristic
   #
+  # mdl:    fitted linear model
+  # opt:    not used
+  # parm:   plot element parameters
   # df:     augmented model data
+  # plts:   list of ggplot objects to add to
   #
   # Default plot element parameters
-  parms <- lm_plot.parms(parms)
+  parms <- lm_plot.parms(parm)
   #
   # Find x, y limits for placing elements
   lim <- data.frame(
@@ -61,7 +66,7 @@ lm_plot.infl <- function(mdl,
   )
   # Plot of studentized residuals vs sequence
   plts$infl <- ggplot2::ggplot(data = df) +
-    ggplot2::aes(x = df$.sequence, y = df$.stud.resid) +
+    ggplot2::aes(x = .sequence, y = .stud.resid) +
     # Plot axis labels
     ggplot2::labs(x = "Sequence", y = "Studentized Residual") +
     # Highlight axes within frame
@@ -74,17 +79,13 @@ lm_plot.infl <- function(mdl,
   # Drop lines for influence measure
   plts$infl <- plts$infl +
     ggplot2::geom_segment(
-      ggplot2::aes(
-        xend = df$.sequence,
-        yend = 0,
-        color = df$.attn
-      ),
+      ggplot2::aes(xend = .sequence, yend = 0, color = .attn),
       show.legend = FALSE
     ) +
     ggplot2::scale_color_manual(values = c(
       outl = parms$pts$colr$outl,
       infl = parms$pts$colr$infl,
-      reg = "black"
+      reg = parms$pts$colr$reg
     ))
   #
   # ID outlier and influential points if requested
@@ -92,12 +93,7 @@ lm_plot.infl <- function(mdl,
   plts$infl <- plts$infl +
   ggrepel::geom_text_repel(
     data = df.reg,
-    ggplot2::aes(
-      x = df.reg$.sequence,
-      y = df.reg$.stud.resid,
-      label = df.reg$.id,
-      color = df.reg$.attn
-    ),
+    ggplot2::aes(x = .sequence, y = .stud.resid, label = .id, color = .attn),
     nudge_y = -sign(df.reg$.stud.resid) * offp_y,
     size = parms$pts$csz,
     show.legend = FALSE
@@ -138,9 +134,12 @@ lm_plot.infl <- function(mdl,
       )
   }
   #
+  #
+  # Return results
   list(
     mdl = mdl,
-    parms = parms,
+    opt = opt,
+    parm = parms,
     df = df,
     plts = plts
   )

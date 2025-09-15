@@ -4,16 +4,22 @@
 \alias{lm_plot.lev}
 \title{Plot Standard Residuals vs. Leverage with Cook's Distance Contours}
 \usage{
-lm_plot.lev(mdl, parms = list(), df = lm_plot.df(mdl), plts = list())
+lm_plot.lev(
+  mdl,
+  opt = list(),
+  parm = list(),
+  df = lm_plot.df(mdl),
+  plts = list()
+)
 }
 \arguments{
 \item{mdl}{An object of class \code{lm} or similar, representing the fitted model.}
 
-\item{parms}{List of plot customization parameters. Passed to \code{lm_plot.parms()}.}
-
 \item{df}{Data frame with augmented model data. Defaults to \code{lm_plot.df(mdl)}.}
 
 \item{plts}{List of ggplot objects to build upon. Defaults to empty list.}
+
+\item{parms}{List of plot customization parameters. Passed to \code{lm_plot.parms()}.}
 }
 \value{
 A list containing:

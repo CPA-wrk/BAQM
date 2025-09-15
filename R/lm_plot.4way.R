@@ -10,7 +10,7 @@
 #' @param opt A named \code{list} of options. Recognized elements include:
 #'   \describe{
 #'     \item{\code{ts}}{Logical; \code{TRUE} if data are time series, \code{FALSE} otherwise.}
-#'     \item{\code{pred.pts}}{Integer; number of prediction points (default 100).}
+#'     \item{\code{pred_intvl_pts}}{Integer; number of prediction points (default 100).}
 #'     \item{\code{pval.SW}, \code{pval.BP}, \code{pval.DW}}{Logical; include p-values from Shapiro–Wilk,
 #'       Breusch–Pagan, and Durbin–Watson tests in the plots.}
 #'     \item{\code{cook.loess}}{Logical; whether to overlay Cook's distance loess curve.}
@@ -35,38 +35,51 @@
 #' }
 #' @export
 lm_plot.4way <- function(mdl,
-                         opt = list()) {
+                         opt = list(ts = FALSE),
+                         parm = list(),
+                         plt_nms = c("fit", "var", "qq",
+                                     ifelse(opt$ts, "ac", "infl"))) {
   # Copyright 2025, Peter Lert, All rights reserved.
   #
   # PLert, Spring 2025
   #
-  # Build 4-panel plot of for multiple regression assumption analysis:
-  #   Fitted.Values vs. Observed.Values: checking for non-linearity
-  #   Quantiile-Quantile plot of Residuals: checking non-normality
-  #   Residuals vs. Fitted.Values: checking for heteroskedasticity
+  # Build 4-panel plot of for multiple regression assumption analysis
+  # (order: top-left, top-right, bottom-left, bottom-right):
+  #   fit:  Fitted.Values vs. Observed.Values: checking for non-linearity
+  #   var:  Residuals vs. Fitted.Values: checking for heteroskedasticity
+  #   qq:   Quantiile-Quantile plot of Residuals: checking non-normality
+  #   ac:   Residuals vs. Order (time series): checking for autocorrelation
+  #   infl: Comb plot of studentized residual vs sequence w/ influence level
+  #   lev:  Standardized Residuals vs. Leverage with Cook's distance contours
   #
-  # ts:     TRUE for time-series data, else false
-  # pvals:  Print test pvals, etc?
+  # options:
+  #   ts:             TRUE for time-series data, FALSE for infl/lev plots
+  #   pred_intvl_pts: number of prediction interval points on q-q plot
+  #   pvals:          Print test pvals?
+  #   cook.loess:     add loess curve to Cook's distance plot?
   #
+  # plot format parameters:
+  #   see lm_plot.parms()
   #
   # Plot settings
   if (missing(mdl)) {
     cat(
       "Inputs: mdl,",
-      "        opt = list(ts=FALSE, pred.pts=100, pval.SW=FALSE,",
+      "        opt = list(ts=FALSE, pred_intvl_pts=100, pval.SW=FALSE,",
       "                   pval.BP=FALSE, pval.DW=FALSE, cook.loess=FALSE)",
       "        <default option values>",
       sep = "\n"
     )
+    invisible()
   }
-  invisible()
-  #
-  parms <- lm_plot.parms(parms = list(opt = opt)) # inputs override defaults
   #
   # Plot panels
-  plt_nms <- c("fit", "var", "qq", ifelse(parms$opt$ts, "ac", "infl"))
   #
-  lm_plot.lst <- list(mdl = mdl, parms = parms)
+  lm_plot.lst <- list(mdl = mdl,
+                      opt = opt,
+                      parm = lm_plot.parms(parm), # inputs override defaults
+                      df = lm_plot.df(mdl),
+                      plts = list())
   for (nm in plt_nms) {
     lm_plot.lst <- do.call(paste0("lm_plot.", nm), args = lm_plot.lst)
   }
@@ -78,6 +91,5 @@ lm_plot.4way <- function(mdl,
     lm_plot.lst$plts[[plt_nms[4]]]
   )
   #
-  # Change this in pkg to return invisible(lm_plot.lst)
-  lm_plot.lst$p_4way
+  invisible(lm_plot.lst)
 }

@@ -25,17 +25,24 @@
 #' result <- lm_plot.fit(mdl)
 #' print(result$plts$fit)
 lm_plot.fit <- function(mdl,
-                        parms = list(),
+                        opt = list(),
+                        parm = list(),
                         df = lm_plot.df(mdl),
                         plts = list()) {
   # Copyright 2025, Peter Lert, All rights reserved.
   #
-  # Plot observed values vs. fitted values to check linearity
+  # Plot of observed versus fitted to test linearity
   #
+  # mdl:    fitted linear model
+  # opt:    pred_intvl_pts: # of pts for prediction interval of fitted values
+  # parm:   plot element parameters
   # df:     augmented model data
+  # plts:   list of ggplot objects to add to
   #
   # Default plot element parameters
-  parms <- lm_plot.parms(parms)
+  parms <- lm_plot.parms(parm)
+  #
+  if (is.null(opt$pred_intvl_pts)) opt$pred_intvl_pts <- 100
   #
   # Find x, y limits for placing elements
   lim <- data.frame(
@@ -47,8 +54,7 @@ lm_plot.fit <- function(mdl,
   # Plot Fitted vs. Observed
   note_fit <- "y = x"
   plts$fit <- ggplot2::ggplot(data = df) +
-    ggplot2::aes(x = df$.fits, y = df$.obs) +
-    #
+    ggplot2::aes(x = .fits, y = .obs) +
     # PLot axis labels
     ggplot2::labs(x = "Fitted Value", y = "Observed Value")
   #
@@ -111,20 +117,20 @@ lm_plot.fit <- function(mdl,
   plts$fit <- plts$fit +
     ggplot2::geom_line(
       data = lim,
-      ggplot2::aes(x = lim$x, y = lim$x),
+      ggplot2::aes(x = x, y = x),
       linetype = parms$lins$ltyp,
       color = parms$lins$colr$fit,
       linewidth = parms$lins$size
     )
   #
   # Plot prediction interval if desired
-  if (parms$opt$pred.pts > 0) {
+  if (opt$pred_intvl_pts > 0) {
     p.int <- df[order(df$.fits), ]
     plts$fit <- plts$fit +
       ggplot2::scale_y_continuous(expand = c(0, 0)) +
       ggplot2::geom_smooth(
         data = p.int,
-        ggplot2::aes(x = p.int$.fits, y = p.int$.upper.pi),
+        ggplot2::aes(x = .fits, y = .upper.pi),
         method = "loess",
         formula = y ~ x,
         color = parms$lins$colr$fit,
@@ -132,7 +138,7 @@ lm_plot.fit <- function(mdl,
       ) +
       ggplot2::geom_smooth(
         data = p.int,
-        ggplot2::aes(x = p.int$.fits, y = p.int$.lower.pi),
+        ggplot2::aes(x = .fits, y = .lower.pi),
         method = "loess",
         formula = y ~ x,
         color = parms$lins$colr$fit,
@@ -146,11 +152,7 @@ lm_plot.fit <- function(mdl,
     plts$fit <- plts$fit +
       ggrepel::geom_text_repel(
         data = df.outl,
-        ggplot2::aes(
-          x = df.outl$.fits,
-          y = df.outl$.obs,
-          label = df.outl$.id
-        ),
+        ggplot2::aes(x = .fits, y = .obs, label = .id),
         color = parms$pts$colr$outl,
         size = parms$pts$csz
       )
@@ -161,11 +163,7 @@ lm_plot.fit <- function(mdl,
     df.reg <- df[df$outlier == "reg", ]
     plts$fit <- plts$fit + ggrepel::geom_text_repel(
       data = df.reg,
-      ggplot2::aes(
-        x = df.reg$.fits,
-        y = df.reg$.obs,
-        label = df.reg$.id
-      ),
+      ggplot2::aes(x = .fits, y = .obs, label = .id),
       color = parms$pts$colr$reg,
       size = parms$pts$csz
     )
@@ -174,9 +172,11 @@ lm_plot.fit <- function(mdl,
   # Return fit results
   parms$fit <- list(lim = lim)
   #
+  # Return results
   list(
     mdl = mdl,
-    parms = parms,
+    opt = opt,
+    parm = parms,
     df = df,
     plts = plts
   )

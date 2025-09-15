@@ -4,7 +4,12 @@
 \alias{lm_plot.4way}
 \title{Create a Four-Panel Regression Assumptions Plot}
 \usage{
-lm_plot.4way(mdl, opt = list())
+lm_plot.4way(
+  mdl,
+  opt = list(ts = FALSE),
+  parm = list(),
+  plt_nms = c("fit", "var", "qq", ifelse(opt$ts, "ac", "infl"))
+)
 }
 \arguments{
 \item{mdl}{A fitted model object (typically from \code{\link[stats]{lm}}) to be analyzed.}
@@ -12,7 +17,7 @@ lm_plot.4way(mdl, opt = list())
 \item{opt}{A named \code{list} of options. Recognized elements include:
 \describe{
   \item{\code{ts}}{Logical; \code{TRUE} if data are time series, \code{FALSE} otherwise.}
-  \item{\code{pred.pts}}{Integer; number of prediction points (default 100).}
+  \item{\code{pred_intvl_pts}}{Integer; number of prediction points (default 100).}
   \item{\code{pval.SW}, \code{pval.BP}, \code{pval.DW}}{Logical; include p-values from Shapiro–Wilk,
     Breusch–Pagan, and Durbin–Watson tests in the plots.}
   \item{\code{cook.loess}}{Logical; whether to overlay Cook's distance loess curve.}

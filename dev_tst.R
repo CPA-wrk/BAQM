@@ -34,6 +34,37 @@ test_that("summary.lm: regression with interaction term", {
 ### End of test-summary.lm.R ###
 
 
+
+### test-lm_plot.ac.R ###
+# Tests for lm_plot.ac (snapshots plus other checks)
+library(testthat)
+
+test_that("lm_plot.ac produces the expected plot for cars", {
+  fit <- lm(mpg ~ wt + hp, data = mtcars)
+  lm_plot.ac_ex_cars <-
+    lm_plot.ac(fit, opt = list(pval.DW = TRUE))
+  vdiffr::expect_doppelganger(title = "lm_plot.ac example cars",
+                              lm_plot.ac_ex_cars)
+})
+### End of test-lm_plot.4way.R ###
+
+
+
+### test-lm_plot.4way.R ###
+# Tests for lm_plot.4way (snapshots plus other checks)
+library(testthat)
+
+test_that("lm_plot.4way produces the expected plot", {
+  fit <- lm(mpg ~ wt + hp, data = mtcars)
+  lm_plot.4way_ex_cars <-
+    lm_plot.4way(fit, opt = list(ts = FALSE, pval.DW = TRUE))
+  # vdiffr::expect_doppelganger(title = "lm_plot.4way example cars",
+  #                             lm_plot.4way_ex_cars)
+})
+### End of test-lm_plot.4way.R ###
+
+
+
 test_options <- list(scipen = 2, digits = 6, width = 80)
 
 

@@ -4,16 +4,22 @@
 \alias{lm_plot.ac}
 \title{Plot Residuals vs. Observation Order (Autocorrelation Check)}
 \usage{
-lm_plot.ac(mdl, parms = list(), df = lm_plot.df(mdl), plts = list())
+lm_plot.ac(
+  mdl,
+  opt = list(),
+  parm = list(),
+  df = lm_plot.df(mdl),
+  plts = list()
+)
 }
 \arguments{
 \item{mdl}{A fitted model object (typically from \code{\link[stats]{lm}}).}
 
-\item{parms}{A list of plotting and option parameters, usually from \code{lm_plot.parms()}.}
-
 \item{df}{An augmented model data frame; if missing, is generated via \code{lm_plot.df(mdl)}.}
 
 \item{plts}{A list of existing plots to which this plot will be added.}
+
+\item{parms}{A list of plotting and option parameters, usually from \code{lm_plot.parms()}.}
 }
 \value{
 A list containing:

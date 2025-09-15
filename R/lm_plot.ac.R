@@ -29,34 +29,24 @@
 #' }
 #' @export
 lm_plot.ac <- function(mdl,
-                       parms = list(),
+                       opt = list(),
+                       parm = list(),
                        df = lm_plot.df(mdl),
                        plts = list()) {
   # Copyright 2025, Peter Lert, All rights reserved.
   #
   # Plot of Residuals vs order to test independence (autocorrelation)
   #
+  # mdl:    fitted linear model
+  # opt:    pval.DW: include Durbin-Watson autocorrelation test p-value?
+  # parm:   plot element parameters
   # df:     augmented model data
+  # plts:   list of ggplot objects to add to
   #
   # Default plot element parameters
-  parms <- lm_plot.parms(parms)
+  parms <- lm_plot.parms(parm)
   #
-  # Assure data
-  if (!is.ok(df)) {
-    df <- data.frame(.resid = stats::residuals(mdl))
-  }
-  if (!is.ok(df$.resid)) {
-    df$.resid <- stats::residuals(mdl)
-  }
-  if (!is.ok(df$.id)) {
-    df$.id <- row.names(mdl$model)
-  }
-  if (!is.ok(df$outlier)) {
-    df$outlier <- ifelse(outlier(df$.resid), "outl", "reg")
-  }
-  if (!is.ok(df$.sequence)) {
-    df$.sequence <- 1:nrow(df)
-  }
+  if (is.null(opt$pval.DW)) opt$pval.DW <- FALSE
   #
   # Find x, y limits for placing elements
   lim <- data.frame(
@@ -67,11 +57,9 @@ lm_plot.ac <- function(mdl,
   #
   # Plot of Residuals vs order
   plts$ac <- ggplot2::ggplot(data = df) +
-    ggplot2::aes(x = df$.sequence, y = df$.resid) +
-    #
+    ggplot2::aes(x = .sequence, y = .resid) +
     # PLot axis labels
     ggplot2::labs(x = "Order", y = "Residual") +
-    #
     # Highlight axes, if within frame
     ggplot2::geom_hline(
       color = "white",
@@ -138,11 +126,7 @@ lm_plot.ac <- function(mdl,
     df.outl <- df[df$outlier == "outl", , drop = FALSE]
     plts$ac <- plts$ac + ggrepel::geom_text_repel(
       data = df.outl,
-      ggplot2::aes(
-        x = df.outl$.quantile,
-        y = df.outl$.resid,
-        label = df.outl$.id
-      ),
+      ggplot2::aes(x = .sequence, y = .resid, label = .id),
       color = parms$pts$colr$outl,
       size = parms$pts$csz
     )
@@ -153,11 +137,7 @@ lm_plot.ac <- function(mdl,
     df.reg <- df[df$.attn == "reg", , drop = FALSE]
     plts$ac <- plts$ac + ggrepel::geom_text_repel(
       data = df.reg,
-      ggplot2::aes(
-        x = df.reg$.quantile,
-        y = df.reg$.resid,
-        label = df.reg$.id
-      ),
+      ggplot2::aes(x = .sequence, y = .resid, label = .id),
       color = parms$pts$colr$reg,
       size = parms$pts$csz
     )
@@ -167,7 +147,7 @@ lm_plot.ac <- function(mdl,
   parms$ac <- list(lim = lim, DW = lmtest::dwtest(mdl))
   #
   # Add Durbin-Watson autocorrelation test p-value if desired
-  if (parms$opt$pval.DW) {
+  if (opt$pval.DW) {
     note_ac <- paste0(
       "Autocorrelation: DW p-val=",
       round(parms$ac$DW$p.value, 4)
@@ -184,10 +164,11 @@ lm_plot.ac <- function(mdl,
         size = parms$lins$csz
       )
   }
-  #
+  # Return results
   list(
     mdl = mdl,
-    parms = parms,
+    opt = opt,
+    parm = parms,
     df = df,
     plts = plts
   )

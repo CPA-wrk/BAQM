@@ -5,7 +5,11 @@
 ^LICENSE\.md$
 ^dev_tst\.R$
 ^publish\.R$
+^etc$
 ^.*\.DS_Store\.R$
 ^\.Rbuildignore$
 ^\.github$
 ^README\.Rmd$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$

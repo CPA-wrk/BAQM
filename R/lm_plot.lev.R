@@ -27,17 +27,24 @@
 #' print(result$plts$lev)
 #' }
 lm_plot.lev <- function(mdl,
-                        parms = list(),
+                        opt = list(),
+                        parm = list(),
                         df = lm_plot.df(mdl),
                         plts = list()) {
   # Copyright 2025, Peter Lert, All rights reserved.
   #
   # Plot Standard residuals vs. Leverage with Cook's distance contours
   #
+  # mdl:    fitted linear model
+  # opt:    pval.DW: include Durbin-Watson autocorrelation test p-value?
+  # parm:   plot element parameters
   # df:     augmented model data
+  # plts:   list of ggplot objects to add to
   #
   # Default plot element parameters
-  parms <- lm_plot.parms(parms)
+  parms <- lm_plot.parms(parm)
+  #
+  if (is.null(opt$cook.loess)) opt$cook.loess <- FALSE
   #
   # Find x, y limits for placing elements
   lim <- data.frame(
@@ -57,15 +64,13 @@ lm_plot.lev <- function(mdl,
     parms$cook$labl <- c(parms$cook$labl, paste0("d = ", c("+", "-"), level))
   }
   names(parms$cook$labl) <- names(parms$cook$cont)
-  # parms$cook$level <- namewith(rep(parms$cook$level, each = 2) * rep(c(1, -1), 2),
-  #                              names(parms$cook$cont))
   parms$cook$level <- rep(parms$cook$level, each = 2) * rep(c(1, -1), 2)
   names(parms$cook$level) <- names(parms$cook$cont)
   parms$cook$cont$x <- x
   parms$cook$cont <- data.frame(parms$cook$cont)
   #
   plts$lev <- ggplot2::ggplot(df) +
-    ggplot2::aes(x = df$.hat, y = df$.std.resid) +
+    ggplot2::aes(x = .hat, y = .std.resid) +
     # PLot axis labels
     ggplot2::labs(x = "Leverage", y = "Standard Residual") +
     # Highlight axes within frame
@@ -118,7 +123,7 @@ lm_plot.lev <- function(mdl,
     )
   #
   # Add loess line
-  if (parms$opt$cook.loess) {
+  if (opt$cook.loess) {
     plts$lev <- plts$lev +
       ggplot2::geom_smooth(
         linetype = parms$lins$ltyp,
@@ -137,11 +142,7 @@ lm_plot.lev <- function(mdl,
     plts$lev <- plts$lev +
       ggrepel::geom_text_repel(
         data = df.i_d,
-        ggplot2::aes(
-          x = df.i_d$.hat,
-          y = df.i_d$.std.resid,
-          label = df.i_d$.id
-        ),
+        ggplot2::aes(x = .hat, y = .std.resid, label = .id),
         color = parms$pts$colr$cook,
         size = parms$pts$csz
       )
@@ -155,11 +156,7 @@ lm_plot.lev <- function(mdl,
     df.outl <- df[i_out[!i_out %in% i_d], , drop = FALSE]
     plts$lev <- plts$lev + ggrepel::geom_text_repel(
       data = df.outl,
-      ggplot2::aes(
-        x = df.outl$.hat,
-        y = df.outl$.std.resid,
-        label = df.outl$.id
-      ),
+      ggplot2::aes(x = .hat, y = .std.resid, label = .id),
       color = parms$pts$colr$outl,
       size = parms$pts$csz
     )
@@ -172,11 +169,7 @@ lm_plot.lev <- function(mdl,
     plts$lev <- plts$lev +
       ggrepel::geom_text_repel(
         data = df.reg,
-        ggplot2::aes(
-          x = df.reg$.hat,
-          y = df.reg$.std.resid,
-          label = df.reg$.id
-        ),
+        ggplot2::aes(x = .hat, y = .std.resid, label = .id),
         color = parms$pts$colr$reg,
         size = parms$pts$csz
       )
@@ -208,21 +201,18 @@ lm_plot.lev <- function(mdl,
     )
   #
   # Plot Cook's distance contours
-  tbl <- list()
   for (d_nm in names(parms$cook$labl)) {
-    tbl[[d_nm]] <- t_nm <- data.frame(.hat = parms$cook$cont$x,
-                                      .std.resid = parms$cook$cont[[d_nm]])
+    t_nm <- data.frame(.hat = parms$cook$cont$x,
+                       .std.resid = parms$cook$cont[[d_nm]])
     i_cont <- which(t_nm$.std.resid >= lim["min", "y"] &
                       t_nm$.std.resid <= lim["max", "y"])
-    if (length(i_cont) <= 1) {
-      # next
-      tbl[[d_nm]] <- t_nm <- t_nm[i_cont, ]
-    }
+    if (length(i_cont) <= 1) next
+    t_nm <- t_nm[i_cont, ]
     k_mid <- ceiling(length(i_cont) / 2)
     plts$lev <- plts$lev +
       ggplot2::geom_line(
         data = t_nm,
-        ggplot2::aes(x = t_nm$.hat, y = t_nm$.std.resid),
+        ggplot2::aes(x = .hat, y = .std.resid),
         linetype = parms$cook$ltyp,
         linewidth = parms$lins$size,
         color = parms$lins$colr$cook
@@ -237,10 +227,11 @@ lm_plot.lev <- function(mdl,
         color = parms$lins$colr$cook
       )
   }
-  #
+  # Return results
   list(
     mdl = mdl,
-    parms = parms,
+    opt = opt,
+    parm = parms,
     df = df,
     plts = plts
   )

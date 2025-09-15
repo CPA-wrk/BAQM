@@ -25,17 +25,24 @@
 #' result <- lm_plot.qq(mdl)
 #' print(result$plts$qq)
 lm_plot.qq <- function(mdl,
-                       parms = list(),
+                       opt = list(),
+                       parm = list(),
                        df = lm_plot.df(mdl),
                        plts = list()) {
   # Copyright 2025, Peter Lert, All rights reserved.
   #
   # Q-Q Plot of Residuals to test normality
   #
+  # mdl:    fitted linear model
+  # opt:    pval.SW: include Shapiro-Wilk normality test p-value?
+  # parm:   plot element parameters
   # df:     augmented model data
+  # plts:   list of ggplot objects to add to
   #
   # Default plot element parameters
-  parms <- lm_plot.parms(parms)
+  parms <- lm_plot.parms(parm)
+  #
+  if (is.null(opt$pval.SW)) opt$pval.SW <- FALSE
   #
   # Add qqline elements
   qqlin <- list(probs = c(0.25, 0.75))
@@ -57,12 +64,9 @@ lm_plot.qq <- function(mdl,
   #
   # Q-Q Plot of Residuals
   plts$qq <- ggplot2::ggplot(data = df) +
-    ggplot2::aes(x = df$.quantile,
-                 y = df$.resid) +
-    #
+    ggplot2::aes(x = .quantile, y = .resid) +
     # PLot axis labels
     ggplot2::labs(x = "Theoretical Quantile", y = "Residual") +
-    #
     # Highlight axes within frame
     ggplot2::geom_hline(
       color = "white",
@@ -127,9 +131,7 @@ lm_plot.qq <- function(mdl,
     plts$qq <- plts$qq +
       ggrepel::geom_text_repel(
         data = df.outl,
-        ggplot2::aes(x = df.outl$.quantile,
-                     y = df.outl$.resid,
-                     label = df.outl$.id),
+        ggplot2::aes(x = .quantile, y = .resid, label = .id),
         color = parms$pts$colr$outl,
         size = parms$pts$csz
       )
@@ -141,9 +143,7 @@ lm_plot.qq <- function(mdl,
     plts$qq <- plts$qq +
       ggrepel::geom_text_repel(
         data = df.reg,
-        ggplot2::aes(x = df.reg$.quantile,
-                     y = df.reg$.resid,
-                     label = df.reg$.id),
+        ggplot2::aes(x = .quantile, y = .resid, label = .id),
         color = parms$pts$colr$reg,
         size = parms$pts$csz
       )
@@ -157,11 +157,11 @@ lm_plot.qq <- function(mdl,
   )
   #
   # Add Shapiro-Wilk normality test p-value if desired
-  if (parms$opt$pval.SW) {
+  if (opt$pval.SW) {
     note_qq <- paste0("Normality: SW p-val=", round(parms$qq$SW$p.value, 4))
     plts$qq <- plts$qq +
       ggplot2::annotate(
-        "test",
+        "text",
         x = lim["min", "x"],
         y = lim["max", "y"],
         label = note_qq,
@@ -171,10 +171,11 @@ lm_plot.qq <- function(mdl,
         size = parms$lins$csz
       )
   }
-  #
+  # Return results
   list(
     mdl = mdl,
-    parms = parms,
+    opt = opt,
+    parm = parms,
     df = df,
     plts = plts
   )

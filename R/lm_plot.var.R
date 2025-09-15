@@ -25,17 +25,24 @@
 #' result <- lm_plot.var(mdl)
 #' print(result$plts$var)
 lm_plot.var <- function(mdl,
-                        parms = list(),
+                        opt = list(),
+                        parm = list(),
                         df = lm_plot.df(mdl),
                         plts = list()) {
   # Copyright 2025, Peter Lert, All rights reserved.
   #
   # Plot Residuals vs Fitted Values to test Homoskedasticity
   #
+  # mdl:    fitted linear model
+  # opt:    pval.BP: include Breusch-Pagan homoskedasticity test p-value?
+  # parm:   plot element parameters
   # df:     augmented model data
+  # plts:   list of ggplot objects to add to
   #
   # Default plot element parameters
-  parms <- lm_plot.parms(parms)
+  parms <- lm_plot.parms(parm)
+  #
+  if (is.null(opt$pval.BP)) opt$pval.BP <- FALSE
   #
   # Find x, y limits for placing elements
   lim <- data.frame(
@@ -46,7 +53,7 @@ lm_plot.var <- function(mdl,
   #
   # Plot of Residuals vs Fitted Values
   plts$var <- ggplot2::ggplot(data = df) +
-    ggplot2::aes(x = df$.fits, y = df$.resid) +
+    ggplot2::aes(x = .fits, y = .resid) +
     #
     # PLot axis labels
     ggplot2::labs(x = "Fitted Value", y = "Residual") +
@@ -110,9 +117,7 @@ lm_plot.var <- function(mdl,
     plts$var <- plts$var +
       ggrepel::geom_text_repel(
         data = df.outl,
-        ggplot2::aes(x = df.outl$.fits,
-                     y = df.outl$.resid,
-                     label = df.outl$.id),
+        ggplot2::aes(x = .fits, y = .resid, label = .id),
         color = parms$pts$colr$outl,
         size = parms$pts$csz
       )
@@ -124,9 +129,7 @@ lm_plot.var <- function(mdl,
     plts$var <- plts$var +
       ggrepel::geom_text_repel(
         data = df.reg,
-        ggplot2::aes(x = df.reg$.fits,
-                     y = df.reg$.resid,
-                     label = df.reg$.id),
+        ggplot2::aes(x = .fits, y = .resid, label = .id),
         color = parms$pts$colr$reg,
         size = parms$pts$csz
       )
@@ -136,7 +139,7 @@ lm_plot.var <- function(mdl,
   parms$var <- list(lim = lim, BP = lmtest::bptest(mdl))
   #
   # Add Breusch-Pagan heteroskedasticity test p-value if desired
-  if (parms$opt$pval.BP) {
+  if (opt$pval.BP) {
     note_var <- paste0("Const.Var: BP p-val=", round(parms$var$BP$p.value, 4))
     plts$var <- plts$var +
       ggplot2::annotate(
@@ -150,10 +153,11 @@ lm_plot.var <- function(mdl,
         size = parms$lins$csz
       )
   }
-  #
+  # Return results
   list(
     mdl = mdl,
-    parms = parms,
+    opt = opt,
+    parm = parms,
     df = df,
     plts = plts
   )
