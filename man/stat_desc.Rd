@@ -14,7 +14,7 @@ stat_desc(
 \arguments{
 \item{data}{A vector, list or data frame containing variables to summarize. A vector is treated as a single variable data frame. Unnamed variables receive generic names like \code{V1}, \code{V2}, etc.}
 
-\item{transpose}{A logical concerning report format. By default the summary printed and returned is organized to show variables in columns and their statistic values in rows. Setting \code{transpose = TRUE} generates a transposed report with variables in rows and statistics in columns.}
+\item{transpose}{A logical concerning report format. By default the tables printed and returned are organized to show variables in columns and their statistic values in rows. Setting \code{transpose = TRUE} generates transposed tables with variables in rows and statistics in columns.}
 
 \item{pad}{A positive integer for the number of spaces between output columns..}
 
@@ -36,6 +36,9 @@ For each variable in \code{data}, the function computes the count of non-missing
 }
 }
 \examples{
-stat_desc(mtcars)
-stat_desc(data.frame(a = rnorm(100), b = sample(letters[1:3], 100, TRUE)))
+stat_desc(penguins)
+stat_desc(data.frame(a = rnorm(100),
+          b = c(NA, 1:98, NA),
+          c = sample(letters[4:6], 100, TRUE)),
+          transpose = TRUE, pad = 1)
 }

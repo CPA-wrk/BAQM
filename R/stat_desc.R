@@ -3,7 +3,7 @@
 #' Computes and prints summary descriptive statistics for each variable in a list or  data frame, including counts, numeric summaries (min, quartiles, mean, max, standard deviation), and factor summaries (levels and frequencies).
 #'
 #' @param data A vector, list or data frame containing variables to summarize. A vector is treated as a single variable data frame. Unnamed variables receive generic names like \code{V1}, \code{V2}, etc.
-#' @param transpose A logical concerning report format. By default the summary printed and returned is organized to show variables in columns and their statistic values in rows. Setting \code{transpose = TRUE} generates a transposed report with variables in rows and statistics in columns.
+#' @param transpose A logical concerning report format. By default the tables printed and returned are organized to show variables in columns and their statistic values in rows. Setting \code{transpose = TRUE} generates transposed tables with variables in rows and statistics in columns.
 #' @param pad A positive integer for the number of spaces between output columns..
 #' @param opts A key=value tupe list, optional input for "\code{options}" values on output. Existing values are restored on exit.
 #'
@@ -21,8 +21,11 @@
 #' @export
 #'
 #' @examples
-#' stat_desc(mtcars)
-#' stat_desc(data.frame(a = rnorm(100), b = sample(letters[1:3], 100, TRUE)))
+#' stat_desc(penguins)
+#' stat_desc(data.frame(a = rnorm(100),
+#'           b = c(NA, 1:98, NA),
+#'           c = sample(letters[4:6], 100, TRUE)),
+#'           transpose = TRUE, pad = 1)
 stat_desc <- function(data,
                       transpose = FALSE,
                       pad = 2,
@@ -100,7 +103,7 @@ stat_desc <- function(data,
       x <- as.factor(x)
       n.f[[nm]] <- length(levels(x)) + 1
       smry$fctr[[nm]] <- c(
-        n.lvls = n.f[[nm]],
+        n.lvls = n.f[[nm]] - 1,
         sort(summary(x), decreasing = TRUE)
       )
     }
@@ -132,9 +135,11 @@ stat_desc <- function(data,
       smry$rpt[[nm]] <- c(smry$rpt[[nm]], s_fctr)
     }
   }
-  smry$rpt <- do.call(cbind, smry$rpt)
-  smry$rpt <- as.matrix(smry$rpt)
-  if (transpose) smry$rpt <- t(smry$rpt)
+  for (nm in c("rpt", "cnt", "num")) {
+    smry[[nm]] <- do.call(cbind, smry[[nm]])
+    smry[[nm]] <- as.matrix(smry[[nm]])
+    if (transpose) smry[[nm]] <- t(smry[[nm]])
+  }
   print.default(smry$rpt,
     right = TRUE,
     quote = FALSE, na.print = "", print.gap = pad

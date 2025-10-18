@@ -1,5 +1,5 @@
 # Testing code for summary.lm
-test_options <- list(scipen = 2, digits = 6, width = 80)
+test_options <- list(scipen = 0, digits = 4, width = 80)
 
 test_that("summary.lm: simple regression (iris) works", {
   withr::local_options(test_options)

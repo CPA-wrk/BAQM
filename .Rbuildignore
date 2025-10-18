@@ -14,5 +14,4 @@
 ^docs$
 ^pkgdown$
 ^cran-comments\.md$
-^chk$
-
+^air.toml$

@@ -1,5 +1,5 @@
 # test-tools.R -- testthat unit tests for general purpose tools
-test_options <- list(scipen = 2, digits = 6, width = 80)
+test_options <- list(scipen = 0, digits = 4, width = 80)
 
 test_that("char2dt converts MM/DD/YYYY to Date", {
   expect_equal(char2dt("12/31/2024"), as.Date("2024-12-31"))

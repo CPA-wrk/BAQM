@@ -1,5 +1,5 @@
 # test-print.summary.regsubsets.R
-test_options <- list(scipen = 2, digits = 6, width = 90)
+test_options <- list(scipen = 0, digits = 4, width = 90)
 
 test_that("Weak model -  best 3 subsets (swiss)", {
   withr::local_options(test_options)
