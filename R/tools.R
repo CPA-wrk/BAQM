@@ -1,6 +1,6 @@
 #' General Purpose Internal Utility Functions
 #'
-#' This file contains a set of small, general-purpose helper functions used internally throughout the package. They cover data cleaning, vector and attribute manipulation, file name parsing, formatting, and basic statistical utilities. These functions are designed for convenience and package-internal use, and are not exported for direct use by package users.
+#' This file contains a set of small, general-purpose helper functions used internally throughout the package. They cover data cleaning, vector and attribute manipulation, formatting, and basic statistical utilities. These functions are designed for convenience and package-internal use, and are not exported for direct use by package users.
 #' The final function contains code for the examples used in the package README file.
 #'
 #' Functions included:
@@ -18,8 +18,6 @@
 #'   \item \code{\%of\%}, \code{\%notof\%}: Vector inclusion/exclusion operators.
 #'   \item \code{rpt_space}: Utility for report formatting layout.
 #'   \item \code{trim}: Trim leading and trailing whitespace from strings.
-#'   \item \code{file_ext}, \code{file_lname}: Get file extensions or last name part.
-#'   \item \code{file_split}: General file path splitting utility.
 #'   \item \code{permute}: Calculate number of permutations (\eqn{nPk}).
 #'   \item \code{outlier}: Identify outliers in numeric vectors using boxplot heuristic.
 #' }
@@ -34,7 +32,6 @@
 #' if.ok(NULL, 1)
 #' pr(10000)
 #' trim("  text  ")
-#' file_ext("foo.bar.txt")
 #' outlier(c(1, 2, 3, 100))
 #'
 #' @name tools.R
@@ -121,30 +118,6 @@ trim <- function(s) {
     x = s
   )
   s
-}
-file_ext <- function(fil, n = 2) {
-  file_split(fil, n, sep = ".")
-}
-file_lname <- function(fil, n = 2) {
-  file_split(fil, n, sep = "/")
-}
-file_split <- function(fil, n, sep) {
-  # Return list=c(ext, pathname_root) for each fil
-  x_lst <- strsplit(fil, sep, fixed = TRUE)
-  names(x_lst) <- names(fil)
-  x_lst <- lapply(x_lst, function(x) {
-    if (n == 1) {
-      return(utils::tail(x, 1))
-    }
-    if ((i <- length(x) - n) <= 0) {
-      return(c(rev(x), rep("", -i)))
-    }
-    c(rev(utils::tail(x, n - 1)), paste(utils::head(x, i + 1), collapse = sep))
-  })
-  if (!is.list(fil) && length(fil) == 1) {
-    return(unlist(x_lst))
-  }
-  x_lst
 }
 permute <- function(n, k) {
   choose(n, k) * factorial(k)

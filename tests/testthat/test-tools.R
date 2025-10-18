@@ -72,12 +72,6 @@ test_that("trim removes leading and trailing spaces", {
   expect_equal(trim("world"), "world")
 })
 
-test_that("file_ext, file_lname, and file_split work", {
-  expect_equal(file_ext("foo.bar"), file_split("foo.bar", 2, "."))
-  expect_equal(file_lname("dir/foo"), file_split("dir/foo", 2, "/"))
-  expect_equal(file_split("foo.bar.baz", 2, "."), c("baz", "foo.bar"))
-})
-
 test_that("permute computes nPk", {
   expect_equal(permute(5, 3), choose(5,3)*factorial(3))
 })
