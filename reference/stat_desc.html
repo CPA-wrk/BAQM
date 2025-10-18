@@ -56,7 +56,7 @@
 
 
 <dt id="arg-transpose">transpose<a class="anchor" aria-label="anchor" href="#arg-transpose"></a></dt>
-<dd><p>A logical concerning report format. By default the summary printed and returned is organized to show variables in columns and their statistic values in rows. Setting <code>transpose = TRUE</code> generates a transposed report with variables in rows and statistics in columns.</p></dd>
+<dd><p>A logical concerning report format. By default the tables printed and returned are organized to show variables in columns and their statistic values in rows. Setting <code>transpose = TRUE</code> generates transposed tables with variables in rows and statistics in columns.</p></dd>
 
 
 <dt id="arg-pad">pad<a class="anchor" aria-label="anchor" href="#arg-pad"></a></dt>
@@ -81,38 +81,35 @@
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">stat_desc</span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            mpg    cyl   disp     hp    drat      wt   qsec      vs      am</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> n.val       32     32     32     32      32      32     32      32      32</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> n.na         0      0      0      0       0       0      0       0       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> min       10.4      4   71.1     52    2.76   1.513   14.5       0       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Q1        15.2      4  120.7     95    3.08   2.542  16.88      NA      NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> median    19.2      6  196.3    123   3.695   3.325  17.71       0       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> mean     20.09  6.188  230.7  146.7   3.597   3.217  17.85  0.4375  0.4062</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Q3        22.8      8    334    180    3.92    3.65   18.9       1       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> max       33.9      8    472    335    4.93   5.424   22.9       1       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> std.dev  6.027  1.786  123.9  68.56  0.5347  0.9785  1.787   0.504   0.499</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            gear   carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> n.val        32     32</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> n.na          0      0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> min           3      1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Q1            3      1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> median        4      2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> mean      3.688  2.812</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Q3            5      4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> max           5      8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> std.dev  0.7378  1.615</span>
-<span class="r-in"><span><span class="fu">stat_desc</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>a <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">100</span><span class="op">)</span>, b <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="va">letters</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span>, <span class="fl">100</span>, <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 a         b</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> n.val         100       100</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> n.na            0         0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> min        -1.914  n.lvls=4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Q1        -0.6432  a    :39</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> median    -0.1679  c    :35</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> mean     0.009043  b    :26</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Q3         0.6221          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> max         2.308          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> std.dev    0.9815          </span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">stat_desc</span><span class="op">(</span><span class="va">penguins</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           species    island  bill_len  bill_dep  flipper_len  body_mass</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> n.val         344       344       342       342          342        342</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> n.na            0         0         2         2            2          2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> min      n.lvls=3  n.lvls=3      32.1      13.1          172       2700</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Q1       Adel:152  Bisc:168      39.2     15.45          190       3550</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> median   Gent:124  Drem:124     44.45      17.3          197       4050</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mean     Chns: 68  Trgr: 52     43.92     17.15        200.9       4202</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Q3                               48.5      18.7          214       4800</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> max                              59.6      21.5          231       6300</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> std.dev                          5.46     1.975        14.06        802</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               sex    year</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> n.val         333     344</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> n.na           11       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> min      n.lvls=2    2007</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Q1       male:168    2007</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> median   feml:165    2008</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mean                 2008</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Q3                   2009</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> max                  2009</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> std.dev            0.8184</span>
+<span class="r-in"><span><span class="fu">stat_desc</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>a <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">100</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>          b <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">98</span>, <span class="cn">NA</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>          c <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="va">letters</span><span class="op">[</span><span class="fl">4</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span>, <span class="fl">100</span>, <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>          transpose <span class="op">=</span> <span class="cn">TRUE</span>, pad <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   n.val n.na      min       Q1   median     mean     Q3   max std.dev</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> a   100    0   -1.914  -0.6432  -0.1679 0.009043 0.6221 2.308  0.9815</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> b    98    2        1       25     49.5     49.5     74    98   28.43</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> c   100    0 n.lvls=3 d    :39 f    :35 e    :26                     </span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
