@@ -4,13 +4,13 @@
 #' 1) Fitted values vs. observed values (check for non-linearity),
 #' 2) Quantile–Quantile plot of residuals (check for non-normality),
 #' 3) Residuals vs. fitted values (check for heteroskedasticity),
-#' 4) Autocorrelation or influence plot depending on whether data are time series.
+#' 4) Autocorrelation for time series otherwise influence plot (leverage also available).
 #'
 #' @param mdl A fitted model object (typically from \code{\link[stats]{lm}}).
 #' @param opt A named \code{list} of options. Recognized elements include:
 #'   \describe{
 #'     \item{\code{ts}}{Logical; \code{TRUE} if data are time series, \code{FALSE} otherwise.}
-#'     \item{\code{pred_intvl_pts}}{Integer; number of prediction points (default 100).}
+#'     \item{\code{pred.intvl}}{Logical; plot prediction interval on fitted vs observed.}
 #'     \item{\code{pval.SW}, \code{pval.BP}, \code{pval.DW}}{Logical; include p-values from Shapiro–Wilk,
 #'       Breusch–Pagan, and Durbin–Watson tests in the plots.}
 #'     \item{\code{cook.loess}}{Logical; whether to overlay Cook's distance loess curve.}
@@ -44,8 +44,6 @@ lm_plot.4way <- function(mdl,
                                      ifelse(opt$ts, "ac", "infl"))) {
   # Copyright 2025, Peter Lert, All rights reserved.
   #
-  # PLert, Spring 2025
-  #
   # Build 4-panel plot of for multiple regression assumption analysis
   # (order: top-left, top-right, bottom-left, bottom-right):
   #   fit:  Fitted.Values vs. Observed.Values: checking for non-linearity
@@ -57,8 +55,8 @@ lm_plot.4way <- function(mdl,
   #
   # options:
   #   ts:             TRUE for time-series data, FALSE for infl/lev plots
-  #   pred_intvl_pts: number of prediction interval points on q-q plot
-  #   pvals:          Print test pvals?
+  #   pred.intvl:     Plot prediction interval on q-q plot?
+  #   pvals:          Print test pvals on plots?
   #   cook.loess:     add loess curve to Cook's distance plot?
   #
   # plot format parameters:
@@ -68,7 +66,7 @@ lm_plot.4way <- function(mdl,
   if (missing(mdl)) {
     cat(
       "Inputs: mdl,",
-      "        opt = list(ts=FALSE, pred_intvl_pts=100, pval.SW=FALSE,",
+      "        opt = list(ts=FALSE, pred.intvl=TRUE, pval.SW=FALSE,",
       "                   pval.BP=FALSE, pval.DW=FALSE, cook.loess=FALSE)",
       "        <default option values>",
       sep = "\n"
@@ -76,12 +74,13 @@ lm_plot.4way <- function(mdl,
     invisible()
   }
   #
+  parms <- lm_plot.parms(mdl, parm)
   # Plot panels
   #
   lm_plot.lst <- list(mdl = mdl,
                       opt = opt,
-                      parm = lm_plot.parms(parm), # inputs override defaults
-                      df = lm_plot.df(mdl),
+                      parm = lm_plot.parms(mdl, parms), # inputs override defaults
+                      df = lm_plot.df(mdl, parms),
                       plts = list())
   for (nm in plt_nms) {
     lm_plot.lst <- do.call(paste0("lm_plot.", nm), args = lm_plot.lst)

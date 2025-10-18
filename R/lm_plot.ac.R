@@ -47,7 +47,7 @@ lm_plot.ac <- function(mdl,
   # plts:   list of ggplot objects to add to
   #
   # Default plot element parameters
-  parms <- lm_plot.parms(parm)
+  parms <- lm_plot.parms(mdl, parm)
   #
   if (is.null(opt$pval.DW)) opt$pval.DW <- FALSE
   #
@@ -82,8 +82,8 @@ lm_plot.ac <- function(mdl,
   # Plot points - vary color & shape for normal/outlier points
   plts$ac <- plts$ac +
     ggplot2::geom_point(
-      ggplot2::aes(shape = outlier, color = outlier),
-      size = parms$pts$size,
+      ggplot2::aes(shape = .is.outl, color = .is.outl),
+      size = parms$pts$symsz,
       show.legend = FALSE
     ) +
     ggplot2::scale_shape_manual(values = c(
@@ -98,7 +98,7 @@ lm_plot.ac <- function(mdl,
   # Add sequence line
   plts$ac <- plts$ac +
     ggplot2::geom_path(
-      linetype = parms$lins$ltyp,
+      linetype = parms$lins$ltyp$ac,
       color = parms$pts$colr$reg,
       linewidth = parms$lins$size
     )
@@ -111,7 +111,7 @@ lm_plot.ac <- function(mdl,
       y = lim["min", "y"],
       shape = parms$pts$shape$outl,
       color = parms$pts$colr$outl,
-      size = parms$pts$size
+      size = parms$pts$symsz
     ) +
     ggplot2::annotate(
       "text",
@@ -121,28 +121,30 @@ lm_plot.ac <- function(mdl,
       hjust = 1,
       vjust = 0.5,
       color = parms$pts$colr$outl,
-      size = parms$pts$csz
+      size = parms$pts$lblsz
     )
   #
   # ID outlier points if desired
   if (parms$pts$id$outl) {
-    df.outl <- df[df$outlier == "outl", , drop = FALSE]
+    set.seed(parms$seed$ac$outl) # For reproducible ID placement
+    df.outl <- df[df$.is.outl == "outl", , drop = FALSE]
     plts$ac <- plts$ac + ggrepel::geom_text_repel(
       data = df.outl,
       ggplot2::aes(x = .sequence, y = .resid, label = .id),
       color = parms$pts$colr$outl,
-      size = parms$pts$csz
+      size = parms$pts$lblsz
     )
   }
   #
   # ID regular points if desired
   if (parms$pts$id$reg) {
-    df.reg <- df[df$.attn == "reg", , drop = FALSE]
+    set.seed(parms$seed$ac$reg) # For reproducible ID placement
+    df.reg <- df[df$.is.outl == "reg", , drop = FALSE]
     plts$ac <- plts$ac + ggrepel::geom_text_repel(
       data = df.reg,
       ggplot2::aes(x = .sequence, y = .resid, label = .id),
       color = parms$pts$colr$reg,
-      size = parms$pts$csz
+      size = parms$pts$lblsz
     )
   }
   #
@@ -164,7 +166,7 @@ lm_plot.ac <- function(mdl,
         hjust = 0,
         vjust = 1,
         color = parms$lins$colr$ac,
-        size = parms$lins$csz
+        size = parms$lins$notesz
       )
   }
   # Return results

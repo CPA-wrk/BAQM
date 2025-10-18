@@ -2,13 +2,13 @@
 % Please edit documentation in R/lm_plot.infl.R
 \name{lm_plot.infl}
 \alias{lm_plot.infl}
-\title{Plot Studentized Residuals vs. Sequence with Influence Identification}
+\title{Plot Leverage vs. Fitted Values to Visualize Inflential Observations}
 \usage{
 lm_plot.infl(
   mdl,
   opt = list(),
   parm = list(),
-  df = lm_plot.df(mdl),
+  df = lm_plot.df(mdl, parm),
   plts = list()
 )
 }
@@ -34,10 +34,10 @@ A list containing:
 }
 }
 \description{
-Creates a "comb" plot of studentized residuals versus sequence, highlighting influence and outlier points using a robust outlier heuristic.
+Creates a plot of leverage values versus the linear fitted values, including an identification of points with a large Cook's distance, to visualize high-leverage and influential observations.
 }
 \details{
-The plot visualizes studentized residuals by sequence order, marking regular, outlier, and influential points. Influence thresholds are set using robust outlier detection. Influential and outlier points can be labeled, and influence threshold lines are shown.
+The plot visualizes the calculated leverage of individual data points, defined as the diagonal element of the 'hat' matrix, as a function of the fitted values and implicitly relative to their location in the field of predictor variables, and the threshold value of high leverage is indicated. In addition, Cook's distance can be used to label influential points, along with outlier and regular points.
 }
 \examples{
 \dontrun{

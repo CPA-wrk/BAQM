@@ -42,13 +42,11 @@ Here are summaries of built-in R data sets `swiss` and `iris`, with
 (Variable names are truncated in `swiss` to narrow the output.)
 
 ``` r
-load_all()
-#> ℹ Loading BAQM
+library(BAQM)
 #> Registered S3 methods overwritten by 'BAQM':
 #>   method           from 
 #>   print.summary.lm stats
 #>   summary.lm       stats
-# library(BAQM)
 names(swiss) # Show original variable names
 #> [1] "Fertility"        "Agriculture"      "Examination"      "Education"       
 #> [5] "Catholic"         "Infant.Mortality"
@@ -69,23 +67,35 @@ regs <- leaps::regsubsets(Fert ~ ., data = swiss, nbest = 3)
 #> Registered S3 method overwritten by 'leaps':
 #>   method                   from
 #>   print.summary.regsubsets BAQM
-print.summary.regsubsets(regs)
-#>                                                            
-#> Call: regsubsets.formula(Fert ~ ., data = swiss, nbest = 3)
-#>    _k_i.best    rsq  adjr2      see    cp Agri Exam Educ Cath Infa
-#> 1   1  ( 1 ) 0.4406 0.4282  9.44603 35.20              *          
-#> 2   1  ( 2 ) 0.4172 0.4042  9.64200 38.48         *               
-#> 3   1  ( 3 ) 0.2150 0.1976 11.18995 66.75                   *     
-#> 4   2  ( 1 ) 0.5745 0.5552  8.33144 18.49              *    *     
-#> 5   2  ( 2 ) 0.5648 0.5450  8.42614 19.85              *         *
-#> 6   2  ( 3 ) 0.5363 0.5152  8.69745 23.83         *              *
-#> 7   3  ( 1 ) 0.6625 0.6390  7.50542  8.18              *    *    *
-#> 8   3  ( 2 ) 0.6423 0.6173  7.72776 11.01    *         *    *     
-#> 9   3  ( 3 ) 0.6191 0.5925  7.97396 14.25         *    *         *
-#> 10  4  ( 1 ) 0.6993 0.6707  7.16817  5.03    *         *    *    *
-#> 11  4  ( 2 ) 0.6639 0.6319  7.57936  9.99         *    *    *    *
-#> 12  4  ( 3 ) 0.6498 0.6164  7.73642 11.96    *    *    *    *     
-#> 13  5  ( 1 ) 0.7067 0.6710  7.16537  6.00    *    *    *    *    *
+summary(regs)
+#> Subset selection object
+#> Call: (function (...) 
+#> rmarkdown::render(...))(input = base::quote("/Users/peter/Library/CloudStorage/OneDrive-centerpointanalytics.com/CPA_wrk/R/BAQM/README.Rmd"), 
+#>     output_options = base::quote(list(html_preview = FALSE)), 
+#>     quiet = base::quote(TRUE))
+#> 5 Variables  (and intercept)
+#>      Forced in Forced out
+#> Agri     FALSE      FALSE
+#> Exam     FALSE      FALSE
+#> Educ     FALSE      FALSE
+#> Cath     FALSE      FALSE
+#> Infa     FALSE      FALSE
+#> 3 subsets of each size up to 5
+#> Selection Algorithm: exhaustive
+#>          Agri Exam Educ Cath Infa
+#> 1  ( 1 ) " "  " "  "*"  " "  " " 
+#> 1  ( 2 ) " "  "*"  " "  " "  " " 
+#> 1  ( 3 ) " "  " "  " "  "*"  " " 
+#> 2  ( 1 ) " "  " "  "*"  "*"  " " 
+#> 2  ( 2 ) " "  " "  "*"  " "  "*" 
+#> 2  ( 3 ) " "  "*"  " "  " "  "*" 
+#> 3  ( 1 ) " "  " "  "*"  "*"  "*" 
+#> 3  ( 2 ) "*"  " "  "*"  "*"  " " 
+#> 3  ( 3 ) " "  "*"  "*"  " "  "*" 
+#> 4  ( 1 ) "*"  " "  "*"  "*"  "*" 
+#> 4  ( 2 ) " "  "*"  "*"  "*"  "*" 
+#> 4  ( 3 ) "*"  "*"  "*"  "*"  " " 
+#> 5  ( 1 ) "*"  "*"  "*"  "*"  "*"
 #
 stat_desc(iris) # Includes non-numeric variable
 #>          Sepal.Length  Sepal.Width  Petal.Length  Petal.Width   Species
@@ -100,8 +110,7 @@ stat_desc(iris) # Includes non-numeric variable
 #> std.dev        0.8281       0.4359         1.765       0.7622
 #
 mdl <- lm(Sepal.Length ~ ., data = iris)
-# mdl <- lm(mpg ~ wt + hp, data = mtcars)
-print.summary.lm(summary.lm(mdl))
+summary(mdl)
 #> 
 #> Summary Statistics:
 #>                  Value      Performance    Measure  Err(Resids)    Metric
@@ -130,10 +139,9 @@ print.summary.lm(summary.lm(mdl))
 #> Residuals: -0.7942  -0.2187   <3e-14  0.008987  0.2025   0.731  
 #>                                                   
 #> Call:  lm(formula = Sepal.Length ~ ., data = iris)
+#
 lm_plot.lst <- lm_plot.4way(mdl)
 lm_plot.lst$p_4way
-#> Warning: ggrepel: 66 unlabeled data points (too many overlaps). Consider
-#> increasing max.overlaps
 ```
 
 <img src="man/figures/README-example-1.png" width="100%" />

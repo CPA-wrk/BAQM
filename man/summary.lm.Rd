@@ -37,8 +37,7 @@ Factor variable names are recoded for clarity, and coefficients for aliased or s
 }
 \examples{
 mdl <- lm(Sepal.Length ~ Sepal.Width + Petal.Length, data = iris)
-sumry <- summary(mdl)
-sumry
+summary(mdl)
 }
 \seealso{
 \code{\link{print.summary.lm}}, \code{\link{lm}}

@@ -30,18 +30,21 @@
 #'
 #' @examples
 #' mdl <- lm(Sepal.Length ~ Sepal.Width + Petal.Length, data = iris)
-#' sumry <- summary(mdl)
-#' sumry
+#' summary(mdl)
 summary.lm <- function(object, ...) {
   # Copyright 2025, Peter Lert, All rights reserved.
   #
-  z <- object
-  p <- z$rank
-  rdf <- z$df.residual
-  coeffs <- z$coefficients
+  mdl <- object
+  if (!inherits(mdl, "lm")) {
+    stop("not an \"lm\" object")
+  }
+  # Extract key elements from the lm object
+  rk <- mdl$rank
+  resid.df <- mdl$df.residual
+  coeffs <- mdl$coefficients
   #
   # Recode factor variable names
-  if (length(levels <- z$xlevels) > 0) {
+  if (length(levels <- mdl$xlevels) > 0) {
     var_fact <-
       lapply(names(levels), function(xvar, levels) {
         x <- levels[[xvar]]
@@ -57,9 +60,9 @@ summary.lm <- function(object, ...) {
       }, levels = levels)
     var_fact <- do.call(rbind, var_fact)
     # Handle interactions
-    coeffs.splt <- strsplit(names(coeffs), split = ":", fixed = TRUE)
+    intx_nms_splt <- strsplit(names(coeffs), split = ":", fixed = TRUE)
     var_trans <- data.frame(old = names(coeffs))
-    var_trans$new <- unlist(lapply(coeffs.splt, function(x) {
+    var_trans$new <- unlist(lapply(intx_nms_splt, function(x) {
       i <- match(x, var_fact$old)
       x[!is.na(i)] <- var_fact$new[i[!is.na(i)]]
       paste(x, collapse = ":")
@@ -71,18 +74,18 @@ summary.lm <- function(object, ...) {
   #
   # Notes for alias, singularity, collinearity warnings
   note <- matrix(character(0), nrow = 0, ncol = 1)
-  if (p == 0) {
-    r <- z$residuals
+  if (rk == 0) {
+    r <- mdl$residuals
     n <- length(r)
-    w <- z$weights
+    w <- mdl$weights
     if (is.null(w)) {
       rss <- sum(r^2)
     } else {
       rss <- sum(w * r^2)
       r <- sqrt(w) * r
     }
-    resvar <- rss / rdf
-    ans <- z[c("call", "terms", if (!is.null(z$weights)) {
+    resvar <- rss / resid.df
+    ans <- mdl[c("call", "terms", if (!is.null(mdl$weights)) {
       "weights"
     })]
     ans$aliased <- is.na(coeffs)
@@ -93,39 +96,39 @@ summary.lm <- function(object, ...) {
     ans$cov.unscaled <- matrix(NA_real_, 0L, 0L)
     ans$correlation <- ans$cov.unscaled
   } else {
-    if (is.null(z$terms)) {
+    if (is.null(mdl$terms)) {
       stop("invalid 'lm' object:  no 'terms' component")
     }
-    if (!inherits(object, "lm")) {
+    if (!inherits(mdl, "lm")) {
       warning("calling summary.lm(<fake-lm-object>) ...")
     }
-    Qr <- qr(object)
+    Qr <- qr(mdl)
     if (!is.null(var_trans)) {
       colnames(Qr$qr) <- var_trans$new[match(colnames(Qr$qr), var_trans$old)]
     }
     n <- NROW(Qr$qr)
-    if (is.na(z$df.residual) || n - p != z$df.residual) {
+    if (is.na(mdl$df.residual) || n - rk != mdl$df.residual) {
       warning(
-        "residual degrees of freedom in object",
+        "residual degrees of freedom in mdl",
         "suggest this is not an \"lm\" fit"
       )
     }
-    r <- z$residuals
-    f <- z$fitted.values
+    r <- mdl$residuals
+    f <- mdl$fitted.values
     obs <- f + r
-    if (!is.null(z$offset)) {
-      f <- f - z$offset
+    if (!is.null(mdl$offset)) {
+      f <- f - mdl$offset
     }
-    w <- z$weights
+    w <- mdl$weights
     if (is.null(w)) {
-      mss <- if (attr(z$terms, "intercept")) {
+      mss <- if (attr(mdl$terms, "intercept")) {
         sum((f - mean(f))^2)
       } else {
         sum(f^2)
       }
       rss <- sum(r^2)
     } else {
-      mss <- if (attr(z$terms, "intercept")) {
+      mss <- if (attr(mdl$terms, "intercept")) {
         m <- sum(w * f / sum(w))
         sum(w * (f - m)^2)
       } else {
@@ -134,40 +137,40 @@ summary.lm <- function(object, ...) {
       rss <- sum(w * r^2)
       r <- sqrt(w) * r
     }
-    resvar <- rss / rdf
+    resvar <- rss / resid.df
     if (is.finite(resvar) &&
       resvar < (mean(f)^2 + stats::var(c(f))) * 1e-30) {
       warning("essentially perfect fit: summary may be unreliable")
     }
-    p1 <- 1:p
+    p1 <- 1:rk
     R <- chol2inv(Qr$qr[p1, p1, drop = FALSE])
     se <- sqrt(diag(R) * resvar)
     est <- coeffs[Qr$pivot[p1]]
     tval <- est / se
     #
     # Build summary object to return
-    ans <- z[c("call", "terms", if (!is.null(z$weights)) {
+    ans <- mdl[c("call", "terms", if (!is.null(mdl$weights)) {
       "weights"
     })]
     ans$residuals <- r
     ans$sigma <- sqrt(resvar)
     ans$aliased <- is.na(coeffs)
-    ans$df <- c(p, rdf, NCOL(Qr$qr))
-    if (!is.null(z$na.action)) {
-      ans$na.action <- z$na.action
+    ans$df <- c(rk, resid.df, NCOL(Qr$qr))
+    if (!is.null(mdl$na.action)) {
+      ans$na.action <- mdl$na.action
     }
-    if (p != attr(z$terms, "intercept")) {
-      df.int <- if (attr(z$terms, "intercept")) {
+    if (rk != attr(mdl$terms, "intercept")) {
+      df.int <- if (attr(mdl$terms, "intercept")) {
         1L
       } else {
         0L
       }
       ans$r.squared <- mss / (mss + rss)
-      ans$adj.r.squared <- 1 - (1 - ans$r.squared) * ((n - df.int) / rdf)
+      ans$adj.r.squared <- 1 - (1 - ans$r.squared) * ((n - df.int) / resid.df)
       ans$fstatistic <- c(
-        value = (mss / (p - df.int)) / resvar,
-        numdf = p - df.int,
-        dendf = rdf
+        value = (mss / (rk - df.int)) / resvar,
+        numdf = rk - df.int,
+        dendf = resid.df
       )
       ans$f.pval <- stats::pf(ans$fstatistic["value"],
         ans$fstatistic["numdf"],
@@ -180,7 +183,7 @@ summary.lm <- function(object, ...) {
       colnames(ans$fits) <- c("Obs.Value", "Fit.Value", "Residual")
       #
       # Build simplified ANOVA table - Sum of squares
-      anova_tbl <- stats::anova(z)
+      anova_tbl <- stats::anova(mdl)
       anova_tbl <- data.frame(
         row.names = c("Regression", "Error(Resids)"),
         Deg.Frdm = c(sum(anova_tbl[-nrow(anova_tbl), "Df"]), anova_tbl[nrow(anova_tbl), "Df"]),
@@ -251,8 +254,8 @@ summary.lm <- function(object, ...) {
       ans$r.squared <- ans$adj.r.squared <- 0
     }
     # Build regression coefficient table with VIFs
-    if (length(attr(z$terms, "order")) > 1) {
-      m.mat <- as.data.frame(stats::model.matrix(z))
+    if (length(attr(mdl$terms, "order")) > 1) {
+      m.mat <- as.data.frame(stats::model.matrix(mdl))
       if (!is.null(var_trans)) {
         names(m.mat) <- var_trans$new[match(names(m.mat), var_trans$old)]
       }
@@ -275,11 +278,11 @@ summary.lm <- function(object, ...) {
         )
         res <- xvar.lm$residuals
         fits <- xvar.lm$fitted.values
-        RDF <- xvar.lm$df.residual
+        resid.df <- xvar.lm$df.residual
         #
         SSR <- sum((fits - mean(fits))^2)
         SSE <- sum(res^2)
-        res.var <- SSE / RDF
+        res.var <- SSE / resid.df
         xvar.r.squared <- SSR / (SSR + SSE)
         #
         vif <- 1 / (1 - xvar.r.squared)
@@ -306,7 +309,7 @@ summary.lm <- function(object, ...) {
       vif <- rep(NA_real_, length(coeffs))
     }
     # End VIF
-    pval <- 2 * stats::pt(abs(tval), rdf, lower.tail = FALSE)
+    pval <- 2 * stats::pt(abs(tval), resid.df, lower.tail = FALSE)
     ans$coefficients <- cbind(est, se, tval, pval, vif)
     colnames(ans$coefficients) <-
       c("Coefficient", "Std.Error", "t-stat", "p-value", "VIF")

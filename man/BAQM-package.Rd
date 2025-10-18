@@ -6,7 +6,7 @@
 \alias{BAQM-package}
 \title{BAQM: Analytics Functions for Babson AQM Courses}
 \description{
-Functions developed by instructors for AQM 1000 and AQM 2000 courses using R in the curriculum.
+Instructor-developed tools for AQM 1000 and AQM 2000 courses using R in the curriculum.
 }
 \seealso{
 Useful links:
@@ -18,7 +18,7 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Peter Lert \email{plert@babson.edu}
+\strong{Maintainer}: Peter Lert \email{plert@babson.edu} [copyright holder]
 
 }
 \keyword{internal}

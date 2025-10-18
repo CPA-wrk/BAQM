@@ -4,9 +4,11 @@
 \alias{lm_plot.parms}
 \title{Set or Retrieve Default Plot Parameters for Model Diagnostic Plots}
 \usage{
-lm_plot.parms(parms = list())
+lm_plot.parms(mdl, parms = list())
 }
 \arguments{
+\item{mdl}{An object of class \code{lm}.}
+
 \item{parms}{A list of plot parameters. Any missing or invalid entries are replaced with defaults.}
 }
 \value{
@@ -28,9 +30,10 @@ See function code for full list of available settings and default values.
 }
 \examples{
 # Retrieve default parameters
-parms <- lm_plot.parms()
+parms <- lm_plot.parms(mdl = lm(Sepal.Length ~ Sepal.Width, data = iris))
 # Set custom color for regular points
-parms <- lm_plot.parms(list(pts = list(colr = list(reg = "blue"))))
+parms <- lm_plot.parms(mdl = lm(Sepal.Length ~ Sepal.Width, data = iris),
+                       parms = list(pts = list(colr = list(reg = "blue"))))
 }
 \seealso{
 \code{\link{lm_plot.fit}}, \code{\link{lm_plot.lev}}, \code{\link{lm_plot.infl}}

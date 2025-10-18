@@ -46,7 +46,7 @@ lm_plot.lev <- function(mdl,
   # plts:   list of ggplot objects to add to
   #
   # Default plot element parameters
-  parms <- lm_plot.parms(parm)
+  parms <- lm_plot.parms(mdl, parm)
   #
   if (is.null(opt$cook.loess)) opt$cook.loess <- FALSE
   #
@@ -75,7 +75,7 @@ lm_plot.lev <- function(mdl,
   #
   plts$lev <- ggplot2::ggplot(df) +
     ggplot2::aes(x = .hat, y = .std.resid) +
-    # PLot axis labels
+    # Plot axis labels
     ggplot2::labs(x = "Leverage", y = "Standard Residual") +
     # Highlight axes within frame
     ggplot2::geom_hline(
@@ -92,8 +92,8 @@ lm_plot.lev <- function(mdl,
   # Plot points - vary color & shape for normal/outlier points
   plts$lev <- plts$lev +
     ggplot2::geom_point(
-      ggplot2::aes(shape = outlier, color = outlier),
-      size = parms$pts$size,
+      ggplot2::aes(shape = .is.outl, color = .is.outl),
+      size = parms$pts$symsz,
       show.legend = FALSE
     ) +
     ggplot2::scale_shape_manual(values = c(
@@ -113,7 +113,7 @@ lm_plot.lev <- function(mdl,
       y = lim["min", "y"],
       shape = parms$pts$shape$outl,
       color = parms$pts$colr$outl,
-      size = parms$pts$size
+      size = parms$pts$symsz
     ) +
     ggplot2::annotate(
       "text",
@@ -123,17 +123,17 @@ lm_plot.lev <- function(mdl,
       hjust = 1,
       vjust = 0.5,
       color = parms$pts$colr$outl,
-      size = parms$pts$csz
+      size = parms$pts$lblsz
     )
   #
   # Add loess line
   if (opt$cook.loess) {
     plts$lev <- plts$lev +
       ggplot2::geom_smooth(
-        linetype = parms$lins$ltyp,
         se = FALSE,
         method = "loess",
         formula = y ~ x,
+        linetype = parms$lins$ltyp$lev,
         color = parms$lins$colr$lev,
         linewidth = parms$lins$size
       )
@@ -148,7 +148,7 @@ lm_plot.lev <- function(mdl,
         data = df.i_d,
         ggplot2::aes(x = .hat, y = .std.resid, label = .id),
         color = parms$pts$colr$cook,
-        size = parms$pts$csz
+        size = parms$pts$lblsz
       )
   } else {
     i_d <- 0
@@ -156,40 +156,42 @@ lm_plot.lev <- function(mdl,
   #
   # ID outlier points not large(Cook's Distance) if desired
   if (parms$pts$id$outl) {
-    i_out <- which(df$outlier == "outl")
-    df.outl <- df[i_out[!i_out %in% i_d], , drop = FALSE]
+    set.seed(parms$seed$lev$outl) # For reproducible ID placement
+    i_outl <- which(df$.is.outl == "outl")
+    df.outl <- df[i_outl[!i_outl %in% i_d], , drop = FALSE]
     plts$lev <- plts$lev + ggrepel::geom_text_repel(
       data = df.outl,
       ggplot2::aes(x = .hat, y = .std.resid, label = .id),
       color = parms$pts$colr$outl,
-      size = parms$pts$csz
+      size = parms$pts$lblsz
     )
   }
   #
   # ID regular points if desired
   if (parms$pts$id$reg) {
-    i_reg <- which(df$outlier == "reg")
+    set.seed(parms$seed$lev$reg) # For reproducible ID placement
+    i_reg <- which(df$.is.outl == "reg")
     df.reg <- df[i_reg[!i_reg %in% i_d], , drop = FALSE]
     plts$lev <- plts$lev +
       ggrepel::geom_text_repel(
         data = df.reg,
         ggplot2::aes(x = .hat, y = .std.resid, label = .id),
         color = parms$pts$colr$reg,
-        size = parms$pts$csz
+        size = parms$pts$lblsz
       )
   }
   #
   # Add CooksD legend
   lgd_x <- lim["max", "x"] - diff(lim$x) / 15
+  l.dat <- data.frame(
+    x = c(lgd_x, lim["max", "x"]),
+    y = c(lim["max", "y"], lim["max", "y"])
+  )
   plts$lev <- plts$lev +
-    ggplot2::geom_segment(
-      ggplot2::aes(
-        x = lgd_x,
-        xend = lim["max", "x"],
-        y = lim["max", "y"],
-        yend = lim["max", "y"]
-      ),
-      linetype = parms$cook$ltyp,
+    ggplot2::geom_line(
+      data = l.dat,
+      ggplot2::aes(x = x, y = y),
+      linetype = parms$lins$ltyp$cook,
       linewidth = parms$lins$size,
       color = parms$lins$colr$cook
     ) +
@@ -201,7 +203,7 @@ lm_plot.lev <- function(mdl,
       hjust = 1,
       vjust = 0.5,
       color = parms$lins$colr$cook,
-      size = parms$lins$csz
+      size = parms$lins$notesz
     )
   #
   # Plot Cook's distance contours
@@ -217,7 +219,7 @@ lm_plot.lev <- function(mdl,
       ggplot2::geom_line(
         data = t_nm,
         ggplot2::aes(x = .hat, y = .std.resid),
-        linetype = parms$cook$ltyp,
+        linetype = parms$lins$ltyp$cook,
         linewidth = parms$lins$size,
         color = parms$lins$colr$cook
       ) +
@@ -227,7 +229,7 @@ lm_plot.lev <- function(mdl,
         label = parms$cook$labl[d_nm],
         hjust = 0,
         vjust = ifelse(parms$cook$level[[d_nm]] < 0, 1, 0),
-        size = parms$lins$csz,
+        size = parms$lins$notesz,
         color = parms$lins$colr$cook
       )
   }

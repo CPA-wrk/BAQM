@@ -4,10 +4,12 @@
 \alias{lm_plot.df}
 \title{Augment Model Data for Diagnostic Plots}
 \usage{
-lm_plot.df(mdl)
+lm_plot.df(mdl, parm = list())
 }
 \arguments{
 \item{mdl}{An object of class \code{lm}, representing the fitted linear model.}
+
+\item{parm}{List of plotting parameters, usually from \code{lm_plot.parms()}.}
 }
 \value{
 A data frame with augmented diagnostic variables, one row per observation.
@@ -20,19 +22,20 @@ The returned data frame contains key statistics for each observation:
 \itemize{
   \item \code{.id}: Observation identifier
   \item \code{.sequence}: Sequence index
+  \item \code{.obs}: Observed values
   \item \code{.fits}: Fitted/predicted values
   \item \code{.resid}: Residuals
-  \item \code{.obs}: Observed values
-  \item \code{.sigma}: Estimated standard deviation for each residual
+  \item \code{.se.fit}: Estimated standard error of fitted (mean) value
+  \item \code{.lower.pi}: Lower bound on 95\% prediction interval of fitted value
+  \item \code{.upper.pi}: Upper bound on 95\% prediction interval of fitted value
   \item \code{.std.resid}: Standardized residuals
   \item \code{.stud.resid}: Studentized residuals
-  \item \code{.lower.pi}, \code{.upper.pi}: Lower/upper 95\% prediction interval bounds
   \item \code{.cooksd}: Cook's distance
   \item \code{.hat}: Leverage (diagonal of the hat matrix)
-  \item \code{.cooksd.is.infl}, \code{.hat.is.infl}: Logical flags for influential points
   \item \code{.quantile}: Theoretical normal quantile of residuals
-  \item \code{outlier}: Flag for ordinary residual outlier ("outl" or "reg")
-  \item \code{.stud.outl}: Flag for studentized residual influential point ("infl" or "reg")
+  \item \code{.is.outl}: Flag for residual outlier ("outl" or "reg")
+  \item \code{.is.infl}: Flag for influential point ("infl" or "outl" or "reg")
+  \item \code{.is.lev}: Flag for high leverage point ("lev" or "infl" or "reg")
 }
 }
 \examples{

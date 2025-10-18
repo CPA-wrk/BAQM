@@ -5,7 +5,7 @@ Version: 0.1.1
 Authors@R: 
     person("Peter", "Lert", , "plert@babson.edu", role = c("aut", "cre", "cph"))
 Copyright: Copyright Peter Lert, PhD, CFA
-Description: Functions developed by instructors for AQM 1000 and AQM 2000
+Description: Instructor-developed tools for AQM 1000 and AQM 2000
     courses using R in the curriculum.
 License: GPL (>= 2)
 Suggests: 

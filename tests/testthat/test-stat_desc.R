@@ -36,7 +36,7 @@ test_that("Check printed results: mixed types", {
   expect_snapshot(stat_desc(iris, pad = 1))
 })
 #
-test_that("Check printed results: vector, and transopose", {
+test_that("Check printed results: vector, and transpose", {
   withr::local_options(test_options)
   expect_snapshot(stat_desc(1:10, transpose = TRUE))
 })

@@ -1,9 +1,10 @@
 #' Identify Outliers Using Boxplot Heuristic
 #'
-#' Detects outliers in a numeric vector using the standard boxplot rule (outside 1.5 times the IQR from the 1st and 3rd quartiles).
+#' Detects outliers in a numeric vector using the boxplot heuristic (default, outside 1.5 times the IQR from the 1st and 3rd quartiles).
 #' Handles missing values (NA) automatically.
 #'
 #' @param x Numeric vector for which outliers are to be detected.
+#' @param coef Numeric value for boxplot heuristic coefficient (default is 1.5). Higher values result in fewer points being classified as outliers.
 #' @param rpt Logical. If \code{FALSE} (default), returns a logical vector indicating which elements of \code{x} are outliers. If \code{TRUE}, returns the calculated lower and upper limits for outlier detection, identified by \code{x < rpt[1] | x > rpt[2]}.
 #'
 #' @return If \code{rpt = FALSE}, returns a logical vector indicating outliers. If \code{rpt = TRUE}, returns a numeric vector of length 2 giving lower and upper limits for outlier detection
@@ -16,6 +17,7 @@
 #'
 #' @export
 outlier <- function(x,
+                    coef = 1.5,
                     rpt = FALSE) {
   # Copyright 2025, Peter Lert, All rights reserved.
   #
@@ -24,7 +26,7 @@ outlier <- function(x,
   # x: numeric vector
   #
   q <- stats::quantile(x, probs = c(0.25, 0.75), na.rm = TRUE)
-  lims <- q + c(-1.5, 1.5) * (q[2] - q[1])
+  lims <- q + c(-coef, coef) * (q[2] - q[1])
   names(lims) <- c("lower", "upper")
   if (rpt) {
     return(lims)

@@ -17,7 +17,7 @@ lm_plot.4way(
 \item{opt}{A named \code{list} of options. Recognized elements include:
 \describe{
   \item{\code{ts}}{Logical; \code{TRUE} if data are time series, \code{FALSE} otherwise.}
-  \item{\code{pred_intvl_pts}}{Integer; number of prediction points (default 100).}
+  \item{\code{pred.intvl}}{Logical; plot prediction interval on fitted vs observed.}
   \item{\code{pval.SW}, \code{pval.BP}, \code{pval.DW}}{Logical; include p-values from Shapiro–Wilk,
     Breusch–Pagan, and Durbin–Watson tests in the plots.}
   \item{\code{cook.loess}}{Logical; whether to overlay Cook's distance loess curve.}
@@ -40,7 +40,7 @@ Generates a 4-panel diagnostic plot for a multiple regression model, including:
 1) Fitted values vs. observed values (check for non-linearity),
 2) Quantile–Quantile plot of residuals (check for non-normality),
 3) Residuals vs. fitted values (check for heteroskedasticity),
-4) Autocorrelation or influence plot depending on whether data are time series.
+4) Autocorrelation for time series otherwise influence plot (leverage also available).
 }
 \details{
 This function is a high-level wrapper that calls internal plotting functions

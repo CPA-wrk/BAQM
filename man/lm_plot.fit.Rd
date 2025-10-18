@@ -34,10 +34,10 @@ A list containing:
 }
 }
 \description{
-Generates a scatter plot of observed values versus fitted values from a linear model, with optional prediction intervals and identification of outlier points. The plot includes a reference line \code{y = x} for assessing linearity.
+Generates a scatter plot of fitted values versus observed values from a linear model, with optional prediction intervals and identification of outlier points. The plot includes a reference line \code{y = x} for assessing linearity.
 }
 \details{
-The plot visualizes observed versus fitted values, includes a diagonal reference line, marks outliers, and can optionally display loess-smoothed prediction intervals. Outlier and regular points can be labeled. This plot is useful for visually assessing linearity and model fit quality.
+The plot visualizes fitted versus observed values, includes a diagonal reference line, marks outliers, and can optionally display loess-smoothed prediction intervals. Outlier and regular points can be labeled. This plot is useful for visually assessing linearity and model fit quality.
 }
 \examples{
 mdl <- lm(Sepal.Length ~ Sepal.Width, data = iris)
