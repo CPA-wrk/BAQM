@@ -3,11 +3,11 @@
 1) Fitted values vs. observed values (check for non-linearity),
 2) Quantile–Quantile plot of residuals (check for non-normality),
 3) Residuals vs. fitted values (check for heteroskedasticity),
-4) Autocorrelation or influence plot depending on whether data are time series."><meta property="og:description" content="Generates a 4-panel diagnostic plot for a multiple regression model, including:
+4) Autocorrelation for time series otherwise influence plot (leverage also available)."><meta property="og:description" content="Generates a 4-panel diagnostic plot for a multiple regression model, including:
 1) Fitted values vs. observed values (check for non-linearity),
 2) Quantile–Quantile plot of residuals (check for non-normality),
 3) Residuals vs. fitted values (check for heteroskedasticity),
-4) Autocorrelation or influence plot depending on whether data are time series."></head><body>
+4) Autocorrelation for time series otherwise influence plot (leverage also available)."></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -46,7 +46,7 @@
 1) Fitted values vs. observed values (check for non-linearity),
 2) Quantile–Quantile plot of residuals (check for non-normality),
 3) Residuals vs. fitted values (check for heteroskedasticity),
-4) Autocorrelation or influence plot depending on whether data are time series.</p>
+4) Autocorrelation for time series otherwise influence plot (leverage also available).</p>
     </div>
 
     <div class="section level2">
@@ -71,8 +71,8 @@
 <dd><p>A named <code>list</code> of options. Recognized elements include:</p><dl><dt><code>ts</code></dt>
 <dd><p>Logical; <code>TRUE</code> if data are time series, <code>FALSE</code> otherwise.</p></dd>
 
-  <dt><code>pred_intvl_pts</code></dt>
-<dd><p>Integer; number of prediction points (default 100).</p></dd>
+  <dt><code>pred.intvl</code></dt>
+<dd><p>Logical; plot prediction interval on fitted vs observed.</p></dd>
 
   <dt><code>pval.SW</code>, <code>pval.BP</code>, <code>pval.DW</code></dt>
 <dd><p>Logical; include p-values from Shapiro–Wilk,
