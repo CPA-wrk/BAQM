@@ -1,7 +1,7 @@
 Type: Package
 Package: BAQM
 Title: Analytics Functions for Babson AQM Courses
-Version: 0.1.1
+Version: 0.1.2
 Authors@R: 
     person("Peter", "Lert", , "plert@babson.edu", role = c("aut", "cre", "cph"))
 Copyright: Copyright Peter Lert, PhD, CFA
