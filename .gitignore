@@ -7,6 +7,4 @@
 .httr-oauth
 .quarto
 R/.DS_Store
-dev_test.R
-publish.R
 docs

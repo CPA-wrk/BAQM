@@ -240,7 +240,7 @@ summary.lm <- function(object, ...) {
         c(
           "Observations",
           "F-Statistic",
-          "Pr(b's=0),%",
+          "Pr(b's=0)",
           "R-Squared",
           "Adj-R2",
           "Std.Err.Est",
