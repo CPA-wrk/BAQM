@@ -8,7 +8,10 @@
 ^etc$
 ^.*\.DS_Store\.R$
 ^\.Rbuildignore$
+^\.Renviron$
 ^\.github$
+^\.gitignore$
+^\.gitattributes$
 ^README\.Rmd$
 ^_pkgdown\.yml$
 ^docs$
