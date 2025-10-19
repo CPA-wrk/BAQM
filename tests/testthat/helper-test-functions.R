@@ -1,3 +1,12 @@
+sysnm <- function() {
+  if ((os <- tolower(Sys.info()["sysname"])) == "darwin") {
+    os <- "mac"
+  } else if (! os %in% c("windows", "solaris")) {
+    os <- "linux"
+  }
+  os
+}
+#
 lm_plot.4way_cars_bld <- function(test_options) {
   withr::local_options(test_options)
   fit <- lm(mpg ~ wt + hp, data = mtcars)

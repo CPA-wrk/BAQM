@@ -67,6 +67,11 @@ stat_desc(swiss)
 #
 regs <- regsubsets(Fert ~ ., data = swiss, nbest = 3)
 summary(regs)
+#>                                                                                                                          
+#> Call: (function (...)                                                                                                    
+#>       rmarkdown::render(...))(input = base::quote("C:/Users/plert/OneDrive - Babson College/Documents/BAQM/README.Rmd"), 
+#>           output_options = base::quote(list(html_preview = FALSE)),                                                      
+#>           quiet = base::quote(TRUE))                                                                                     
 #>    _k_i.best    rsq  adjr2       see    cp Agri Exam Educ Cath Infa
 #> 1   1  ( 1 ) 0.4406 0.4282  9.446029 35.20              *          
 #> 2   1  ( 2 ) 0.4172 0.4042  9.642000 38.48         *               
