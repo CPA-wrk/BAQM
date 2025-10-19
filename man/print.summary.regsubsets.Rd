@@ -20,7 +20,6 @@ If the input is a \code{regsubsets} object, it is converted to a summary with \c
 }
 \examples{
 \dontrun{
-library(leaps)
 fit <- leaps::regsubsets(Fertility ~ ., data = swiss, nbest = 3)
 print.summary.regsubsets(fit)
 }

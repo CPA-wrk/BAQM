@@ -1,3 +1,17 @@
+#
+# From https://github.com/CPA-wrk/BAQM/issues/1
+#
+# git pull
+urlchecker::url_check()
+devtools::build_readme()
+devtools::check(remote = TRUE, manual = TRUE)
+devtools::check_win_devel()
+# git push
+
+
+
+
+
 library(Microsoft365R)
 odb <- get_business_onedrive()
 ### --- Will authenticate in browser via MSFT Authenticator

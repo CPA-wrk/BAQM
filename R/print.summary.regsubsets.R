@@ -10,11 +10,10 @@
 #' If the input is a \code{regsubsets} object, it is converted to a summary with \code{summary()}. If not, the object is returned unmodified.
 #'
 #' @seealso \code{\link[leaps]{regsubsets}}
-#' @export
+#' @exportS3Method print summary.regsubsets
 #'
 #' @examples
 #' \dontrun{
-#' library(leaps)
 #' fit <- leaps::regsubsets(Fertility ~ ., data = swiss, nbest = 3)
 #' print.summary.regsubsets(fit)
 #' }

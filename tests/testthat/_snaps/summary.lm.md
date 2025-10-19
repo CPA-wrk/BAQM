@@ -8,7 +8,7 @@
                        Value      Performance      Measure  Err(Resids)   Metric
       Observations =     150      R-Squared =     0.013823       MAPE =  0.11751
       F-Statistic =   2.0744      Adj-R2 =       0.0071593       MAD  =   0.6749
-      Pr(b's=0),% =    0.152      Std.Err.Est =     0.8251       RMSE =  0.81958
+      Pr(b's=0) =      0.152      Std.Err.Est =     0.8251       RMSE =  0.81958
       
       Analysis of Variance:
                      Deg.Frdm  Sum.of.Sqs  Mean.Sum.Sqs  F.statistic  p-value(F)    
@@ -38,7 +38,7 @@
                        Value      Performance    Measure  Err(Resids)    Metric
       Observations =     150      R-Squared =    0.86731       MAPE =  0.041785
       F-Statistic =   188.25      Adj-R2 =       0.86271       MAD  =   0.24286
-      Pr(b's=0),% =   <2e-16 ***  Std.Err.Est =  0.30683       RMSE =   0.30063
+      Pr(b's=0) =     <2e-16 ***  Std.Err.Est =  0.30683       RMSE =   0.30063
       
       Analysis of Variance:
                      Deg.Frdm  Sum.of.Sqs  Mean.Sum.Sqs  F.statistic  p-value(F)    
@@ -72,7 +72,7 @@
                        Value      Performance    Measure  Err(Resids)    Metric
       Observations =     150      R-Squared =     0.8619       MAPE =  0.042979
       F-Statistic =   226.25      Adj-R2 =       0.85809       MAD  =   0.24946
-      Pr(b's=0),% =   <2e-16 ***  Std.Err.Est =  0.31194       RMSE =   0.30669
+      Pr(b's=0) =     <2e-16 ***  Std.Err.Est =  0.31194       RMSE =   0.30669
       
       Analysis of Variance:
                      Deg.Frdm  Sum.of.Sqs  Mean.Sum.Sqs  F.statistic  p-value(F)    

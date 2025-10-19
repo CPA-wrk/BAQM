@@ -42,11 +42,13 @@ Here are summaries of built-in R data sets `swiss` and `iris`, with
 (Variable names are truncated in `swiss` to narrow the output.)
 
 ``` r
+library(leaps)
 library(BAQM)
 #> Registered S3 methods overwritten by 'BAQM':
-#>   method           from 
-#>   print.summary.lm stats
-#>   summary.lm       stats
+#>   method                   from 
+#>   print.summary.lm         stats
+#>   print.summary.regsubsets leaps
+#>   summary.lm               stats
 names(swiss) # Show original variable names
 #> [1] "Fertility"        "Agriculture"      "Examination"      "Education"       
 #> [5] "Catholic"         "Infant.Mortality"
@@ -63,45 +65,28 @@ stat_desc(swiss)
 #> max       92.5   89.7     37     53    100   26.6
 #> std.dev  12.49  22.71  7.978  9.615   41.7  2.913
 #
-regs <- leaps::regsubsets(Fert ~ ., data = swiss, nbest = 3)
-#> Registered S3 method overwritten by 'leaps':
-#>   method                   from
-#>   print.summary.regsubsets BAQM
+regs <- regsubsets(Fert ~ ., data = swiss, nbest = 3)
 summary(regs)
-#> Subset selection object
-#> Call: (function (...) 
-#> rmarkdown::render(...))(input = base::quote("/Users/peter/Library/CloudStorage/OneDrive-centerpointanalytics.com/CPA_wrk/R/BAQM/README.Rmd"), 
-#>     output_options = base::quote(list(html_preview = FALSE)), 
-#>     quiet = base::quote(TRUE))
-#> 5 Variables  (and intercept)
-#>      Forced in Forced out
-#> Agri     FALSE      FALSE
-#> Exam     FALSE      FALSE
-#> Educ     FALSE      FALSE
-#> Cath     FALSE      FALSE
-#> Infa     FALSE      FALSE
-#> 3 subsets of each size up to 5
-#> Selection Algorithm: exhaustive
-#>          Agri Exam Educ Cath Infa
-#> 1  ( 1 ) " "  " "  "*"  " "  " " 
-#> 1  ( 2 ) " "  "*"  " "  " "  " " 
-#> 1  ( 3 ) " "  " "  " "  "*"  " " 
-#> 2  ( 1 ) " "  " "  "*"  "*"  " " 
-#> 2  ( 2 ) " "  " "  "*"  " "  "*" 
-#> 2  ( 3 ) " "  "*"  " "  " "  "*" 
-#> 3  ( 1 ) " "  " "  "*"  "*"  "*" 
-#> 3  ( 2 ) "*"  " "  "*"  "*"  " " 
-#> 3  ( 3 ) " "  "*"  "*"  " "  "*" 
-#> 4  ( 1 ) "*"  " "  "*"  "*"  "*" 
-#> 4  ( 2 ) " "  "*"  "*"  "*"  "*" 
-#> 4  ( 3 ) "*"  "*"  "*"  "*"  " " 
-#> 5  ( 1 ) "*"  "*"  "*"  "*"  "*"
+#>    _k_i.best    rsq  adjr2       see    cp Agri Exam Educ Cath Infa
+#> 1   1  ( 1 ) 0.4406 0.4282  9.446029 35.20              *          
+#> 2   1  ( 2 ) 0.4172 0.4042  9.642000 38.48         *               
+#> 3   1  ( 3 ) 0.2150 0.1976 11.189945 66.75                   *     
+#> 4   2  ( 1 ) 0.5745 0.5552  8.331442 18.49              *    *     
+#> 5   2  ( 2 ) 0.5648 0.5450  8.426136 19.85              *         *
+#> 6   2  ( 3 ) 0.5363 0.5152  8.697447 23.83         *              *
+#> 7   3  ( 1 ) 0.6625 0.6390  7.505417  8.18              *    *    *
+#> 8   3  ( 2 ) 0.6423 0.6173  7.727757 11.01    *         *    *     
+#> 9   3  ( 3 ) 0.6191 0.5925  7.973957 14.25         *    *         *
+#> 10  4  ( 1 ) 0.6993 0.6707  7.168166  5.03    *         *    *    *
+#> 11  4  ( 2 ) 0.6639 0.6319  7.579356  9.99         *    *    *    *
+#> 12  4  ( 3 ) 0.6498 0.6164  7.736422 11.96    *    *    *    *     
+#> 13  5  ( 1 ) 0.7067 0.6710  7.165369  6.00    *    *    *    *    *
 #
 stat_desc(iris) # Includes non-numeric variable
 #>          Sepal.Length  Sepal.Width  Petal.Length  Petal.Width   Species
 #> n.val             150          150           150          150       150
 #> n.na                0            0             0            0         0
-#> min               4.3            2             1          0.1  n.lvls=4
+#> min               4.3            2             1          0.1  n.lvls=3
 #> Q1                5.1          2.7           1.6          0.2  setos:50
 #> median            5.8            3          4.35          1.3  vrscl:50
 #> mean            5.843        3.057         3.758        1.199  vrgnc:50
@@ -116,7 +101,7 @@ summary(mdl)
 #>                  Value      Performance    Measure  Err(Resids)    Metric
 #> Observations =     150      R-Squared =    0.86731       MAPE =  0.041785
 #> F-Statistic =   188.25      Adj-R2 =       0.86271       MAD  =   0.24286
-#> Pr(b's=0),% =   <2e-16 ***  Std.Err.Est =  0.30683       RMSE =   0.30063
+#> Pr(b's=0) =     <2e-16 ***  Std.Err.Est =  0.30683       RMSE =   0.30063
 #> 
 #> Analysis of Variance:
 #>                Deg.Frdm  Sum.of.Sqs  Mean.Sum.Sqs  F.statistic  p-value(F)    
