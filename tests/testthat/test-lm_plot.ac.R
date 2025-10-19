@@ -8,12 +8,13 @@ test_that("lm_plot.ac produces expected plot graphics for longley", {
     lm_plot.ac(mdl = fit, opt = list(ts = TRUE, pval.DW = TRUE))
   vdiffr::expect_doppelganger(
     title = "lm-plot-ac-longley",
-    fig = lm_plot.ac_longley$plts$ac)
+    fig = lm_plot.ac_longley$plts$ac,
+    variant = sysnm())
 })
 
 test_that("lm_plot.ac produces expected plot elements for longley", {
   withr::local_options(test_options)
+  load(testthat::test_path("fixtures", sysnm(), "lm_plot.ac_longley.Rdata"))
   lm_plot.ac_longley.out <- lm_plot.ac_longley_bld(test_options)
-  load(testthat::test_path("fixtures", "lm_plot.ac_longley.Rdata"))
   expect_equal(lm_plot.ac_longley.out, lm_plot.ac_longley.rda)
 })

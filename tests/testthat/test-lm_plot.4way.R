@@ -12,12 +12,14 @@ test_that("lm_plot.4way produces expected plot graphics for cars", {
                             pval.SW = TRUE))
   vdiffr::expect_doppelganger(
     title = "lm-plot-4way-cars-p-4way",
-    fig = lm_plot.4way_cars$p_4way)
+    fig = lm_plot.4way_cars$p_4way,
+    variant = sysnm()
+  )
 })
 
 test_that("lm_plot.4way produces expected plot content for cars", {
   withr::local_options(test_options)
+  load(testthat::test_path("fixtures", sysnm(), "lm_plot.4way_cars.Rdata"))
   lm_plot.4way_cars.out <- lm_plot.4way_cars_bld(test_options)
-  load(testthat::test_path("fixtures", "lm_plot.4way_cars.Rdata"))
   expect_equal(lm_plot.4way_cars.out, lm_plot.4way_cars.rda)
 })
