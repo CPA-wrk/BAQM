@@ -26,7 +26,7 @@
 #' @return An object of class \code{summary.lm} containing tables and statistics described above.
 #'
 #' @seealso \code{\link{print.summary.lm}}, \code{\link{lm}}
-#' @export
+#' @exportS3Method stats::summary
 #'
 #' @examples
 #' mdl <- lm(Sepal.Length ~ Sepal.Width + Petal.Length, data = iris)

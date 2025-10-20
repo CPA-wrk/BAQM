@@ -16,12 +16,12 @@
 #' For objects not of class \code{summary.lm}, a default print method is used.
 #'
 #' @seealso \code{\link{summary.lm}}, \code{\link{print.table.summary.lm}}
-#' @export
 #'
 #' @examples
 #' mdl <- lm(Sepal.Length ~ Sepal.Width, data = iris)
 #' summary(mdl)
 #' summary(mdl, options = c("correlation", "fits"))
+#' @exportS3Method stats::print
 print.summary.lm <- function(x,
                              digits = max(5, getOption("digits") - 2),
                              symbolic.cor = NULL,
