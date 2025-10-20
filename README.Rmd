@@ -23,12 +23,13 @@ knitr::opts_chunk$set(
   
 BAQM supplies functions developed by Babson College instructors
 for AQM 1000 and AQM 2000 courses using R in the curriculum.
-The primary functions include:
+The primary functions provide:
 
-* `stat_desc()` - a function to produce descriptive statistics for data frames
-* `summary.lm()` - a function to summarize linear model results
-* `lm_plot.4way()` - a function to produce diagnostic plots for linear models
-* `print.summary.regsubsets()` - a function to format a "best subsets" report created by the `regsubsets` function from the leaps package
+* `stat_desc()` - summary descriptive statistics for data frames, allowing both numeric and factor variables, in both wide and long formats.
+* `summary.lm()` - expanded statistics and enhanced formatting to summarize linear model results.
+* `lm_plot.4way()` - multiple diagnostic plots for linear models using ggplot, including a 4-in-1 summary graphic.
+* `print.summary.regsubsets()` - compact "best subsets" linear model reports for analytics from the `regsubsets` function of the leaps package. Note that this BAQM package must
+be loaded (using `library(BAQM)`) **after** the leaps package is loaded.
 
 ## Installation
 
@@ -42,28 +43,35 @@ from [GitHub](https://github.com/) with:
 
 ## Example
 
-Here are summaries of built-in R data sets `swiss` and `iris`, with 
+These examples use the built-in R data sets `iris`, `swiss`, and `mtcars`, and
+show:
 
-* a best-subsets analysis of modeling Fertility in `swiss` and
-* a linear model with analytics of Sepal Length in `iris`.
+* brief statistical summaries of data sets `iris` and `swiss`,
+* a concise best-subsets report for regression modeling of Fertility in
+  `swiss`,
+* expanded statistical summaries for linear models of Sepal Length in
+  `iris` and miles per gallon in `mtcars`, and
+* a 4-way diagnostic plot for the `mtcars` model.
 
 (Variable names are truncated in `swiss` to narrow the output.)
 
 ```{r example}
 library(leaps)
 library(BAQM)
+#
+stat_desc(iris) # Includes non-numeric variable
+#
 names(swiss) # Show original variable names
 names(swiss) <- substr(names(swiss), 1, 4) # Narrows output
 stat_desc(swiss)
-#
 regs <- regsubsets(Fert ~ ., data = swiss, nbest = 3)
 summary(regs)
-#
-stat_desc(iris) # Includes non-numeric variable
 #
 mdl <- lm(Sepal.Length ~ ., data = iris)
 summary(mdl)
 #
+mdl <- lm(mpg ~ hp + qsec, data = mtcars)
+summary(mdl)
 lm_plot.lst <- lm_plot.4way(mdl)
 lm_plot.lst$p_4way
 ```
