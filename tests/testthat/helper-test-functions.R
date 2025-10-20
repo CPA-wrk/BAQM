@@ -4,9 +4,11 @@ sysnm <- function() {
   } else if (! os %in% c("windows", "solaris")) {
     os <- "linux"
   }
+  #
+  if (os != "windows") os <- "mac"  # for linux or solaris
   os
 }
-#
+# Define test functions to build lm_plot outputs for comparison
 lm_plot.4way_cars_bld <- function(test_options) {
   withr::local_options(test_options)
   fit <- lm(mpg ~ wt + hp, data = mtcars)
