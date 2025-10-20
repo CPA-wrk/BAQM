@@ -8,7 +8,6 @@ Copyright: Copyright Peter Lert, PhD, CFA
 Description: Instructor-developed tools for AQM 1000 and AQM 2000
     courses using R in the curriculum.
 License: GPL (>= 2)
-R: >= 3.5.0
 Suggests: 
     leaps,
     shiny,
