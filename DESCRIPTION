@@ -3,7 +3,7 @@ Package: BAQM
 Title: Analytics Functions for Babson AQM Courses
 Version: 0.1.2
 Authors@R: 
-    person("Peter", "Lert", , "plert@babson.edu", role = c("aut", "cre", "cph"))
+    person("Peter", "Lert", , "plert@centerpointanalytics.com", role = c("aut", "cre", "cph"))
 Copyright: Copyright Peter Lert, PhD, CFA
 Description: Instructor-developed tools for AQM 1000 and AQM 2000
     courses using R in the curriculum.
