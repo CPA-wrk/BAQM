@@ -133,25 +133,37 @@ lm_plot.fit <- function(mdl,
   if (opt$pred.intvl) {
     p.int <- df[order(df$.obs), ]
     plts$fit <- plts$fit +
-      ggplot2::geom_smooth(
+      ggplot2::geom_smooth(  # Upper limit with quadratic smoothing
         data = p.int,
         ggplot2::aes(x = .obs, y = .upper.pi),
-        method = "loess",
-        formula = y ~ x,
+        method = "lm",
+        formula = y ~ poly(x, 2),
         se = FALSE,
+        na.rm = TRUE,
         linetype = parms$lins$ltyp$pi,
         color = parms$lins$colr$fit,
         linewidth = parms$lins$size
       ) +
-      ggplot2::geom_smooth(
+      ggplot2::geom_smooth(  # Lower limit with quadratic smoothing
         data = p.int,
         ggplot2::aes(x = .obs, y = .lower.pi),
-        method = "loess",
-        formula = y ~ x,
+        method = "lm",
+        formula = y ~ poly(x, 2),
         se = FALSE,
+        na.rm = TRUE,
         linetype = parms$lins$ltyp$pi,
         color = parms$lins$colr$fit,
         linewidth = parms$lins$size
+      ) +
+      ggplot2::annotate(    # Label for prediction interval
+        "label",
+        x = lim["max", "x"],
+        y = tail(p.int$.lower.pi, 1),
+        label = "95% P.I.",
+        hjust = 0.7,
+        vjust = 1.8,
+        color = parms$lins$colr$fit,
+        size = parms$pts$lblsz
       )
   }
   #

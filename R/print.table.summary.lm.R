@@ -102,7 +102,7 @@ print.table.summary.lm <- function(x,
             corr = FALSE,
             na = FALSE,
             cutpoints = c(0, 0.001, 0.01, 0.05, 0.1, 1),
-            symbols = c("***", "** ", "*  ", ".  ", "   ")
+            symbols = c("***", "** ", " * ", " . ", "   ")
           )
           strs[ij.p[1]] <- sig
           t.note <- rbind(t.note, matrix(
@@ -147,7 +147,7 @@ print.table.summary.lm <- function(x,
             corr = FALSE,
             na = FALSE,
             cutpoints = c(0, 0.001, 0.01, 0.05, 0.1, 1),
-            symbols = c("***", "** ", "*  ", ".  ", "   ")
+            symbols = c("***", "** ", " * ", " . ", "   ")
           )
           t.note <- rbind(t.note, matrix(
             attr(sig, "legend"),

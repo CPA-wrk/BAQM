@@ -12,15 +12,19 @@
 
 BAQM supplies functions developed by Babson College instructors for AQM
 1000 and AQM 2000 courses using R in the curriculum. The primary
-functions include:
+functions provide:
 
-- `stat_desc()` - a function to produce descriptive statistics for data
-  frames
-- `summary.lm()` - a function to summarize linear model results
-- `lm_plot.4way()` - a function to produce diagnostic plots for linear
-  models
-- `print.summary.regsubsets()` - a function to format a “best subsets”
-  report created by the `regsubsets` function from the leaps package
+- `stat_desc()` - summary descriptive statistics for data frames,
+  allowing both numeric and factor variables, in both wide and long
+  formats.
+- `summary.lm()` - expanded statistics and enhanced formatting to
+  summarize linear model results.
+- `lm_plot.4way()` - multiple diagnostic plots for linear models using
+  ggplot, including a 4-in-1 summary graphic.
+- `print.summary.regsubsets()` - compact “best subsets” linear model
+  reports for analytics from the `regsubsets` function of the leaps
+  package. Note that this BAQM package must be loaded (using
+  `library(BAQM)`) **after** the leaps package is loaded.
 
 ## Installation
 
@@ -34,10 +38,15 @@ You can install the development version of BAQM from
 
 ## Example
 
-Here are summaries of built-in R data sets `swiss` and `iris`, with
+These examples use the built-in R data sets `iris`, `swiss`, and
+`mtcars`, and show:
 
-- a best-subsets analysis of modeling Fertility in `swiss` and
-- a linear model with analytics of Sepal Length in `iris`.
+- brief statistical summaries of data sets `iris` and `swiss`,
+- a concise best-subsets report for regression modeling of Fertility in
+  `swiss`,
+- expanded statistical summaries for linear models of Sepal Length in
+  `iris` and miles per gallon in `mtcars`, and
+- a 4-way diagnostic plot for the `mtcars` model.
 
 (Variable names are truncated in `swiss` to narrow the output.)
 
@@ -49,6 +58,19 @@ library(BAQM)
 #>   print.summary.lm         stats
 #>   print.summary.regsubsets leaps
 #>   summary.lm               stats
+#
+stat_desc(iris) # Includes non-numeric variable
+#>          Sepal.Length  Sepal.Width  Petal.Length  Petal.Width   Species
+#> n.val             150          150           150          150       150
+#> n.na                0            0             0            0         0
+#> min               4.3            2             1          0.1  n.lvls=3
+#> Q1                5.1          2.7           1.6          0.2  setos:50
+#> median            5.8            3          4.35          1.3  vrscl:50
+#> mean            5.843        3.057         3.758        1.199  vrgnc:50
+#> Q3               6.45          3.4           5.1          1.8          
+#> max               7.9          4.4           6.9          2.5          
+#> std.dev        0.8281       0.4359         1.765       0.7622
+#
 names(swiss) # Show original variable names
 #> [1] "Fertility"        "Agriculture"      "Examination"      "Education"       
 #> [5] "Catholic"         "Infant.Mortality"
@@ -64,14 +86,8 @@ stat_desc(swiss)
 #> Q3        79.3   67.8     22   12.5   93.4   22.2
 #> max       92.5   89.7     37     53    100   26.6
 #> std.dev  12.49  22.71  7.978  9.615   41.7  2.913
-#
 regs <- regsubsets(Fert ~ ., data = swiss, nbest = 3)
 summary(regs)
-#>                                                                                                                          
-#> Call: (function (...)                                                                                                    
-#>       rmarkdown::render(...))(input = base::quote("C:/Users/plert/OneDrive - Babson College/Documents/BAQM/README.Rmd"), 
-#>           output_options = base::quote(list(html_preview = FALSE)),                                                      
-#>           quiet = base::quote(TRUE))                                                                                     
 #>    _k_i.best    rsq  adjr2       see    cp Agri Exam Educ Cath Infa
 #> 1   1  ( 1 ) 0.4406 0.4282  9.446029 35.20              *          
 #> 2   1  ( 2 ) 0.4172 0.4042  9.642000 38.48         *               
@@ -86,18 +102,6 @@ summary(regs)
 #> 11  4  ( 2 ) 0.6639 0.6319  7.579356  9.99         *    *    *    *
 #> 12  4  ( 3 ) 0.6498 0.6164  7.736422 11.96    *    *    *    *     
 #> 13  5  ( 1 ) 0.7067 0.6710  7.165369  6.00    *    *    *    *    *
-#
-stat_desc(iris) # Includes non-numeric variable
-#>          Sepal.Length  Sepal.Width  Petal.Length  Petal.Width   Species
-#> n.val             150          150           150          150       150
-#> n.na                0            0             0            0         0
-#> min               4.3            2             1          0.1  n.lvls=3
-#> Q1                5.1          2.7           1.6          0.2  setos:50
-#> median            5.8            3          4.35          1.3  vrscl:50
-#> mean            5.843        3.057         3.758        1.199  vrgnc:50
-#> Q3               6.45          3.4           5.1          1.8          
-#> max               7.9          4.4           6.9          2.5          
-#> std.dev        0.8281       0.4359         1.765       0.7622
 #
 mdl <- lm(Sepal.Length ~ ., data = iris)
 summary(mdl)
@@ -119,17 +123,44 @@ summary(mdl)
 #> (Intercept)             2.17127   0.279794   7.7602  1.43e-12 ***         
 #> Sepal.Width             0.49589   0.086070   5.7615  4.87e-08 ***   2.2275
 #> Petal.Length            0.82924   0.068528  12.1009   < 2e-16 ***  23.1616
-#> Petal.Width            -0.31516   0.151196  -2.0844   0.03889 *    21.0214
+#> Petal.Width            -0.31516   0.151196  -2.0844   0.03889  *   21.0214
 #> Species_versicolor     -0.72356   0.240169  -3.0127   0.00306 **   20.4234
 #> Species_virginica      -1.02350   0.333726  -3.0669   0.00258 **   39.4344
 #>                                                                      
-#> Signif.Levels:  0 '***' 0.001 '** ' 0.01 '*  ' 0.05 '.  ' 0.1 '   ' 1
+#> Signif.Levels:  0 '***' 0.001 '** ' 0.01 ' * ' 0.05 ' . ' 0.1 '   ' 1
 #>                                                                 
 #> Summary of   Min       1Q      Mean    Median     3Q      Max   
 #> Residuals: -0.7942  -0.2187   <3e-14  0.008987  0.2025   0.731  
 #>                                                   
 #> Call:  lm(formula = Sepal.Length ~ ., data = iris)
 #
+mdl <- lm(mpg ~ hp + qsec, data = mtcars)
+summary(mdl)
+#> 
+#> Summary Statistics:
+#>                    Value      Performance    Measure  Err(Resids)  Metric
+#> Observations =        32      R-Squared =    0.63688       MAPE =  0.1448
+#> F-Statistic =     25.431      Adj-R2 =       0.61183       MAD  =  2.6984
+#> Pr(b's=0) =     4.18e-07 ***  Std.Err.Est =    3.755       RMSE =  3.5746
+#> 
+#> Analysis of Variance:
+#>                Deg.Frdm  Sum.of.Sqs  Mean.Sum.Sqs  F.statistic  p-value(F)    
+#> Regression            2      717.15        358.58       25.431    4.18e-07 ***
+#> Error(Resids)        29      408.89         14.10                             
+#> Total                31     1126.05                                           
+#> 
+#> Coefficients:
+#>              Coefficient  Std.Error   t-stat   p-value         VIF
+#> (Intercept)    48.323705  11.103306   4.3522  0.000153 ***        
+#> hp             -0.084593   0.013933  -6.0715  1.31e-06 ***  2.0063
+#> qsec           -0.886580   0.534585  -1.6584  0.108007      2.0063
+#>                                                                      
+#> Signif.Levels:  0 '***' 0.001 '** ' 0.01 ' * ' 0.05 ' . ' 0.1 '   ' 1
+#>                                                           
+#> Summary of   Min     1Q    Median   Mean     3Q      Max  
+#> Residuals: -5.178  -2.603  -0.5098 <6e-15   1.287   8.718 
+#>                                                    
+#> Call:  lm(formula = mpg ~ hp + qsec, data = mtcars)
 lm_plot.lst <- lm_plot.4way(mdl)
 lm_plot.lst$p_4way
 ```
