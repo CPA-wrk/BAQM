@@ -22,7 +22,7 @@
 #' @return Invisibly returns the input table.
 #'
 #' @seealso \code{\link{print.summary.lm}}
-#' @exportS3Method BAQM::print
+#' @export
 #'
 #' @examples
 #' mdl <- lm(Sepal.Length ~ Sepal.Width, data = iris)
