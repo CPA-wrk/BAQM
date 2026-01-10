@@ -6,7 +6,8 @@
 \usage{
 lm_plot.ac(
   mdl,
-  opt = list(),
+  ...,
+  pval.DW = FALSE,
   parm = list(),
   df = lm_plot.df(mdl),
   plts = list()
@@ -15,7 +16,9 @@ lm_plot.ac(
 \arguments{
 \item{mdl}{A fitted model object (typically from \code{\link[stats]{lm}}).}
 
-\item{opt}{List of options, where \code{pval.DW} (logical, default = FALSE) indicates whether to include Durbin-Watson p-value on the plot.}
+\item{...}{Additional arguments (not currently used).}
+
+\item{pval.DW}{(logical, default = FALSE) Option to show Durbin-Watson p-value on the plot.}
 
 \item{parm}{A list of plotting parameters, usually from \code{lm_plot.parms()}.}
 
@@ -27,7 +30,7 @@ lm_plot.ac(
 A list containing:
 \itemize{
   \item \code{mdl} Fitted model object,
-  \item \code{opt} Options used, including \code{pval.DW},
+  \item \code{pval.DW} Option to show Durbin-Watson p-value,
   \item \code{parm} Parameter list with Durbin-Watson test results added,
   \item \code{df} Data frame used for plotting,
   \item \code{plts} List of ggplot objects, including the \code{$ac} element.

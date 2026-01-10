@@ -15,10 +15,11 @@ lm_plot.4way_cars_bld <- function(test_options) {
   set.seed(123)
   lm_plot.test <-
     lm_plot.4way(mdl = fit,
-                 opt = list(ts = FALSE,
-                            pval.BP = TRUE,
-                            pval.DW = TRUE,
-                            pval.SW = TRUE))
+                 rtn_all = TRUE,
+                 ts = FALSE,
+                 pval.BP = TRUE,
+                 pval.DW = TRUE,
+                 pval.SW = TRUE)
   nms <- names(lm_plot.test)
   lm_plot.4way_cars <- lm_plot.test[nms[!nms %in% c("mdl", "plts", "p_4way")]]
   lm_plot.4way_cars
@@ -29,7 +30,7 @@ lm_plot.ac_longley_bld <- function(test_options) {
   fit <- lm(GNP ~ ., data = longley[-1])
   set.seed(123)
   lm_plot.test <-
-    lm_plot.ac(mdl = fit, opt = list(ts = TRUE, pval.DW = TRUE))
+    lm_plot.ac(mdl = fit, ts = TRUE, pval.DW = TRUE)
   nms <- names(lm_plot.test)
   lm_plot.ac_longley <- lm_plot.test[nms[!nms %in% c("mdl", "plts", "p_4way")]]
   lm_plot.ac_longley

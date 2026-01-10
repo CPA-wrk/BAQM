@@ -1,8 +1,8 @@
 #' Print a Table from Linear Model Summary
 #'
-#' Prints a formatted table from a summary of a linear model, including coefficients, ANOVA, correlation matrices, or summary statistics. Significance stars and legends are added as appropriate.
+#' Prints a formatted table from a sumry of a linear model, including coefficients, ANOVA, correlation matrices, or summary statistics. Significance stars and legends are added as appropriate.
 #'
-#' @param x A table object from a linear model summary (e.g., coefficients, ANOVA, statistics, correlation matrices).
+#' @param x A table object from a linear model sumry (e.g., coefficients, ANOVA, statistics, correlation matrices).
 #' @param digits Number of significant digits to print. Defaults to \code{max(4, getOption("digits") - 2)}.
 #' @param quote Logical; whether to print with quotes (default: FALSE).
 #' @param na.print String to use for NA values (default: ").
@@ -17,35 +17,36 @@
 #' @param ... Additional arguments (not currently used).
 #'
 #' @details
-#' This method handles tabular output from linear model summaries, including coefficients, ANOVA, statistics, and correlation/covariance matrices. It formats p-values, adds significance stars, and prints appropriate legends for hypothesis tests.
+#' This method handles tabular output from linear model sumry.lm, including coefficients, ANOVA, statistics, and correlation/covariance matrices. It formats p-values, adds significance stars, and prints appropriate legends for hypothesis tests.
 #'
 #' @return Invisibly returns the input table.
 #'
-#' @seealso \code{\link{print.summary.lm}}
-#' @export
+#' @seealso \code{\link{print.sumry.lm}}
 #'
 #' @examples
 #' mdl <- lm(Sepal.Length ~ Sepal.Width, data = iris)
-#' sumry <- summary(mdl)
-#' print(sumry$coefficients)
-print.table.summary.lm <- function(x,
-                                   digits = max(4, getOption("digits") - 2),
-                                   quote = FALSE,
-                                   na.print = "",
-                                   zero.print = "0",
-                                   right = TRUE,
-                                   justify = "right",
-                                   signif.stars = getOption("show.signif.stars"),
-                                   eps = .Machine$double.eps,
-                                   nsmall = 4,
-                                   prnt.lgnd = c("coefficients"),
-                                   dig.test = max(1, min(5, digits - 2)),
-                                   ...) {
+#' sum_mdl <- sumry(mdl)
+#' print(sum_mdl$coefficients)
+#'
+#' @export
+print.table.sumry.lm <- function(x, ...,
+                                 digits = max(4, getOption("digits") - 2),
+                                 quote = FALSE,
+                                 na.print = "",
+                                 zero.print = "0",
+                                 right = TRUE,
+                                 justify = "right",
+                                 signif.stars = getOption("show.signif.stars"),
+                                 eps = .Machine$double.eps,
+                                 nsmall = 4,
+                                 prnt.lgnd = c("coefficients"),
+                                 dig.test = max(1, min(5, digits - 2))
+                                 ) {
   # Copyright 2025, Peter Lert, All rights reserved.
   #
   # Method to print a table component of an lm object summary
   #
-  tbl_nm <- sub(".summary.lm", "", grep("summary.lm", class(x), value = TRUE))
+  tbl_nm <- sub(".sumry.lm", "", grep("sumry.lm", class(x), value = TRUE))
   tbl_nm <- tbl_nm[!tbl_nm %in% "table"]
   t.mat <- as.matrix(x)
   t.fmtd <- array("", dim = dim(t.mat), dimnames = dimnames(t.mat))

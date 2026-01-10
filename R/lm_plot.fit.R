@@ -3,10 +3,11 @@
 #' Generates a scatter plot of fitted values versus observed values from a linear model, with optional prediction intervals and identification of outlier points. The plot includes a reference line \code{y = x} for assessing linearity.
 #'
 #' @param mdl A fitted model object (typically from \code{\link[stats]{lm}}).
-#' @param opt List of options, where \code{pred_intvl_pts} (numeric, default = 100) is used for prediction interval bounds of fitted values (0 to skip).
+#' @param pred.intvl List of options, where \code{pred_intvl_pts} (numeric, default = 100) is used for prediction interval bounds of fitted values (0 to skip).
 #' @param parm List of plotting parameters, usually from \code{lm_plot.parms()}.
 #' @param df Data frame with augmented model data. Defaults to \code{lm_plot.df(mdl)}.
 #' @param plts List of ggplot objects to which this plot will be added.
+#' @param ... Additional arguments (not currently used).
 #'
 #' @details
 #' The plot visualizes fitted versus observed values, includes a diagonal reference line, marks outliers, and can optionally display loess-smoothed prediction intervals. Outlier and regular points can be labeled. This plot is useful for visually assessing linearity and model fit quality.
@@ -14,7 +15,7 @@
 #' @return A list containing:
 #' \itemize{
 #'   \item \code{mdl} Fitted model object,
-#'   \item \code{opt} Options used, including \code{pred_intvl_pts},
+#'   \item \code{pred.intvl} Options used, including \code{pred_intvl_pts},
 #'   \item \code{parm} Parameter list with autocorrelation test results added,
 #'   \item \code{df} Data frame used for plotting,
 #'   \item \code{plts} List of ggplot objects, including the \code{$fit} element.
@@ -28,8 +29,8 @@
 #' mdl <- lm(Sepal.Length ~ Sepal.Width, data = iris)
 #' result <- lm_plot.fit(mdl)
 #' print(result$plts$fit)
-lm_plot.fit <- function(mdl,
-                        opt = list(),
+lm_plot.fit <- function(mdl, ...,
+                        pred.intvl = TRUE,
                         parm = list(),
                         df = lm_plot.df(mdl),
                         plts = list()) {
@@ -37,19 +38,17 @@ lm_plot.fit <- function(mdl,
   #
   # Plot of observed versus fitted to test linearity
   #
-  # mdl:    fitted linear model
-  # opt:    pred_intvl_pts: # of pts for prediction interval of fitted values
-  # parm:   plot element parameters
-  # df:     augmented model data
-  # plts:   list of ggplot objects to add to
+  # mdl:        fitted linear model
+  # pred.intvl: option to plot prediction interval of fitted values
+  # parm:       plot element parameters
+  # df:         augmented model data
+  # plts:       list of ggplot objects to add to
   #
   # Default plot element parameters
   parms <- lm_plot.parms(mdl, parm)
   #
-  if (is.null(opt$pred.intvl)) opt$pred.intvl <- TRUE
-  #
   # Find x, y limits for placing elements
-  if (opt$pred.intvl) {
+  if (pred.intvl) {
     lim <- data.frame(
       x = range(df$.obs, na.rm = TRUE),
       y = range(df$.obs, df$.fits, na.rm = TRUE),
@@ -130,7 +129,7 @@ lm_plot.fit <- function(mdl,
     )
   #
   # Plot prediction interval if desired
-  if (opt$pred.intvl) {
+  if (pred.intvl) {
     p.int <- df[order(df$.obs), ]
     plts$fit <- plts$fit +
       ggplot2::geom_smooth(  # Upper limit with quadratic smoothing
@@ -213,7 +212,7 @@ lm_plot.fit <- function(mdl,
   # Return results
   list(
     mdl = mdl,
-    opt = opt,
+    pred.intvl = pred.intvl,
     parm = parms,
     df = df,
     plts = plts

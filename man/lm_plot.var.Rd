@@ -6,7 +6,8 @@
 \usage{
 lm_plot.var(
   mdl,
-  opt = list(),
+  ...,
+  pval.BP = FALSE,
   parm = list(),
   df = lm_plot.df(mdl),
   plts = list()
@@ -15,7 +16,9 @@ lm_plot.var(
 \arguments{
 \item{mdl}{A fitted model object (typically from \code{\link[stats]{lm}}).}
 
-\item{opt}{List of options, where \code{pval.BP} (logical, default = FALSE) indicates whether to include Breusch-Pagan p-value on the plot.}
+\item{...}{Additional arguments (not currently used).}
+
+\item{pval.BP}{(logical, default = FALSE) option to include Breusch-Pagan p-value on the plot.}
 
 \item{parm}{List of plotting parameters, usually from \code{lm_plot.parms()}.}
 
@@ -27,7 +30,7 @@ lm_plot.var(
 A list containing:
 \itemize{
   \item \code{mdl} Fitted model object,
-  \item \code{opt} Options used, including \code{pval.BP},
+  \item \code{pval.BP} Option to show Breusch-Pagan p-value,
   \item \code{parm} Parameter list with Breusch-Pagan test results added,
   \item \code{df} Data frame used for plotting,
   \item \code{plts} List of ggplot objects, including the \code{$var} element.

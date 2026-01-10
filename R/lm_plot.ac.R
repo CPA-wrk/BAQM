@@ -5,10 +5,11 @@
 #' Durbin–Watson test and labels outliers.
 #'
 #' @param mdl A fitted model object (typically from \code{\link[stats]{lm}}).
-#' @param opt List of options, where \code{pval.DW} (logical, default = FALSE) indicates whether to include Durbin-Watson p-value on the plot.
+#' @param pval.DW (logical, default = FALSE) Option to show Durbin-Watson p-value on the plot.
 #' @param parm A list of plotting parameters, usually from \code{lm_plot.parms()}.
 #' @param df Data frame with augmented model data. Defaults to \code{lm_plot.df(mdl)}.
 #' @param plts A list of ggplot objects to which this plot will be added.
+#' @param ... Additional arguments (not currently used).
 #'
 #' @details
 #' Points are colored and shaped according to whether they are residual outliers
@@ -18,7 +19,7 @@
 #' @return A list containing:
 #' \itemize{
 #'   \item \code{mdl} Fitted model object,
-#'   \item \code{opt} Options used, including \code{pval.DW},
+#'   \item \code{pval.DW} Option to show Durbin-Watson p-value,
 #'   \item \code{parm} Parameter list with Durbin-Watson test results added,
 #'   \item \code{df} Data frame used for plotting,
 #'   \item \code{plts} List of ggplot objects, including the \code{$ac} element.
@@ -31,25 +32,23 @@
 #' lm_plot.ac(fit)
 #' }
 #' @export
-lm_plot.ac <- function(mdl,
-                       opt = list(),
+lm_plot.ac <- function(mdl, ...,
+                       pval.DW = FALSE,
                        parm = list(),
                        df = lm_plot.df(mdl),
                        plts = list()) {
-  # Copyright 2025, Peter Lert, All rights reserved.
+  # Copyright 2026, Peter Lert, All rights reserved.
   #
   # Plot of Residuals vs order to test independence (autocorrelation)
   #
-  # mdl:    fitted linear model
-  # opt:    pval.DW: include Durbin-Watson autocorrelation test p-value?
-  # parm:   plot element parameters
-  # df:     augmented model data
-  # plts:   list of ggplot objects to add to
+  # mdl:     fitted linear model
+  # pval.DW: option to include Durbin-Watson autocorrelation test p-value
+  # parm:    plot element parameters
+  # df:      augmented model data
+  # plts:    list of ggplot objects to add to
   #
   # Default plot element parameters
   parms <- lm_plot.parms(mdl, parm)
-  #
-  if (is.null(opt$pval.DW)) opt$pval.DW <- FALSE
   #
   # Find x, y limits for placing elements
   lim <- data.frame(
@@ -152,7 +151,7 @@ lm_plot.ac <- function(mdl,
   parms$ac <- list(lim = lim, DW = lmtest::dwtest(mdl))
   #
   # Add Durbin-Watson autocorrelation test p-value if desired
-  if (opt$pval.DW) {
+  if (pval.DW) {
     note_ac <- paste0(
       "Autocorrelation: DW p-val=",
       round(parms$ac$DW$p.value, 4)
@@ -172,7 +171,7 @@ lm_plot.ac <- function(mdl,
   # Return results
   list(
     mdl = mdl,
-    opt = opt,
+    pval.DW = pval.DW,
     parm = parms,
     df = df,
     plts = plts

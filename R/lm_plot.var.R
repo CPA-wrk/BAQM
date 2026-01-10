@@ -3,10 +3,11 @@
 #' Produces a scatter plot of residuals against fitted values from a linear model, highlighting outlier points and optionally displaying the Breusch-Pagan test p-value for heteroskedasticity.
 #'
 #' @param mdl A fitted model object (typically from \code{\link[stats]{lm}}).
-#' @param opt List of options, where \code{pval.BP} (logical, default = FALSE) indicates whether to include Breusch-Pagan p-value on the plot.
+#' @param pval.BP (logical, default = FALSE) option to include Breusch-Pagan p-value on the plot.
 #' @param parm List of plotting parameters, usually from \code{lm_plot.parms()}.
 #' @param df Data frame with augmented model data. Defaults to \code{lm_plot.df(mdl)}.
 #' @param plts List of ggplot objects to which this plot will be added.
+#' @param ... Additional arguments (not currently used).
 #'
 #' @details
 #' The plot visualizes residuals versus fitted values to assess homoskedasticity (constant variance). Points are colored and shaped by outlier status, and outlier/regular points can be labeled. If enabled, the Breusch-Pagan test for heteroskedasticity is run and its p-value is annotated on the plot.
@@ -14,7 +15,7 @@
 #' @return A list containing:
 #' \itemize{
 #'   \item \code{mdl} Fitted model object,
-#'   \item \code{opt} Options used, including \code{pval.BP},
+#'   \item \code{pval.BP} Option to show Breusch-Pagan p-value,
 #'   \item \code{parm} Parameter list with Breusch-Pagan test results added,
 #'   \item \code{df} Data frame used for plotting,
 #'   \item \code{plts} List of ggplot objects, including the \code{$var} element.
@@ -28,25 +29,23 @@
 #' mdl <- lm(Sepal.Length ~ Sepal.Width, data = iris)
 #' result <- lm_plot.var(mdl)
 #' print(result$plts$var)
-lm_plot.var <- function(mdl,
-                        opt = list(),
+lm_plot.var <- function(mdl, ...,
+                        pval.BP = FALSE,
                         parm = list(),
                         df = lm_plot.df(mdl),
                         plts = list()) {
-  # Copyright 2025, Peter Lert, All rights reserved.
+  # Copyright 2026, Peter Lert, All rights reserved.
   #
   # Plot Residuals vs Fitted Values to test Homoskedasticity
   #
-  # mdl:    fitted linear model
-  # opt:    pval.BP: include Breusch-Pagan homoskedasticity test p-value?
-  # parm:   plot element parameters
-  # df:     augmented model data
-  # plts:   list of ggplot objects to add to
+  # mdl:     fitted linear model
+  # pval.BP: include Breusch-Pagan homoskedasticity test p-value?
+  # parm:    plot element parameters
+  # df:      augmented model data
+  # plts:    list of ggplot objects to add to
   #
   # Default plot element parameters
   parms <- lm_plot.parms(mdl, parm)
-  #
-  if (is.null(opt$pval.BP)) opt$pval.BP <- FALSE
   #
   # Find x, y limits for placing elements
   lim <- data.frame(
@@ -143,7 +142,7 @@ lm_plot.var <- function(mdl,
   parms$var <- list(lim = lim, BP = lmtest::bptest(mdl))
   #
   # Add Breusch-Pagan heteroskedasticity test p-value if desired
-  if (opt$pval.BP) {
+  if (pval.BP) {
     note_var <- paste0("Const.Var: BP p-val=", round(parms$var$BP$p.value, 4))
     plts$var <- plts$var +
       ggplot2::annotate(
@@ -160,7 +159,7 @@ lm_plot.var <- function(mdl,
   # Return results
   list(
     mdl = mdl,
-    opt = opt,
+    pval.BP = pval.BP,
     parm = parms,
     df = df,
     plts = plts

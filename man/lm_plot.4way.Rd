@@ -6,30 +6,44 @@
 \usage{
 lm_plot.4way(
   mdl,
-  opt = list(ts = FALSE),
-  parm = list(),
-  plt_nms = c("fit", "var", "qq", ifelse(opt$ts, "ac", "infl"))
+  ...,
+  is.ts = FALSE,
+  pred.intvl = TRUE,
+  pval.SW = FALSE,
+  pval.BP = FALSE,
+  pval.DW = FALSE,
+  cook.loess = FALSE,
+  rtn.all = FALSE,
+  plt.nms = c("fit", "var", "qq", ifelse(is.ts, "ac", "infl")),
+  parm = list()
 )
 }
 \arguments{
 \item{mdl}{A fitted model object (typically from \code{\link[stats]{lm}}).}
 
-\item{opt}{A named \code{list} of options. Recognized elements include:
-\describe{
-  \item{\code{ts}}{Logical; \code{TRUE} if data are time series, \code{FALSE} otherwise.}
-  \item{\code{pred.intvl}}{Logical; plot prediction interval on fitted vs observed.}
-  \item{\code{pval.SW}, \code{pval.BP}, \code{pval.DW}}{Logical; include p-values from Shapiro–Wilk,
-    Breusch–Pagan, and Durbin–Watson tests in the plots.}
-  \item{\code{cook.loess}}{Logical; whether to overlay Cook's distance loess curve.}
-}}
+\item{...}{Additional arguments (not currently used).}
+
+\item{is.ts}{Logical; \code{TRUE} if data are time series, \code{FALSE} otherwise.}
+
+\item{pred.intvl}{Logical; plot prediction interval on fitted vs observed.}
+
+\item{pval.SW}{Logical; include Shapiro–Wilk p-value in \code{qq}  plot.}
+
+\item{pval.BP}{Logical; include Breusch–Pagan p-value in \code{var} plot.}
+
+\item{pval.DW}{Logical; include Durbin–Watson p-value in \code{ac}  plot.}
+
+\item{cook.loess}{Logical; overlay Cook's distance loess curve in \code{infl}  plot.}
+
+\item{rtn.all}{Logical; return all plots and parameters (vs. 4-way plot only).}
+
+\item{plt.nms}{Character vector of which panels to plot. Defaults to fit, var, qq, and ac/infl depending on \code{is.ts}.}
 
 \item{parm}{List of plot formatting parameters (see \code{\link{lm_plot.parms}}).}
-
-\item{plt_nms}{Character vector of which panels to plot. Defaults to fit, var, qq, and ac/infl depending on \code{opt$ts}.}
 }
 \value{
 A \code{ggplot} object representing the 4-way diagnostic panel.
-  Invisibly returns a list containing:
+  Optionally invisibly returns a list containing:
   \itemize{
     \item \code{p_4way} – the combined plot,
     \item other elements passed through from the individual plot functions.
@@ -50,6 +64,6 @@ This function is a high-level wrapper that calls internal plotting functions
 \examples{
 \dontrun{
 fit <- lm(mpg ~ wt + hp, data = mtcars)
-lm_plot.4way(fit, opt = list(ts = FALSE, pval.DW = TRUE))
+lm_plot.4way(fit, is.ts = FALSE, pval.DW = TRUE)
 }
 }

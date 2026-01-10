@@ -3,10 +3,11 @@
 #' Produces a Q-Q plot of residuals from a linear model to test for normality, optionally annotating outlier points and adding the Shapiro-Wilk test p-value.
 #'
 #' @param mdl A fitted model object (typically from \code{\link[stats]{lm}}).
-#' @param opt List of options, where \code{pval.SW} (logical, default = FALSE) indicates whether to include Shapiro-Wilk p-value on the plot.
+#' @param pval.SW (logical, default = FALSE) indicates whether to include Shapiro-Wilk p-value on the plot.
 #' @param parm List of plotting parameters, usually from \code{lm_plot.parms()}.
 #' @param df Data frame with augmented model data. Defaults to \code{lm_plot.df(mdl)}.
 #' @param plts List of ggplot objects to which this plot will be added.
+#' @param ... Additional arguments (not currently used).
 #'
 #' @details
 #' The plot visualizes the distribution of residuals against theoretical normal quantiles. Points are colored and shaped by outlier status, and a reference Q-Q line is added. Optionally, outlier and regular points can be labeled. If enabled, the Shapiro-Wilk normality test p-value is displayed.
@@ -14,7 +15,7 @@
 #' @return A list containing:
 #' \itemize{
 #'   \item \code{mdl} Fitted model object,
-#'   \item \code{opt} Options used, including \code{pval.SW},
+#'   \item \code{pval.SW} Option for including Shapiro-Wilk p-value,
 #'   \item \code{parm} Parameter list with Shapiro-Wilk test results added,
 #'   \item \code{df} Data frame used for plotting,
 #'   \item \code{plts} List of ggplot objects, including the \code{$qq} element.
@@ -28,8 +29,8 @@
 #' mdl <- lm(Sepal.Length ~ Sepal.Width, data = iris)
 #' result <- lm_plot.qq(mdl)
 #' print(result$plts$qq)
-lm_plot.qq <- function(mdl,
-                       opt = list(),
+lm_plot.qq <- function(mdl, ...,
+                       pval.SW = FALSE,
                        parm = list(),
                        df = lm_plot.df(mdl),
                        plts = list()) {
@@ -38,15 +39,13 @@ lm_plot.qq <- function(mdl,
   # Q-Q Plot of Residuals to test normality
   #
   # mdl:    fitted linear model
-  # opt:    pval.SW: include Shapiro-Wilk normality test p-value?
+  # pval.SW:include Shapiro-Wilk normality test p-value?
   # parm:   plot element parameters
   # df:     augmented model data
   # plts:   list of ggplot objects to add to
   #
   # Default plot element parameters
   parms <- lm_plot.parms(mdl, parm)
-  #
-  if (is.null(opt$pval.SW)) opt$pval.SW <- FALSE
   #
   # Add qqline elements
   qqlin <- list(probs = c(0.25, 0.75))
@@ -161,7 +160,7 @@ lm_plot.qq <- function(mdl,
   )
   #
   # Add Shapiro-Wilk normality test p-value if desired
-  if (opt$pval.SW) {
+  if (pval.SW) {
     note_qq <- paste0("Normality: SW p-val=", round(parms$qq$SW$p.value, 4))
     plts$qq <- plts$qq +
       ggplot2::annotate(
@@ -178,7 +177,7 @@ lm_plot.qq <- function(mdl,
   # Return results
   list(
     mdl = mdl,
-    opt = opt,
+    pval.SW = pval.SW,
     parm = parms,
     df = df,
     plts = plts

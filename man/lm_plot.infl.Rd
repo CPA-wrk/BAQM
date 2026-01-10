@@ -6,7 +6,7 @@
 \usage{
 lm_plot.infl(
   mdl,
-  opt = list(),
+  ...,
   parm = list(),
   df = lm_plot.df(mdl, parm),
   plts = list()
@@ -15,7 +15,7 @@ lm_plot.infl(
 \arguments{
 \item{mdl}{A fitted model object (typically from \code{\link[stats]{lm}}).}
 
-\item{opt}{List of options (not used).}
+\item{...}{Additional arguments (not currently used).}
 
 \item{parm}{List of plotting parameters, usually from \code{lm_plot.parms()}.}
 
@@ -27,7 +27,6 @@ lm_plot.infl(
 A list containing:
 \itemize{
   \item \code{mdl} Fitted model object,
-  \item \code{opt} List of options (unchanged),
   \item \code{parm} Parameter list for plotting,
   \item \code{df} Data frame used for plotting,
   \item \code{plts} List of ggplot objects, including the \code{$infl} element.

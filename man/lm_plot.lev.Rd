@@ -6,7 +6,8 @@
 \usage{
 lm_plot.lev(
   mdl,
-  opt = list(),
+  ...,
+  cook.loess = FALSE,
   parm = list(),
   df = lm_plot.df(mdl),
   plts = list()
@@ -15,7 +16,9 @@ lm_plot.lev(
 \arguments{
 \item{mdl}{A fitted model object (typically from \code{\link[stats]{lm}}).}
 
-\item{opt}{List of options, where \code{cook.loess} (logical, default = FALSE) indicates whether to show loess curve for Cook's distances on the plot.}
+\item{...}{Additional arguments (not currently used).}
+
+\item{cook.loess}{Option (logical, default = FALSE) indicates whether to show loess curve for Cook's distances on the plot.}
 
 \item{parm}{List of plotting parameters, usually from \code{lm_plot.parms()}.}
 
@@ -27,7 +30,7 @@ lm_plot.lev(
 A list containing:
 \itemize{
   \item \code{mdl} Fitted model object,
-  \item \code{opt} List of options, including \code{cook.loess},
+  \item \code{cook.loess} Option for loess curve for Cook's distances,
   \item \code{parm} Parameter list for plotting, including Cook's distance contours,
   \item \code{df} Data frame used for plotting,
   \item \code{plts} List of ggplot objects, including the \code{$lev} element.

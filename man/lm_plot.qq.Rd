@@ -6,7 +6,8 @@
 \usage{
 lm_plot.qq(
   mdl,
-  opt = list(),
+  ...,
+  pval.SW = FALSE,
   parm = list(),
   df = lm_plot.df(mdl),
   plts = list()
@@ -15,7 +16,9 @@ lm_plot.qq(
 \arguments{
 \item{mdl}{A fitted model object (typically from \code{\link[stats]{lm}}).}
 
-\item{opt}{List of options, where \code{pval.SW} (logical, default = FALSE) indicates whether to include Shapiro-Wilk p-value on the plot.}
+\item{...}{Additional arguments (not currently used).}
+
+\item{pval.SW}{(logical, default = FALSE) indicates whether to include Shapiro-Wilk p-value on the plot.}
 
 \item{parm}{List of plotting parameters, usually from \code{lm_plot.parms()}.}
 
@@ -27,7 +30,7 @@ lm_plot.qq(
 A list containing:
 \itemize{
   \item \code{mdl} Fitted model object,
-  \item \code{opt} Options used, including \code{pval.SW},
+  \item \code{pval.SW} Option for including Shapiro-Wilk p-value,
   \item \code{parm} Parameter list with Shapiro-Wilk test results added,
   \item \code{df} Data frame used for plotting,
   \item \code{plts} List of ggplot objects, including the \code{$qq} element.

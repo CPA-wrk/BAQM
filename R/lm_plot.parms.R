@@ -10,7 +10,6 @@
 #' \itemize{
 #'   \item \strong{pts}: Properties for points (size, color, shape, outlier flags)
 #'   \item \strong{lins}: Properties for lines (type, color, size)
-#'   \item \strong{opt}: Logical options for plot features (e.g., time series, prediction interval, test statistics)
 #'   \item \strong{cook}: Cook's distance contour settings (points, levels, line type)
 #'   \item \strong{infl}: Influence line settings (line type)
 #' }

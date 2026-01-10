@@ -1,8 +1,8 @@
-#' Print a Summary for Linear Model Objects
+#' Print a \code{sumry} Summarization for Linear Model Objects
 #'
 #' Prints a comprehensive summary for objects of class \code{summary.lm} or \code{lm}, including model statistics, ANOVA table, coefficients, and optional tables (correlations, covariance, fits), followed by a five-number summary of residuals and the model call.
 #'
-#' @param x An object of class \code{summary.lm} or \code{lm}.
+#' @param x An object of class \code{sumry.lm} or \code{lm}.
 #' @param digits Minimal number of significant digits. Defaults to \code{max(5, getOption("digits") - 2)}.
 #' @param symbolic.cor Not implemented. Defaults to \code{NULL}.
 #' @param signif.stars Logical; whether to show significance stars in the coefficients table. Defaults to \code{getOption("show.signif.stars")}.
@@ -13,28 +13,27 @@
 #'
 #' @details
 #' The function prints summary statistics, ANOVA, and coefficients tables for a linear model in order, along with specified optional tables if provided. It concludes with a five-number-plus-mean summary of residuals and the model call.
-#' For objects not of class \code{summary.lm}, a default print method is used.
+#' For objects not of class \code{sumry.lm}, a default print method is used.
 #'
-#' @seealso \code{\link{summary.lm}}, \code{\link{print.table.summary.lm}}
+#' @seealso \code{\link{sumry.lm}}, \code{\link{print.table.sumry.lm}}
 #'
 #' @examples
 #' mdl <- lm(Sepal.Length ~ Sepal.Width, data = iris)
-#' summary(mdl)
-#' summary(mdl, options = c("correlation", "fits"))
-#' @exportS3Method stats::print
-print.summary.lm <- function(x,
-                             digits = max(5, getOption("digits") - 2),
-                             symbolic.cor = NULL,
-                             signif.stars = getOption("show.signif.stars"),
-                             options = NULL,
-                             na.print = "",
-                             eps = .Machine$double.eps,
-                             ...) {
-  # Copyright 2025, Peter Lert, All rights reserved.
+#' sumry(mdl)
+#' sumry(mdl, options = c("correlation", "fits"))
+#' @export
+print.sumry.lm <- function(x, ...,
+                           digits = max(5, getOption("digits") - 2),
+                           symbolic.cor = NULL,
+                           signif.stars = getOption("show.signif.stars"),
+                           options = NULL,
+                           na.print = "",
+                           eps = .Machine$double.eps) {
+  # Copyright 2026, Peter Lert, All rights reserved.
   #
   # Method to print a more detailed summary of an lm object
   #
-  # Printing the summary of an lm object
+  # Printing the sumry of an lm object
   # Always print the following tables (in order):
   #   stats, anova, coefficients
   # Optional tables are printed, if given, in order given in options:
@@ -42,10 +41,10 @@ print.summary.lm <- function(x,
   # Summary output ends with 5-number+ summary of residuals and the call.
   #
   if (inherits(x, "lm")) {
-    x <- summary.lm(x)
+    x <- sumry.lm(x)
   }
   #
-  if (!inherits(x, "summary.lm")) {
+  if (!inherits(x, "sumry.lm")) {
     print(x)
     invisible(x)
   }
@@ -65,7 +64,7 @@ print.summary.lm <- function(x,
       next
     }
     cat("\n", headings[[tbl_nm]], "\n", sep = "")
-    print.table.summary.lm(
+    print.table.sumry.lm(
       x[[tbl_nm]],
       digits = digits,
       na.print = na.print,

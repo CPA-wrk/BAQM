@@ -22,12 +22,12 @@
 #'   \item \code{outlier}: Identify outliers in numeric vectors using boxplot heuristic.
 #' }
 #'
-#' @note Copyright 2025, Peter Lert, All rights reserved.
+#' @note Copyright 2026, Peter Lert, All rights reserved.
 #'
 #' @keywords internal utility
 #' @examples
-#' char2dt("08/06/2025")
-#' dt2xlseq(as.Date("2025-08-06"))
+#' char2dt("01/06/2026")
+#' dt2xlseq(as.Date("2026-01-06"))
 #' is.ok(NA)
 #' if.ok(NULL, 1)
 #' pr(10000)

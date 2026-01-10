@@ -3,10 +3,11 @@
 #' Creates a plot of standard residuals versus leverage values, including Cook's distance contours to visualize influential observations.
 #'
 #' @param mdl A fitted model object (typically from \code{\link[stats]{lm}}).
-#' @param opt List of options, where \code{cook.loess} (logical, default = FALSE) indicates whether to show loess curve for Cook's distances on the plot.
+#' @param cook.loess Option (logical, default = FALSE) indicates whether to show loess curve for Cook's distances on the plot.
 #' @param parm List of plotting parameters, usually from \code{lm_plot.parms()}.
 #' @param df Data frame with augmented model data. Defaults to \code{lm_plot.df(mdl)}.
 #' @param plts List of ggplot objects to which this plot will be added.
+#' @param ... Additional arguments (not currently used).
 #'
 #' @details
 #' The plot displays standard residuals against leverage, overlays Cook's distance contours, and marks outliers based on residuals and Cook's distance. Outlier and influential points can be labeled, and a loess fit line is optionally added.
@@ -14,7 +15,7 @@
 #' @return A list containing:
 #' \itemize{
 #'   \item \code{mdl} Fitted model object,
-#'   \item \code{opt} List of options, including \code{cook.loess},
+#'   \item \code{cook.loess} Option for loess curve for Cook's distances,
 #'   \item \code{parm} Parameter list for plotting, including Cook's distance contours,
 #'   \item \code{df} Data frame used for plotting,
 #'   \item \code{plts} List of ggplot objects, including the \code{$lev} element.
@@ -30,25 +31,23 @@
 #' result <- lm_plot.lev(mdl)
 #' print(result$plts$lev)
 #' }
-lm_plot.lev <- function(mdl,
-                        opt = list(),
+lm_plot.lev <- function(mdl, ...,
+                        cook.loess = FALSE,
                         parm = list(),
                         df = lm_plot.df(mdl),
                         plts = list()) {
-  # Copyright 2025, Peter Lert, All rights reserved.
+  # Copyright 2026, Peter Lert, All rights reserved.
   #
   # Plot Standard residuals vs. Leverage with Cook's distance contours
   #
-  # mdl:    fitted linear model
-  # opt:    pval.DW: include Durbin-Watson autocorrelation test p-value?
-  # parm:   plot element parameters
-  # df:     augmented model data
-  # plts:   list of ggplot objects to add to
+  # mdl:        fitted linear model
+  # cook.loess  include loess curve for Cook's distances?
+  # parm:       plot element parameters
+  # df:         augmented model data
+  # plts:       list of ggplot objects to add to
   #
   # Default plot element parameters
   parms <- lm_plot.parms(mdl, parm)
-  #
-  if (is.null(opt$cook.loess)) opt$cook.loess <- FALSE
   #
   # Find x, y limits for placing elements
   lim <- data.frame(
@@ -127,7 +126,7 @@ lm_plot.lev <- function(mdl,
     )
   #
   # Add loess line
-  if (opt$cook.loess) {
+  if (cook.loess) {
     plts$lev <- plts$lev +
       ggplot2::geom_smooth(
         se = FALSE,
@@ -236,7 +235,7 @@ lm_plot.lev <- function(mdl,
   # Return results
   list(
     mdl = mdl,
-    opt = opt,
+    cook.loess = cook.loess,
     parm = parms,
     df = df,
     plts = plts

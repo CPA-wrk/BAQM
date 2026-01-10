@@ -1,38 +1,37 @@
 # dev_tst.R
 #### Example code for testing BAQM package readme ####
-stat_desc(swiss)
+sumry(swiss)
 names(swiss) <- substr(names(swiss), 1, 4) # Narrows output
 regs <- leaps::regsubsets(Fert ~ ., data = swiss, nbest = 3)
-summary(regs)
-stat_desc(iris) # Includes non-numeric variable
+sumry(regs)
+sumry(iris) # Includes non-numeric variable
 mdl <- lm(Sepal.Length ~ ., data = iris)
-summary(mdl)
+sumry(mdl)
 lm_plot.4way(mdl)
 #### End of example ####
 
 ### test-summary.lm.R ###
-# Snapshot tests for custom summary.lm method
+# Snapshot tests for custom sumry.lm method
 # library(testthat)
 
-test_that("summary.lm: reporting simple regression (iris)", {
+test_that("sumry.lm: reporting simple regression (iris)", {
   mdl <- lm(Sepal.Length ~ Sepal.Width, data = iris)
-  sumry <- summary.lm(mdl)
-  expect_snapshot(sumry)
+  smry <- sumry.lm(mdl)
+  expect_snapshot(smry)
 })
 
-test_that("summary.lm: reporting regression with numeric and faactor variables", {
+test_that("sumry.lm: reporting regression with numeric and faactor variables", {
   mdl <- lm(Sepal.Length ~ ., data = iris)
-  sumry <- summary.lm(mdl)
-  expect_snapshot(sumry)
+  smry <- sumry.lm(mdl)
+  expect_snapshot(smry)
 })
 
-test_that("summary.lm: regression with interaction term", {
+test_that("sumry.lm: regression with interaction term", {
   mdl <- lm(Sepal.Length ~ Sepal.Width + Petal.Width * Petal.Length, data = iris)
-  sumry <- summary.lm(mdl)
-  expect_snapshot(sumry)
+  smry <- sumry.lm(mdl)
+  expect_snapshot(smry)
 })
 ### End of test-summary.lm.R ###
-
 
 
 ### test-lm_plot.ac.R ###
@@ -41,12 +40,11 @@ library(testthat)
 
 test_that("lm_plot.ac produces the expected plot for cars", {
   fit <- lm(mpg ~ wt + hp, data = mtcars)
-  lm_plot.ac_ex_cars <-
-    lm_plot.ac(fit, opt = list(pval.DW = TRUE))
+  lm_plot.ac_ex_cars <- lm_plot.ac(fit, pval.SW = TRUE)
   vdiffr::expect_doppelganger(title = "lm_plot.ac example cars",
                               lm_plot.ac_ex_cars)
 })
-### End of test-lm_plot.4way.R ###
+### End of test-lm_plot.ac.R ###
 
 
 
@@ -57,7 +55,7 @@ library(testthat)
 test_that("lm_plot.4way produces the expected plot", {
   fit <- lm(mpg ~ wt + hp, data = mtcars)
   lm_plot.4way_ex_cars <-
-    lm_plot.4way(fit, opt = list(ts = FALSE, pval.DW = TRUE))
+    lm_plot.4way(fit, ts = FALSE, pval.BP = TRUE)
   # vdiffr::expect_doppelganger(title = "lm_plot.4way example cars",
   #                             lm_plot.4way_ex_cars)
 })
@@ -70,28 +68,26 @@ test_options <- list(scipen = 2, digits = 6, width = 80)
 
 
 
-print.default(summary(lm(Sepal.Length ~ Sepal.Width, data = iris)))
-print.default(summary(lm(Sepal.Length ~ Sepal.Length, data = iris)))
-
-print.summary.lm(summary(lm(Sepal.Length ~ Sepal.Width, data = iris)))
+print.default(sumry(lm(Sepal.Length ~ Sepal.Width, data = iris)))
+print.sumry.lm(sumry(lm(Sepal.Length ~ Sepal.Width, data = iris)))
 
 mdl <- lm(Sepal.Length ~ Sepal.Width, data = iris)
-summary.lm(mdl)
+sumry.lm(mdl)
 
 expect_snapshot(
-  print.summary.lm(summary(lm(hwy ~ displ + year + cyl + fl, data = mpg)))
+  print.sumry.lm(sumry(lm(hwy ~ displ + year + cyl + fl, data = mpg)))
 )
 
-expect_snapshot(print.summary.lm(summary(lm(
+expect_snapshot(print.sumry.lm(sumry(lm(
   hwy ~ displ + year + cyl + fl, data = mpg
 ))))
-expect_snapshot(print.summary.lm(summary(lm(
+expect_snapshot(print.sumry.lm(sumry(lm(
   hwy ~ displ + year + cyl * fl, data = mpg
 ))))
-expect_snapshot(print.summary.lm(summary(
+expect_snapshot(print.sumry.lm(sumry(
   lm(hwy ~ displ + year + cyl + trans * fl, data = mpg)
 )))
-expect_snapshot(print.summary.lm(summary(
+expect_snapshot(print.sumry.lm(sumry(
   lm(hwy ~ displ + year + cyl * trans * fl, data = mpg)
 )))
 

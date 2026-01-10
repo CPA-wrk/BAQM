@@ -3,10 +3,10 @@
 #' Creates a plot of leverage values versus the linear fitted values, including an identification of points with a large Cook's distance, to visualize high-leverage and influential observations.
 #'
 #' @param mdl A fitted model object (typically from \code{\link[stats]{lm}}).
-#' @param opt List of options (not used).
 #' @param parm List of plotting parameters, usually from \code{lm_plot.parms()}.
 #' @param df Data frame with augmented model data. Defaults to \code{lm_plot.df(mdl)}.
 #' @param plts List of ggplot objects to which this plot will be added.
+#' @param ... Additional arguments (not currently used).
 #'
 #' @details
 #' The plot visualizes the calculated leverage of individual data points, defined as the diagonal element of the 'hat' matrix, as a function of the fitted values and implicitly relative to their location in the field of predictor variables, and the threshold value of high leverage is indicated. In addition, Cook's distance can be used to label influential points, along with outlier and regular points.
@@ -14,7 +14,6 @@
 #' @return A list containing:
 #' \itemize{
 #'   \item \code{mdl} Fitted model object,
-#'   \item \code{opt} List of options (unchanged),
 #'   \item \code{parm} Parameter list for plotting,
 #'   \item \code{df} Data frame used for plotting,
 #'   \item \code{plts} List of ggplot objects, including the \code{$infl} element.
@@ -30,8 +29,7 @@
 #' result <- lm_plot.infl(mdl)
 #' print(result$plts$infl)
 #' }
-lm_plot.infl <- function(mdl,
-                         opt = list(),
+lm_plot.infl <- function(mdl, ...,
                          parm = list(),
                          df = lm_plot.df(mdl, parm),
                          plts = list()) {
@@ -43,7 +41,6 @@ lm_plot.infl <- function(mdl,
   #     cooksd > qf(p = 0.5, df1 = mdl$rank, df2 = n - mdl$rank)
   #
   # mdl:    fitted linear model
-  # opt:    not used
   # parm:   plot element parameters
   # df:     augmented model data
   # plts:   list of ggplot objects to add to
@@ -165,7 +162,6 @@ lm_plot.infl <- function(mdl,
   # Return results
   list(
     mdl = mdl,
-    opt = opt,
     parm = parms,
     df = df,
     plts = plts

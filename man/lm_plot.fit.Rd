@@ -6,7 +6,8 @@
 \usage{
 lm_plot.fit(
   mdl,
-  opt = list(),
+  ...,
+  pred.intvl = TRUE,
   parm = list(),
   df = lm_plot.df(mdl),
   plts = list()
@@ -15,7 +16,9 @@ lm_plot.fit(
 \arguments{
 \item{mdl}{A fitted model object (typically from \code{\link[stats]{lm}}).}
 
-\item{opt}{List of options, where \code{pred_intvl_pts} (numeric, default = 100) is used for prediction interval bounds of fitted values (0 to skip).}
+\item{...}{Additional arguments (not currently used).}
+
+\item{pred.intvl}{List of options, where \code{pred_intvl_pts} (numeric, default = 100) is used for prediction interval bounds of fitted values (0 to skip).}
 
 \item{parm}{List of plotting parameters, usually from \code{lm_plot.parms()}.}
 
@@ -27,7 +30,7 @@ lm_plot.fit(
 A list containing:
 \itemize{
   \item \code{mdl} Fitted model object,
-  \item \code{opt} Options used, including \code{pred_intvl_pts},
+  \item \code{pred.intvl} Options used, including \code{pred_intvl_pts},
   \item \code{parm} Parameter list with autocorrelation test results added,
   \item \code{df} Data frame used for plotting,
   \item \code{plts} List of ggplot objects, including the \code{$fit} element.

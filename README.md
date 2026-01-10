@@ -14,17 +14,15 @@ BAQM supplies functions developed by Babson College instructors for AQM
 1000 and AQM 2000 courses using R in the curriculum. The primary
 functions provide:
 
-- `stat_desc()` - summary descriptive statistics for data frames,
+- `sumry.df()` - summary descriptive statistics for data frames,
   allowing both numeric and factor variables, in both wide and long
   formats.
-- `summary.lm()` - expanded statistics and enhanced formatting to
+- `sumry.lm()` - expanded statistics and enhanced formatting to
   summarize linear model results.
 - `lm_plot.4way()` - multiple diagnostic plots for linear models using
   ggplot, including a 4-in-1 summary graphic.
-- `print.summary.regsubsets()` - compact “best subsets” linear model
-  reports for analytics from the `regsubsets` function of the leaps
-  package. Note that this BAQM package must be loaded (using
-  `library(BAQM)`) **after** the leaps package is loaded.
+- `sumry.regsubsets()` - compact “best subsets” linear model reports for
+  analytics from the `regsubsets` function of the leaps package.
 
 ## Installation
 
@@ -53,29 +51,24 @@ These examples use the built-in R data sets `iris`, `swiss`, and
 ``` r
 library(leaps)
 library(BAQM)
-#> Registered S3 methods overwritten by 'BAQM':
-#>   method                   from 
-#>   print.summary.lm         stats
-#>   print.summary.regsubsets leaps
-#>   summary.lm               stats
 #
-stat_desc(iris) # Includes non-numeric variable
-#>          Sepal.Length  Sepal.Width  Petal.Length  Petal.Width   Species
-#> n.val             150          150           150          150       150
-#> n.na                0            0             0            0         0
-#> min               4.3            2             1          0.1  n.lvls=3
-#> Q1                5.1          2.7           1.6          0.2  setos:50
-#> median            5.8            3          4.35          1.3  vrscl:50
-#> mean            5.843        3.057         3.758        1.199  vrgnc:50
-#> Q3               6.45          3.4           5.1          1.8          
-#> max               7.9          4.4           6.9          2.5          
+sumry(iris) # Includes non-numeric variable
+#>          Sepal.Length  Sepal.Width  Petal.Length  Petal.Width     Species
+#> n.val             150          150           150          150         150
+#> n.na                0            0             0            0           0
+#> min               4.3            2             1          0.1  n.lvl  : 3
+#> Q1                5.1          2.7           1.6          0.2  setosa :50
+#> median            5.8            3          4.35          1.3  versclr:50
+#> mean            5.843        3.057         3.758        1.199  virginc:50
+#> Q3               6.45          3.4           5.1          1.8            
+#> max               7.9          4.4           6.9          2.5            
 #> std.dev        0.8281       0.4359         1.765       0.7622
 #
 names(swiss) # Show original variable names
 #> [1] "Fertility"        "Agriculture"      "Examination"      "Education"       
 #> [5] "Catholic"         "Infant.Mortality"
 names(swiss) <- substr(names(swiss), 1, 4) # Narrows output
-stat_desc(swiss)
+sumry(swiss)
 #>           Fert   Agri   Exam   Educ   Cath   Infa
 #> n.val       47     47     47     47     47     47
 #> n.na         0      0      0      0      0      0
@@ -87,7 +80,12 @@ stat_desc(swiss)
 #> max       92.5   89.7     37     53    100   26.6
 #> std.dev  12.49  22.71  7.978  9.615   41.7  2.913
 regs <- regsubsets(Fert ~ ., data = swiss, nbest = 3)
-summary(regs)
+sumry(regs)
+#>                                                                                                                                                     
+#> Call: (function (...)                                                                                                                               
+#>       rmarkdown::render(...))(input = base::quote("/Users/peter/Library/CloudStorage/OneDrive-centerpointanalytics.com/CPA_wrk/R/BAQM/README.Rmd"), 
+#>           output_options = base::quote(list(html_preview = FALSE)),                                                                                 
+#>           quiet = base::quote(TRUE))                                                                                                                
 #>    _k_i.best    rsq  adjr2       see    cp Agri Exam Educ Cath Infa
 #> 1   1  ( 1 ) 0.4406 0.4282  9.446029 35.20              *          
 #> 2   1  ( 2 ) 0.4172 0.4042  9.642000 38.48         *               
@@ -104,7 +102,7 @@ summary(regs)
 #> 13  5  ( 1 ) 0.7067 0.6710  7.165369  6.00    *    *    *    *    *
 #
 mdl <- lm(Sepal.Length ~ ., data = iris)
-summary(mdl)
+sumry(mdl)
 #> 
 #> Summary Statistics:
 #>                  Value      Performance    Measure  Err(Resids)    Metric
@@ -135,7 +133,7 @@ summary(mdl)
 #> Call:  lm(formula = Sepal.Length ~ ., data = iris)
 #
 mdl <- lm(mpg ~ hp + qsec, data = mtcars)
-summary(mdl)
+sumry(mdl)
 #> 
 #> Summary Statistics:
 #>                    Value      Performance    Measure  Err(Resids)  Metric
@@ -161,8 +159,7 @@ summary(mdl)
 #> Residuals: -5.178  -2.603  -0.5098 <6e-15   1.287   8.718 
 #>                                                    
 #> Call:  lm(formula = mpg ~ hp + qsec, data = mtcars)
-lm_plot.lst <- lm_plot.4way(mdl)
-lm_plot.lst$p_4way
+lm_plot.4way(mdl)
 ```
 
 <img src="man/figures/README-example-1.png" width="100%" />

@@ -1,12 +1,12 @@
-#' Summary Method for Linear Model (\code{lm}) Objects
+#' Method \code{sumry} to Summarize Linear Model (\code{lm}) Objects
 #'
 #' Computes a comprehensive summary for an object of class \code{lm}, including performance statistics, ANOVA, coefficients with VIFs, and correlation/covariance tables. Handles factor variable recoding and collinearity/singularity warnings.
 #'
-#' @param object An object of class \code{lm}.
+#' @param x An object of class \code{lm}.
 #' @param ... Additional arguments (currently unused).
 #'
 #' @details
-#' The returned summary object includes:
+#' The returned \code{sumry} object includes:
 #' \itemize{
 #'   \item \strong{stats}: Performance statistics (F-statistic, R-squared, RMSE, etc.)
 #'   \item \strong{anova}: Simplified ANOVA table (Sum of squares, mean squares, F-statistic, p-value)
@@ -23,18 +23,19 @@
 #' }
 #' Factor variable names are recoded for clarity, and coefficients for aliased or singular variables are omitted with notes produced as attributes.
 #'
-#' @return An object of class \code{summary.lm} containing tables and statistics described above.
+#' @return An object of class \code{sumry.lm} containing tables and statistics described above.
 #'
-#' @seealso \code{\link{print.summary.lm}}, \code{\link{lm}}
-#' @exportS3Method stats::summary
+#' @seealso \code{\link{print.sumry.lm}}, \code{\link{lm}}
 #'
 #' @examples
 #' mdl <- lm(Sepal.Length ~ Sepal.Width + Petal.Length, data = iris)
-#' summary(mdl)
-summary.lm <- function(object, ...) {
-  # Copyright 2025, Peter Lert, All rights reserved.
+#' sumry(mdl)
+#'
+#' @export
+sumry.lm <- function(x, ...) {
+  # Copyright 2026, Peter Lert, All rights reserved.
   #
-  mdl <- object
+  mdl <- x
   if (!inherits(mdl, "lm")) {
     stop("not an \"lm\" object")
   }
@@ -47,14 +48,14 @@ summary.lm <- function(object, ...) {
   if (length(levels <- mdl$xlevels) > 0) {
     var_fact <-
       lapply(names(levels), function(xvar, levels) {
-        x <- levels[[xvar]]
-        if (length(x) > 1) {
+        lvls <- levels[[xvar]]
+        if (length(lvls) > 1) {
           xvars <- data.frame(
-            old = paste0(xvar, x),
-            new = paste(xvar, x, sep = "_")
+            old = paste0(xvar, lvls),
+            new = paste(xvar, lvls, sep = "_")
           )
         } else {
-          xvars <- data.frame(old = paste0(xvar, x), new = paste0(xvar, x))
+          xvars <- data.frame(old = paste0(xvar, lvls), new = paste0(xvar, lvls))
         }
         xvars
       }, levels = levels)
@@ -62,10 +63,10 @@ summary.lm <- function(object, ...) {
     # Handle interactions
     intx_nms_splt <- strsplit(names(coeffs), split = ":", fixed = TRUE)
     var_trans <- data.frame(old = names(coeffs))
-    var_trans$new <- unlist(lapply(intx_nms_splt, function(x) {
-      i <- match(x, var_fact$old)
-      x[!is.na(i)] <- var_fact$new[i[!is.na(i)]]
-      paste(x, collapse = ":")
+    var_trans$new <- unlist(lapply(intx_nms_splt, function(lvls) {
+      i <- match(lvls, var_fact$old)
+      lvls[!is.na(i)] <- var_fact$new[i[!is.na(i)]]
+      paste(lvls, collapse = ":")
     }))
     names(coeffs) <- var_trans$new[match(names(coeffs), var_trans$old)]
   } else {
@@ -100,7 +101,7 @@ summary.lm <- function(object, ...) {
       stop("invalid 'lm' object:  no 'terms' component")
     }
     if (!inherits(mdl, "lm")) {
-      warning("calling summary.lm(<fake-lm-object>) ...")
+      warning("calling sumry.lm(<fake-lm-object>) ...")
     }
     Qr <- qr(mdl)
     if (!is.null(var_trans)) {
@@ -347,9 +348,9 @@ summary.lm <- function(object, ...) {
       c("matrix", "data.frame"), class(ans[[nm]])
     )))) {
       class(ans[[nm]]) <-
-        c(paste(c(nm, "table"), "summary.lm", sep = "."), class(ans[[nm]]))
+        c(paste(c(nm, "table"), "sumry.lm", sep = "."), class(ans[[nm]]))
     }
   }
-  class(ans) <- "summary.lm"
+  class(ans) <- "sumry.lm"
   ans
 }
