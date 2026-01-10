@@ -53,9 +53,16 @@
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">lm_plot.4way</span><span class="op">(</span></span>
 <span>  <span class="va">mdl</span>,</span>
-<span>  opt <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>ts <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,</span>
-<span>  parm <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  plt_nms <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"fit"</span>, <span class="st">"var"</span>, <span class="st">"qq"</span>, <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">opt</span><span class="op">$</span><span class="va">ts</span>, <span class="st">"ac"</span>, <span class="st">"infl"</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="va">...</span>,</span>
+<span>  is.ts <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  pred.intvl <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  pval.SW <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  pval.BP <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  pval.DW <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  cook.loess <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  rtn.all <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  plt.nms <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"fit"</span>, <span class="st">"var"</span>, <span class="st">"qq"</span>, <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">is.ts</span>, <span class="st">"ac"</span>, <span class="st">"infl"</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  parm <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -67,36 +74,50 @@
 <dd><p>A fitted model object (typically from <code><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></code>).</p></dd>
 
 
-<dt id="arg-opt">opt<a class="anchor" aria-label="anchor" href="#arg-opt"></a></dt>
-<dd><p>A named <code>list</code> of options. Recognized elements include:</p><dl><dt><code>ts</code></dt>
+<dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
+<dd><p>Additional arguments (not currently used).</p></dd>
+
+
+<dt id="arg-is-ts">is.ts<a class="anchor" aria-label="anchor" href="#arg-is-ts"></a></dt>
 <dd><p>Logical; <code>TRUE</code> if data are time series, <code>FALSE</code> otherwise.</p></dd>
 
-  <dt><code>pred.intvl</code></dt>
+
+<dt id="arg-pred-intvl">pred.intvl<a class="anchor" aria-label="anchor" href="#arg-pred-intvl"></a></dt>
 <dd><p>Logical; plot prediction interval on fitted vs observed.</p></dd>
 
-  <dt><code>pval.SW</code>, <code>pval.BP</code>, <code>pval.DW</code></dt>
-<dd><p>Logical; include p-values from Shapiro–Wilk,
-    Breusch–Pagan, and Durbin–Watson tests in the plots.</p></dd>
 
-  <dt><code>cook.loess</code></dt>
-<dd><p>Logical; whether to overlay Cook's distance loess curve.</p></dd>
+<dt id="arg-pval-sw">pval.SW<a class="anchor" aria-label="anchor" href="#arg-pval-sw"></a></dt>
+<dd><p>Logical; include Shapiro–Wilk p-value in <code>qq</code>  plot.</p></dd>
 
 
-</dl></dd>
+<dt id="arg-pval-bp">pval.BP<a class="anchor" aria-label="anchor" href="#arg-pval-bp"></a></dt>
+<dd><p>Logical; include Breusch–Pagan p-value in <code>var</code> plot.</p></dd>
+
+
+<dt id="arg-pval-dw">pval.DW<a class="anchor" aria-label="anchor" href="#arg-pval-dw"></a></dt>
+<dd><p>Logical; include Durbin–Watson p-value in <code>ac</code>  plot.</p></dd>
+
+
+<dt id="arg-cook-loess">cook.loess<a class="anchor" aria-label="anchor" href="#arg-cook-loess"></a></dt>
+<dd><p>Logical; overlay Cook's distance loess curve in <code>infl</code>  plot.</p></dd>
+
+
+<dt id="arg-rtn-all">rtn.all<a class="anchor" aria-label="anchor" href="#arg-rtn-all"></a></dt>
+<dd><p>Logical; return all plots and parameters (vs. 4-way plot only).</p></dd>
+
+
+<dt id="arg-plt-nms">plt.nms<a class="anchor" aria-label="anchor" href="#arg-plt-nms"></a></dt>
+<dd><p>Character vector of which panels to plot. Defaults to fit, var, qq, and ac/infl depending on <code>is.ts</code>.</p></dd>
 
 
 <dt id="arg-parm">parm<a class="anchor" aria-label="anchor" href="#arg-parm"></a></dt>
 <dd><p>List of plot formatting parameters (see <code><a href="lm_plot.parms.html">lm_plot.parms</a></code>).</p></dd>
 
-
-<dt id="arg-plt-nms">plt_nms<a class="anchor" aria-label="anchor" href="#arg-plt-nms"></a></dt>
-<dd><p>Character vector of which panels to plot. Defaults to fit, var, qq, and ac/infl depending on <code>opt$ts</code>.</p></dd>
-
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>A <code>ggplot</code> object representing the 4-way diagnostic panel.
-  Invisibly returns a list containing:</p><ul><li><p><code>p_4way</code> – the combined plot,</p></li>
+  Optionally invisibly returns a list containing:</p><ul><li><p><code>p_4way</code> – the combined plot,</p></li>
 <li><p>other elements passed through from the individual plot functions.</p></li>
 </ul></div>
     <div class="section level2">
@@ -110,7 +131,7 @@
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
 <span class="r-in"><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">wt</span> <span class="op">+</span> <span class="va">hp</span>, data <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu">lm_plot.4way</span><span class="op">(</span><span class="va">fit</span>, opt <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>ts <span class="op">=</span> <span class="cn">FALSE</span>, pval.DW <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">lm_plot.4way</span><span class="op">(</span><span class="va">fit</span>, is.ts <span class="op">=</span> <span class="cn">FALSE</span>, pval.DW <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
 </code></pre></div>
     </div>
@@ -123,7 +144,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>

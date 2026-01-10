@@ -55,13 +55,13 @@
 <p>BAQM supplies functions developed by Babson College instructors for AQM 1000 and AQM 2000 courses using R in the curriculum. The primary functions provide:</p>
 <ul>
 <li>
-<code><a href="reference/stat_desc.html">stat_desc()</a></code> - summary descriptive statistics for data frames, allowing both numeric and factor variables, in both wide and long formats.</li>
+<code>sumry.df()</code> - summary descriptive statistics for data frames, allowing both numeric and factor variables, in both wide and long formats.</li>
 <li>
-<code><a href="reference/summary.lm.html">summary.lm()</a></code> - expanded statistics and enhanced formatting to summarize linear model results.</li>
+<code><a href="reference/sumry.lm.html">sumry.lm()</a></code> - expanded statistics and enhanced formatting to summarize linear model results.</li>
 <li>
 <code><a href="reference/lm_plot.4way.html">lm_plot.4way()</a></code> - multiple diagnostic plots for linear models using ggplot, including a 4-in-1 summary graphic.</li>
 <li>
-<code><a href="reference/print.summary.regsubsets.html">print.summary.regsubsets()</a></code> - compact “best subsets” linear model reports for analytics from the <code>regsubsets</code> function of the leaps package. Note that this BAQM package must be loaded (using <code><a href="https://github.com/CPA-wrk/BAQM" class="external-link">library(BAQM)</a></code>) <strong>after</strong> the leaps package is loaded.</li>
+<code><a href="reference/sumry.regsubsets.html">sumry.regsubsets()</a></code> - compact “best subsets” linear model reports for analytics from the <code>regsubsets</code> function of the leaps package.</li>
 </ul>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
@@ -85,29 +85,24 @@
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">leaps</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/CPA-wrk/BAQM" class="external-link">BAQM</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; Registered S3 methods overwritten by 'BAQM':</span></span>
-<span><span class="co">#&gt;   method                   from </span></span>
-<span><span class="co">#&gt;   print.summary.lm         stats</span></span>
-<span><span class="co">#&gt;   print.summary.regsubsets leaps</span></span>
-<span><span class="co">#&gt;   summary.lm               stats</span></span>
 <span><span class="co">#</span></span>
-<span><span class="fu"><a href="reference/stat_desc.html">stat_desc</a></span><span class="op">(</span><span class="va">iris</span><span class="op">)</span> <span class="co"># Includes non-numeric variable</span></span>
-<span><span class="co">#&gt;          Sepal.Length  Sepal.Width  Petal.Length  Petal.Width   Species</span></span>
-<span><span class="co">#&gt; n.val             150          150           150          150       150</span></span>
-<span><span class="co">#&gt; n.na                0            0             0            0         0</span></span>
-<span><span class="co">#&gt; min               4.3            2             1          0.1  n.lvls=3</span></span>
-<span><span class="co">#&gt; Q1                5.1          2.7           1.6          0.2  setos:50</span></span>
-<span><span class="co">#&gt; median            5.8            3          4.35          1.3  vrscl:50</span></span>
-<span><span class="co">#&gt; mean            5.843        3.057         3.758        1.199  vrgnc:50</span></span>
-<span><span class="co">#&gt; Q3               6.45          3.4           5.1          1.8          </span></span>
-<span><span class="co">#&gt; max               7.9          4.4           6.9          2.5          </span></span>
+<span><span class="fu"><a href="reference/sumry.html">sumry</a></span><span class="op">(</span><span class="va">iris</span><span class="op">)</span> <span class="co"># Includes non-numeric variable</span></span>
+<span><span class="co">#&gt;          Sepal.Length  Sepal.Width  Petal.Length  Petal.Width     Species</span></span>
+<span><span class="co">#&gt; n.val             150          150           150          150         150</span></span>
+<span><span class="co">#&gt; n.na                0            0             0            0           0</span></span>
+<span><span class="co">#&gt; min               4.3            2             1          0.1  n.lvl  : 3</span></span>
+<span><span class="co">#&gt; Q1                5.1          2.7           1.6          0.2  setosa :50</span></span>
+<span><span class="co">#&gt; median            5.8            3          4.35          1.3  versclr:50</span></span>
+<span><span class="co">#&gt; mean            5.843        3.057         3.758        1.199  virginc:50</span></span>
+<span><span class="co">#&gt; Q3               6.45          3.4           5.1          1.8            </span></span>
+<span><span class="co">#&gt; max               7.9          4.4           6.9          2.5            </span></span>
 <span><span class="co">#&gt; std.dev        0.8281       0.4359         1.765       0.7622</span></span>
 <span><span class="co">#</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">swiss</span><span class="op">)</span> <span class="co"># Show original variable names</span></span>
 <span><span class="co">#&gt; [1] "Fertility"        "Agriculture"      "Examination"      "Education"       </span></span>
 <span><span class="co">#&gt; [5] "Catholic"         "Infant.Mortality"</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">swiss</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/substr.html" class="external-link">substr</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">swiss</span><span class="op">)</span>, <span class="fl">1</span>, <span class="fl">4</span><span class="op">)</span> <span class="co"># Narrows output</span></span>
-<span><span class="fu"><a href="reference/stat_desc.html">stat_desc</a></span><span class="op">(</span><span class="va">swiss</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/sumry.html">sumry</a></span><span class="op">(</span><span class="va">swiss</span><span class="op">)</span></span>
 <span><span class="co">#&gt;           Fert   Agri   Exam   Educ   Cath   Infa</span></span>
 <span><span class="co">#&gt; n.val       47     47     47     47     47     47</span></span>
 <span><span class="co">#&gt; n.na         0      0      0      0      0      0</span></span>
@@ -119,7 +114,12 @@
 <span><span class="co">#&gt; max       92.5   89.7     37     53    100   26.6</span></span>
 <span><span class="co">#&gt; std.dev  12.49  22.71  7.978  9.615   41.7  2.913</span></span>
 <span><span class="va">regs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/leaps/man/regsubsets.html" class="external-link">regsubsets</a></span><span class="op">(</span><span class="va">Fert</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">swiss</span>, nbest <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">regs</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/sumry.html">sumry</a></span><span class="op">(</span><span class="va">regs</span><span class="op">)</span></span>
+<span><span class="co">#&gt;                                                                                                                                                     </span></span>
+<span><span class="co">#&gt; Call: (function (...)                                                                                                                               </span></span>
+<span><span class="co">#&gt;       rmarkdown::render(...))(input = base::quote("/Users/peter/Library/CloudStorage/OneDrive-centerpointanalytics.com/CPA_wrk/R/BAQM/README.Rmd"), </span></span>
+<span><span class="co">#&gt;           output_options = base::quote(list(html_preview = FALSE)),                                                                                 </span></span>
+<span><span class="co">#&gt;           quiet = base::quote(TRUE))                                                                                                                </span></span>
 <span><span class="co">#&gt;    _k_i.best    rsq  adjr2       see    cp Agri Exam Educ Cath Infa</span></span>
 <span><span class="co">#&gt; 1   1  ( 1 ) 0.4406 0.4282  9.446029 35.20              *          </span></span>
 <span><span class="co">#&gt; 2   1  ( 2 ) 0.4172 0.4042  9.642000 38.48         *               </span></span>
@@ -136,7 +136,7 @@
 <span><span class="co">#&gt; 13  5  ( 1 ) 0.7067 0.6710  7.165369  6.00    *    *    *    *    *</span></span>
 <span><span class="co">#</span></span>
 <span><span class="va">mdl</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">Sepal.Length</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">iris</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">mdl</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/sumry.html">sumry</a></span><span class="op">(</span><span class="va">mdl</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Summary Statistics:</span></span>
 <span><span class="co">#&gt;                  Value      Performance    Measure  Err(Resids)    Metric</span></span>
@@ -167,7 +167,7 @@
 <span><span class="co">#&gt; Call:  lm(formula = Sepal.Length ~ ., data = iris)</span></span>
 <span><span class="co">#</span></span>
 <span><span class="va">mdl</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">hp</span> <span class="op">+</span> <span class="va">qsec</span>, data <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">mdl</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/sumry.html">sumry</a></span><span class="op">(</span><span class="va">mdl</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Summary Statistics:</span></span>
 <span><span class="co">#&gt;                    Value      Performance    Measure  Err(Resids)  Metric</span></span>
@@ -193,8 +193,7 @@
 <span><span class="co">#&gt; Residuals: -5.178  -2.603  -0.5098 &lt;6e-15   1.287   8.718 </span></span>
 <span><span class="co">#&gt;                                                    </span></span>
 <span><span class="co">#&gt; Call:  lm(formula = mpg ~ hp + qsec, data = mtcars)</span></span>
-<span><span class="va">lm_plot.lst</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/lm_plot.4way.html">lm_plot.4way</a></span><span class="op">(</span><span class="va">mdl</span><span class="op">)</span></span>
-<span><span class="va">lm_plot.lst</span><span class="op">$</span><span class="va">p_4way</span></span></code></pre></div>
+<span><span class="fu"><a href="reference/lm_plot.4way.html">lm_plot.4way</a></span><span class="op">(</span><span class="va">mdl</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-example-1.png" width="100%"></p>
 </div>
 </div>
@@ -245,7 +244,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>
