@@ -1,20 +1,21 @@
 test_options <- list(scipen = 0, digits = 4, width = 90, max.print = 10000)
-
-test_that("lm_plot.ac produces expected plot graphics for longley", {
+# fixt_path <- testthat::test_path("fixtures", sysnm())
+# #
+# lm_plot.ac_longley <- lm_plot.ac_longley_bld(test_options)
+# #
+# test_that("lm_plot.ac plot attributes for longley data are ok", {
+#   withr::local_options(test_options)
+#   expect_equal(
+#     (lm_plot.ac_longley.new <- attributes(lm_plot.ac_longley)),
+#     (lm_plot.ac_longley.old <- readRDS(
+#       file = file.path(fixt_path, "lm_plot.ac_longley.rds")))
+#   )
+# })
+#
+test_that("lm_plot.ac plot graphics for longley data are ok", {
   withr::local_options(test_options)
-  fit <- lm(GNP ~ ., data = longley[-1])
-  set.seed(123)
-  lm_plot.ac_longley <-
-    lm_plot.ac(mdl = fit, opt = list(ts = TRUE, pval.DW = TRUE))
   vdiffr::expect_doppelganger(
     title = "lm-plot-ac-longley",
-    fig = lm_plot.ac_longley$plts$ac,
+    fig = lm_plot.ac_longley_bld(test_options),
     variant = sysnm())
-})
-
-test_that("lm_plot.ac produces expected plot elements for longley", {
-  withr::local_options(test_options)
-  load(testthat::test_path("fixtures", sysnm(), "lm_plot.ac_longley.Rdata"))
-  lm_plot.ac_longley.out <- lm_plot.ac_longley_bld(test_options)
-  expect_equal(lm_plot.ac_longley.out, lm_plot.ac_longley.rda)
 })

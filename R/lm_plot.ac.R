@@ -1,14 +1,11 @@
 #' Plot Residuals vs. Observation Order (Autocorrelation Check)
 #'
-#' Creates a plot of residuals against the sequence/order of observations to visually
-#' assess independence and detect autocorrelation. Optionally overlays results from the
-#' Durbin–Watson test and labels outliers.
+#' Creates a plot of residuals against the sequence/order of observations to visually assess independence and detect autocorrelation. Outliers are labeled by default. Optionally includes p-value result from the Durbin–Watson test for autocorrelation.
 #'
 #' @param mdl A fitted model object (typically from \code{\link[stats]{lm}}).
 #' @param pval.DW (logical, default = FALSE) Option to show Durbin-Watson p-value on the plot.
-#' @param parm A list of plotting parameters, usually from \code{lm_plot.parms()}.
+#' @param parms A list of plotting parameters, usually from \code{lm_plot.parms()}.
 #' @param df Data frame with augmented model data. Defaults to \code{lm_plot.df(mdl)}.
-#' @param plts A list of ggplot objects to which this plot will be added.
 #' @param ... Additional arguments (not currently used).
 #'
 #' @details
@@ -16,39 +13,32 @@
 #' (as determined by Tukey's boxplot rule). The function can label points using
 #' \pkg{ggrepel} if \code{parm$pts$id$outl} or \code{parm$pts$id$reg} are set to \code{TRUE}.
 #'
-#' @return A list containing:
+#' @return A \code{ggplot} object representing the residuals vs. order plot. Included as an attribute \code{"parm"} is a list containing:
 #' \itemize{
-#'   \item \code{mdl} Fitted model object,
+#'   \item \code{lim} Plotted limits on \code{x} and \code{y} axes,
 #'   \item \code{pval.DW} Option to show Durbin-Watson p-value,
-#'   \item \code{parm} Parameter list with Durbin-Watson test results added,
-#'   \item \code{df} Data frame used for plotting,
-#'   \item \code{plts} List of ggplot objects, including the \code{$ac} element.
+#'   \item \code{DW} The \code{htest} object with Durbin-Watson test results.
 #' }
-
+#'
+#' @seealso \code{\link[lmtest]{dwtest}}, \code{\link{lm_plot.df}}, \code{\link{lm_plot.parms}}
 #'
 #' @examples
-#' \dontrun{
-#' fit <- lm(mpg ~ wt + hp, data = mtcars)
-#' lm_plot.ac(fit)
-#' }
+#' fit <- lm(res ~ ., data = data.frame(time = time(austres), res = austres))
+#' lm_plot.ac(fit, pval.DW = TRUE)
+#'
 #' @export
 lm_plot.ac <- function(mdl, ...,
                        pval.DW = FALSE,
-                       parm = list(),
-                       df = lm_plot.df(mdl),
-                       plts = list()) {
+                       parms = lm_plot.parms(mdl),
+                       df = lm_plot.df(mdl, parms = parms)) {
   # Copyright 2026, Peter Lert, All rights reserved.
   #
   # Plot of Residuals vs order to test independence (autocorrelation)
   #
   # mdl:     fitted linear model
   # pval.DW: option to include Durbin-Watson autocorrelation test p-value
-  # parm:    plot element parameters
+  # parms:   plot element parameters
   # df:      augmented model data
-  # plts:    list of ggplot objects to add to
-  #
-  # Default plot element parameters
-  parms <- lm_plot.parms(mdl, parm)
   #
   # Find x, y limits for placing elements
   lim <- data.frame(
@@ -58,7 +48,7 @@ lm_plot.ac <- function(mdl, ...,
   )
   #
   # Plot of Residuals vs order
-  plts$ac <- ggplot2::ggplot(data = df) +
+  plt_ac <- ggplot2::ggplot(data = df) +
     ggplot2::aes(x = .sequence, y = .resid) +
     # PLot axis labels
     ggplot2::labs(x = "Order", y = "Residual") +
@@ -70,7 +60,7 @@ lm_plot.ac <- function(mdl, ...,
     )
   #
   if (prod(sign(lim$x)) %in% -1) {
-    plts$ac <- plts$ac +
+    plt_ac <- plt_ac +
       ggplot2::geom_vline(
         color = "white",
         linewidth = parms$lins$size_lg,
@@ -79,7 +69,7 @@ lm_plot.ac <- function(mdl, ...,
   }
   #
   # Plot points - vary color & shape for normal/outlier points
-  plts$ac <- plts$ac +
+  plt_ac <- plt_ac +
     ggplot2::geom_point(
       ggplot2::aes(shape = .is.outl, color = .is.outl),
       size = parms$pts$symsz,
@@ -95,7 +85,7 @@ lm_plot.ac <- function(mdl, ...,
     ))
   #
   # Add sequence line
-  plts$ac <- plts$ac +
+  plt_ac <- plt_ac +
     ggplot2::geom_path(
       linetype = parms$lins$ltyp$ac,
       color = parms$pts$colr$reg,
@@ -103,7 +93,7 @@ lm_plot.ac <- function(mdl, ...,
     )
   #
   # Add legend for outliers
-  plts$ac <- plts$ac +
+  plt_ac <- plt_ac +
     ggplot2::annotate(
       "point",
       x = lim["max", "x"],
@@ -127,7 +117,7 @@ lm_plot.ac <- function(mdl, ...,
   if (parms$pts$id$outl) {
     set.seed(parms$seed$ac$outl) # For reproducible ID placement
     df.outl <- df[df$.is.outl == "outl", , drop = FALSE]
-    plts$ac <- plts$ac + ggrepel::geom_text_repel(
+    plt_ac <- plt_ac + ggrepel::geom_text_repel(
       data = df.outl,
       ggplot2::aes(x = .sequence, y = .resid, label = .id),
       color = parms$pts$colr$outl,
@@ -139,7 +129,7 @@ lm_plot.ac <- function(mdl, ...,
   if (parms$pts$id$reg) {
     set.seed(parms$seed$ac$reg) # For reproducible ID placement
     df.reg <- df[df$.is.outl == "reg", , drop = FALSE]
-    plts$ac <- plts$ac + ggrepel::geom_text_repel(
+    plt_ac <- plt_ac + ggrepel::geom_text_repel(
       data = df.reg,
       ggplot2::aes(x = .sequence, y = .resid, label = .id),
       color = parms$pts$colr$reg,
@@ -148,15 +138,15 @@ lm_plot.ac <- function(mdl, ...,
   }
   #
   # Return autocorrelation results
-  parms$ac <- list(lim = lim, DW = lmtest::dwtest(mdl))
+  parms_ac <- list(lim = lim, pval.DW = pval.DW, DW = lmtest::dwtest(mdl))
   #
-  # Add Durbin-Watson autocorrelation test p-value if desired
+  # Add Durbin-Watson autocorrelation test p-value to plot if desired
   if (pval.DW) {
     note_ac <- paste0(
       "Autocorrelation: DW p-val=",
-      round(parms$ac$DW$p.value, 4)
+      round(parms_ac$DW$p.value, 4)
     )
-    plts$ac <- plts$ac +
+    plt_ac <- plt_ac +
       ggplot2::annotate(
         "text",
         x = lim["min", "x"],
@@ -169,11 +159,6 @@ lm_plot.ac <- function(mdl, ...,
       )
   }
   # Return results
-  list(
-    mdl = mdl,
-    pval.DW = pval.DW,
-    parm = parms,
-    df = df,
-    plts = plts
-  )
+  attr(plt_ac, "parms") <- parms_ac
+  plt_ac
 }

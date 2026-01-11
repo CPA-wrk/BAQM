@@ -36,8 +36,8 @@ You can install the development version of BAQM
 from [GitHub](https://github.com/) with:
 
 ``` r
-# install.packages("pak")
-# pak::pak("CPA-wrk/BAQM")
+install.packages("pak")
+pak::pak("CPA-wrk/BAQM")
 ```
 
 ## Example

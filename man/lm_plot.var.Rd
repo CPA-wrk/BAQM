@@ -8,9 +8,8 @@ lm_plot.var(
   mdl,
   ...,
   pval.BP = FALSE,
-  parm = list(),
-  df = lm_plot.df(mdl),
-  plts = list()
+  parms = lm_plot.parms(mdl),
+  df = lm_plot.df(mdl, parms = parms)
 )
 }
 \arguments{
@@ -20,32 +19,28 @@ lm_plot.var(
 
 \item{pval.BP}{(logical, default = FALSE) option to include Breusch-Pagan p-value on the plot.}
 
-\item{parm}{List of plotting parameters, usually from \code{lm_plot.parms()}.}
+\item{parms}{List of plotting parameters, usually from \code{lm_plot.parms()}.}
 
 \item{df}{Data frame with augmented model data. Defaults to \code{lm_plot.df(mdl)}.}
-
-\item{plts}{List of ggplot objects to which this plot will be added.}
 }
 \value{
-A list containing:
+A \code{ggplot} object representing the residuals versus fitted values plot. Included as an attribute \code{"parms"} is a list containing:
 \itemize{
-  \item \code{mdl} Fitted model object,
+  \item \code{lim} Plotted limits on \code{x} and \code{y} axes,
   \item \code{pval.BP} Option to show Breusch-Pagan p-value,
-  \item \code{parm} Parameter list with Breusch-Pagan test results added,
-  \item \code{df} Data frame used for plotting,
-  \item \code{plts} List of ggplot objects, including the \code{$var} element.
+  \item \code{BP} The \code{htest} object with Breusch-Pagan test results.
 }
 }
 \description{
 Produces a scatter plot of residuals against fitted values from a linear model, highlighting outlier points and optionally displaying the Breusch-Pagan test p-value for heteroskedasticity.
 }
 \details{
-The plot visualizes residuals versus fitted values to assess homoskedasticity (constant variance). Points are colored and shaped by outlier status, and outlier/regular points can be labeled. If enabled, the Breusch-Pagan test for heteroskedasticity is run and its p-value is annotated on the plot.
+The plot visualizes residuals versus fitted values to assess homoskedasticity (constant variance). Points are colored and shaped by outlier status, and outlier/regular points can be labeled. The Breusch-Pagan test for heteroskedasticity is run and, if enabled, its p-value annotates the plot.
 }
 \examples{
 mdl <- lm(Sepal.Length ~ Sepal.Width, data = iris)
-result <- lm_plot.var(mdl)
-print(result$plts$var)
+lm_plot.var(mdl, pval.BP = TRUE)
+
 }
 \seealso{
 \code{\link{lm_plot.df}}, \code{\link{lm_plot.parms}}, \code{\link[lmtest]{bptest}}

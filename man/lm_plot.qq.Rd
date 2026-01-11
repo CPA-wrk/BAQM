@@ -8,9 +8,8 @@ lm_plot.qq(
   mdl,
   ...,
   pval.SW = FALSE,
-  parm = list(),
-  df = lm_plot.df(mdl),
-  plts = list()
+  parms = lm_plot.parms(mdl),
+  df = lm_plot.df(mdl, parms = parms)
 )
 }
 \arguments{
@@ -20,20 +19,16 @@ lm_plot.qq(
 
 \item{pval.SW}{(logical, default = FALSE) indicates whether to include Shapiro-Wilk p-value on the plot.}
 
-\item{parm}{List of plotting parameters, usually from \code{lm_plot.parms()}.}
+\item{parms}{List of plotting parameters, usually from \code{lm_plot.parms()}.}
 
 \item{df}{Data frame with augmented model data. Defaults to \code{lm_plot.df(mdl)}.}
-
-\item{plts}{List of ggplot objects to which this plot will be added.}
 }
 \value{
-A list containing:
+A \code{ggplot} object representing the quantile-quantile plot. Included as an attribute \code{"parm"} is a list containing:
 \itemize{
-  \item \code{mdl} Fitted model object,
-  \item \code{pval.SW} Option for including Shapiro-Wilk p-value,
-  \item \code{parm} Parameter list with Shapiro-Wilk test results added,
-  \item \code{df} Data frame used for plotting,
-  \item \code{plts} List of ggplot objects, including the \code{$qq} element.
+  \item \code{lim} Plotted limits on \code{x} and \code{y} axes,
+  \item \code{pval.SW} Option to show Shapiro-Wilk p-value,
+  \item \code{DW} The \code{htest} object with Shapiro-Wilk test results.
 }
 }
 \description{
@@ -44,8 +39,8 @@ The plot visualizes the distribution of residuals against theoretical normal qua
 }
 \examples{
 mdl <- lm(Sepal.Length ~ Sepal.Width, data = iris)
-result <- lm_plot.qq(mdl)
-print(result$plts$qq)
+lm_plot.qq(mdl)
+
 }
 \seealso{
 \code{\link{lm_plot.df}}, \code{\link{lm_plot.parms}}, \code{\link[stats]{shapiro.test}}

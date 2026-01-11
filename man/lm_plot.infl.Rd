@@ -7,9 +7,8 @@
 lm_plot.infl(
   mdl,
   ...,
-  parm = list(),
-  df = lm_plot.df(mdl, parm),
-  plts = list()
+  parms = lm_plot.parms(mdl),
+  df = lm_plot.df(mdl, parms = parms)
 )
 }
 \arguments{
@@ -17,19 +16,14 @@ lm_plot.infl(
 
 \item{...}{Additional arguments (not currently used).}
 
-\item{parm}{List of plotting parameters, usually from \code{lm_plot.parms()}.}
+\item{parms}{List of plotting parameters, usually from \code{lm_plot.parms()}.}
 
 \item{df}{Data frame with augmented model data. Defaults to \code{lm_plot.df(mdl)}.}
-
-\item{plts}{List of ggplot objects to which this plot will be added.}
 }
 \value{
-A list containing:
+A \code{ggplot} object representing the comb plot of residuals vs sequence, indicating influential points. Included as an attribute \code{"parms"} is a list containing:
 \itemize{
-  \item \code{mdl} Fitted model object,
-  \item \code{parm} Parameter list for plotting,
-  \item \code{df} Data frame used for plotting,
-  \item \code{plts} List of ggplot objects, including the \code{$infl} element.
+  \item \code{lim} Plotted limits on \code{x} and \code{y} axes.
 }
 }
 \description{
@@ -39,11 +33,10 @@ Creates a plot of leverage values versus the linear fitted values, including an 
 The plot visualizes the calculated leverage of individual data points, defined as the diagonal element of the 'hat' matrix, as a function of the fitted values and implicitly relative to their location in the field of predictor variables, and the threshold value of high leverage is indicated. In addition, Cook's distance can be used to label influential points, along with outlier and regular points.
 }
 \examples{
-\dontrun{
+
 mdl <- lm(Sepal.Length ~ Sepal.Width, data = iris)
 result <- lm_plot.infl(mdl)
-print(result$plts$infl)
-}
+
 }
 \seealso{
 \code{\link{lm_plot.df}}, \code{\link{lm_plot.parms}}, \code{\link{outlier}}

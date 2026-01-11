@@ -1,13 +1,16 @@
 Type: Package
 Package: BAQM
-Title: Analytics Functions for Babson AQM Courses
+Title: Babson Analytics and Quantitative Methods Tools
 Version: 0.1.3
 Authors@R: 
     person("Peter", "Lert", , "plert@babson.edu", role = c("aut", "cre", "cph"))
 Copyright: Copyright Peter Lert, PhD, CFA
-Description: Instructor-developed tools for AQM 1000 and AQM 2000
-    courses using R in the curriculum.
+Description: Instructor-developed tools for Analytics and Quantitative Methods
+    (AQM) courses at Babson College. Included are compact descriptive
+    statistics for data frames and lists, expanded reporting and graphics for
+    linear regressions, and formatted reports for best subsets analyses.
 License: GPL (>= 2)
+Depends: R (>= 3.5),
 Suggests: 
     leaps,
     shiny,

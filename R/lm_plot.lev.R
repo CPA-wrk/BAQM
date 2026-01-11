@@ -4,38 +4,30 @@
 #'
 #' @param mdl A fitted model object (typically from \code{\link[stats]{lm}}).
 #' @param cook.loess Option (logical, default = FALSE) indicates whether to show loess curve for Cook's distances on the plot.
-#' @param parm List of plotting parameters, usually from \code{lm_plot.parms()}.
+#' @param parms List of plotting parameters, usually from \code{lm_plot.parms()}.
 #' @param df Data frame with augmented model data. Defaults to \code{lm_plot.df(mdl)}.
-#' @param plts List of ggplot objects to which this plot will be added.
 #' @param ... Additional arguments (not currently used).
 #'
 #' @details
-#' The plot displays standard residuals against leverage, overlays Cook's distance contours, and marks outliers based on residuals and Cook's distance. Outlier and influential points can be labeled, and a loess fit line is optionally added.
+#' The plot displays standardized residuals against leverage, overlays Cook's distance contours, and marks outliers based on residuals and Cook's distance. Outlier and influential points can be labeled, and a loess fit line is optionally added.
 #'
-#' @return A list containing:
+#' @return A \code{ggplot} object representing the standardized residuals vs leverage plot. Included as an attribute \code{"parms"} is a list containing:
 #' \itemize{
-#'   \item \code{mdl} Fitted model object,
-#'   \item \code{cook.loess} Option for loess curve for Cook's distances,
-#'   \item \code{parm} Parameter list for plotting, including Cook's distance contours,
-#'   \item \code{df} Data frame used for plotting,
-#'   \item \code{plts} List of ggplot objects, including the \code{$lev} element.
+#'   \item \code{lim} Plotted limits on \code{x} and \code{y} axes,
+#'   \item \code{cook.loess} Option to show loess curve for Cook's distances.
 #' }
 #'
 #' @seealso \code{\link{lm_plot.df}}, \code{\link{lm_plot.parms}}
-#' @import ggplot2 ggrepel stats
-#' @export
 #'
 #' @examples
-#' \dontrun{
 #' mdl <- lm(Sepal.Length ~ Sepal.Width, data = iris)
-#' result <- lm_plot.lev(mdl)
-#' print(result$plts$lev)
-#' }
+#' lm_plot.lev(mdl)
+#'
+#' @export
 lm_plot.lev <- function(mdl, ...,
                         cook.loess = FALSE,
-                        parm = list(),
-                        df = lm_plot.df(mdl),
-                        plts = list()) {
+                        parms = lm_plot.parms(mdl),
+                        df = lm_plot.df(mdl, parms = parms)) {
   # Copyright 2026, Peter Lert, All rights reserved.
   #
   # Plot Standard residuals vs. Leverage with Cook's distance contours
@@ -45,9 +37,6 @@ lm_plot.lev <- function(mdl, ...,
   # parm:       plot element parameters
   # df:         augmented model data
   # plts:       list of ggplot objects to add to
-  #
-  # Default plot element parameters
-  parms <- lm_plot.parms(mdl, parm)
   #
   # Find x, y limits for placing elements
   lim <- data.frame(
@@ -72,7 +61,7 @@ lm_plot.lev <- function(mdl, ...,
   parms$cook$cont$x <- x
   parms$cook$cont <- data.frame(parms$cook$cont)
   #
-  plts$lev <- ggplot2::ggplot(df) +
+  plt_lev <- ggplot2::ggplot(df) +
     ggplot2::aes(x = .hat, y = .std.resid) +
     # Plot axis labels
     ggplot2::labs(x = "Leverage", y = "Standard Residual") +
@@ -89,7 +78,7 @@ lm_plot.lev <- function(mdl, ...,
     )
   #
   # Plot points - vary color & shape for normal/outlier points
-  plts$lev <- plts$lev +
+  plt_lev <- plt_lev +
     ggplot2::geom_point(
       ggplot2::aes(shape = .is.outl, color = .is.outl),
       size = parms$pts$symsz,
@@ -105,7 +94,7 @@ lm_plot.lev <- function(mdl, ...,
     ))
   #
   # Add legend for outliers
-  plts$lev <- plts$lev +
+  plt_lev <- plt_lev +
     ggplot2::annotate(
       "point",
       x = lim["max", "x"],
@@ -127,7 +116,7 @@ lm_plot.lev <- function(mdl, ...,
   #
   # Add loess line
   if (cook.loess) {
-    plts$lev <- plts$lev +
+    plt_lev <- plt_lev +
       ggplot2::geom_smooth(
         se = FALSE,
         method = "loess",
@@ -142,7 +131,7 @@ lm_plot.lev <- function(mdl, ...,
   if (parms$pts$id$cook &&
       is.ok(i_d <- which(abs(df$.cooksd) >= min(abs(parms$cook$level))))) {
     df.i_d <- df[i_d, , drop = FALSE]
-    plts$lev <- plts$lev +
+    plt_lev <- plt_lev +
       ggrepel::geom_text_repel(
         data = df.i_d,
         ggplot2::aes(x = .hat, y = .std.resid, label = .id),
@@ -158,7 +147,7 @@ lm_plot.lev <- function(mdl, ...,
     set.seed(parms$seed$lev$outl) # For reproducible ID placement
     i_outl <- which(df$.is.outl == "outl")
     df.outl <- df[i_outl[!i_outl %in% i_d], , drop = FALSE]
-    plts$lev <- plts$lev + ggrepel::geom_text_repel(
+    plt_lev <- plt_lev + ggrepel::geom_text_repel(
       data = df.outl,
       ggplot2::aes(x = .hat, y = .std.resid, label = .id),
       color = parms$pts$colr$outl,
@@ -171,7 +160,7 @@ lm_plot.lev <- function(mdl, ...,
     set.seed(parms$seed$lev$reg) # For reproducible ID placement
     i_reg <- which(df$.is.outl == "reg")
     df.reg <- df[i_reg[!i_reg %in% i_d], , drop = FALSE]
-    plts$lev <- plts$lev +
+    plt_lev <- plt_lev +
       ggrepel::geom_text_repel(
         data = df.reg,
         ggplot2::aes(x = .hat, y = .std.resid, label = .id),
@@ -186,7 +175,7 @@ lm_plot.lev <- function(mdl, ...,
     x = c(lgd_x, lim["max", "x"]),
     y = c(lim["max", "y"], lim["max", "y"])
   )
-  plts$lev <- plts$lev +
+  plt_lev <- plt_lev +
     ggplot2::geom_line(
       data = l.dat,
       ggplot2::aes(x = x, y = y),
@@ -214,7 +203,7 @@ lm_plot.lev <- function(mdl, ...,
     if (length(i_cont) <= 1) next
     t_nm <- t_nm[i_cont, ]
     k_mid <- ceiling(length(i_cont) / 2)
-    plts$lev <- plts$lev +
+    plt_lev <- plt_lev +
       ggplot2::geom_line(
         data = t_nm,
         ggplot2::aes(x = .hat, y = .std.resid),
@@ -232,12 +221,10 @@ lm_plot.lev <- function(mdl, ...,
         color = parms$lins$colr$cook
       )
   }
-  # Return results
-  list(
-    mdl = mdl,
-    cook.loess = cook.loess,
-    parm = parms,
-    df = df,
-    plts = plts
-  )
+  #
+  # Return fit results
+  parms_lev <- list(lim = lim, cook.loess = cook.loess)
+  #
+  attr(plt_lev, "parms") <- parms_lev
+  plt_lev
 }

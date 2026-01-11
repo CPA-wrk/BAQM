@@ -6,7 +6,7 @@
 #' @param parms A list of plot parameters. Any missing or invalid entries are replaced with defaults.
 #'
 #' @details
-#' The returned list contains parameters for points (size, color, shape), lines (type, color, size), options for plot features, and Cook's distance/Influence contours. These are used by other \code{lm_plot.*} functions to control plot appearance and annotation. Key defaults include:
+#' The returned list contains parameters for points (size, color, shape), lines (type, color, size), options for plot features, Cook's distance/Influence contours, and seed values for sampling functions. These are used by other \code{lm_plot.*} functions to control plot appearance and annotation. Key defaults include:
 #' \itemize{
 #'   \item \strong{pts}: Properties for points (size, color, shape, outlier flags)
 #'   \item \strong{lins}: Properties for lines (type, color, size)
@@ -17,7 +17,7 @@
 #'
 #' @return A list of plot element parameters with defaults filled in for any missing or invalid entries.
 #'
-#' @seealso \code{\link{lm_plot.fit}}, \code{\link{lm_plot.lev}}, \code{\link{lm_plot.infl}}
+#' @seealso \code{\link{lm_plot.fit}}, \code{\link{lm_plot.lev}}, \code{\link{lm_plot.infl}} \code{\link{outlier}}
 #' @export
 #'
 #' @examples
@@ -32,8 +32,7 @@ lm_plot.parms <- function(mdl, parms = list()) {
   # Default plotting and statistical parameters for residual analysis
   #
   # Residual outliers:
-  #   Measured by standardized residuals.
-  #     abs(std.resid) > 3
+  #   Measured by Tukey boxplot rule.
   #
   # Influence values:
   #   Measured by Cook's distance.

@@ -4,36 +4,31 @@
 #'
 #' @param mdl A fitted model object (typically from \code{\link[stats]{lm}}).
 #' @param pval.BP (logical, default = FALSE) option to include Breusch-Pagan p-value on the plot.
-#' @param parm List of plotting parameters, usually from \code{lm_plot.parms()}.
+#' @param parms List of plotting parameters, usually from \code{lm_plot.parms()}.
 #' @param df Data frame with augmented model data. Defaults to \code{lm_plot.df(mdl)}.
-#' @param plts List of ggplot objects to which this plot will be added.
 #' @param ... Additional arguments (not currently used).
 #'
 #' @details
-#' The plot visualizes residuals versus fitted values to assess homoskedasticity (constant variance). Points are colored and shaped by outlier status, and outlier/regular points can be labeled. If enabled, the Breusch-Pagan test for heteroskedasticity is run and its p-value is annotated on the plot.
+#' The plot visualizes residuals versus fitted values to assess homoskedasticity (constant variance). Points are colored and shaped by outlier status, and outlier/regular points can be labeled. The Breusch-Pagan test for heteroskedasticity is run and, if enabled, its p-value annotates the plot.
 #'
-#' @return A list containing:
+#' @return A \code{ggplot} object representing the residuals versus fitted values plot. Included as an attribute \code{"parms"} is a list containing:
 #' \itemize{
-#'   \item \code{mdl} Fitted model object,
+#'   \item \code{lim} Plotted limits on \code{x} and \code{y} axes,
 #'   \item \code{pval.BP} Option to show Breusch-Pagan p-value,
-#'   \item \code{parm} Parameter list with Breusch-Pagan test results added,
-#'   \item \code{df} Data frame used for plotting,
-#'   \item \code{plts} List of ggplot objects, including the \code{$var} element.
+#'   \item \code{BP} The \code{htest} object with Breusch-Pagan test results.
 #' }
 #'
 #' @seealso \code{\link{lm_plot.df}}, \code{\link{lm_plot.parms}}, \code{\link[lmtest]{bptest}}
-#' @import ggplot2 ggrepel lmtest
-#' @export
 #'
 #' @examples
 #' mdl <- lm(Sepal.Length ~ Sepal.Width, data = iris)
-#' result <- lm_plot.var(mdl)
-#' print(result$plts$var)
+#' lm_plot.var(mdl, pval.BP = TRUE)
+#'
+#' @export
 lm_plot.var <- function(mdl, ...,
                         pval.BP = FALSE,
-                        parm = list(),
-                        df = lm_plot.df(mdl),
-                        plts = list()) {
+                        parms = lm_plot.parms(mdl),
+                        df = lm_plot.df(mdl, parms = parms)) {
   # Copyright 2026, Peter Lert, All rights reserved.
   #
   # Plot Residuals vs Fitted Values to test Homoskedasticity
@@ -42,10 +37,6 @@ lm_plot.var <- function(mdl, ...,
   # pval.BP: include Breusch-Pagan homoskedasticity test p-value?
   # parm:    plot element parameters
   # df:      augmented model data
-  # plts:    list of ggplot objects to add to
-  #
-  # Default plot element parameters
-  parms <- lm_plot.parms(mdl, parm)
   #
   # Find x, y limits for placing elements
   lim <- data.frame(
@@ -55,7 +46,7 @@ lm_plot.var <- function(mdl, ...,
   )
   #
   # Plot of Residuals vs Fitted Values
-  plts$var <- ggplot2::ggplot(data = df) +
+  plt_var <- ggplot2::ggplot(data = df) +
     ggplot2::aes(x = .fits, y = .resid) +
     #
     # PLot axis labels
@@ -69,7 +60,7 @@ lm_plot.var <- function(mdl, ...,
     )
   #
   if (prod(sign(lim$x)) %in% -1) {
-    plts$var <- plts$var +
+    plt_var <- plt_var +
       ggplot2::geom_vline(
         color = "white",
         linewidth = parms$lins$size_lg,
@@ -78,7 +69,7 @@ lm_plot.var <- function(mdl, ...,
   }
   #
   # Plot points - vary color & shape for normal/outlier points
-  plts$var <- plts$var +
+  plt_var <- plt_var +
     ggplot2::geom_point(
       ggplot2::aes(shape = .is.outl, color = .is.outl),
       size = parms$pts$symsz,
@@ -94,7 +85,7 @@ lm_plot.var <- function(mdl, ...,
     ))
   #
   # Add legend for outliers
-  plts$var <- plts$var +
+  plt_var <- plt_var +
     ggplot2::annotate(
       "point",
       x = lim["max", "x"],
@@ -117,7 +108,7 @@ lm_plot.var <- function(mdl, ...,
   # ID outlier points if desired
   if (parms$pts$id$outl) {
     df.outl <- df[df$.is.outl == "outl", , drop = FALSE]
-    plts$var <- plts$var +
+    plt_var <- plt_var +
       ggrepel::geom_text_repel(
         data = df.outl,
         ggplot2::aes(x = .fits, y = .resid, label = .id),
@@ -129,7 +120,7 @@ lm_plot.var <- function(mdl, ...,
   # ID regular points if desired
   if (parms$pts$id$reg) {
     df.reg <- df[df$.is.outl == "reg", , drop = FALSE]
-    plts$var <- plts$var +
+    plt_var <- plt_var +
       ggrepel::geom_text_repel(
         data = df.reg,
         ggplot2::aes(x = .fits, y = .resid, label = .id),
@@ -139,12 +130,12 @@ lm_plot.var <- function(mdl, ...,
   }
   #
   # Return variance results
-  parms$var <- list(lim = lim, BP = lmtest::bptest(mdl))
+  parms_var <- list(lim = lim, pval.BP = pval.BP, BP = lmtest::bptest(mdl))
   #
   # Add Breusch-Pagan heteroskedasticity test p-value if desired
   if (pval.BP) {
-    note_var <- paste0("Const.Var: BP p-val=", round(parms$var$BP$p.value, 4))
-    plts$var <- plts$var +
+    note_var <- paste0("Const.Var: BP p-val=", round(parms_var$BP$p.value, 4))
+    plt_var <- plt_var +
       ggplot2::annotate(
         "text",
         x = lim["min", "x"],
@@ -157,11 +148,6 @@ lm_plot.var <- function(mdl, ...,
       )
   }
   # Return results
-  list(
-    mdl = mdl,
-    pval.BP = pval.BP,
-    parm = parms,
-    df = df,
-    plts = plts
-  )
+  attr(plt_var, "parms") <- parms_var
+  plt_var
 }

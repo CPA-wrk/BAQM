@@ -4,9 +4,9 @@
 \name{BAQM-package}
 \alias{BAQM}
 \alias{BAQM-package}
-\title{BAQM: Analytics Functions for Babson AQM Courses}
+\title{BAQM: Babson Analytics and Quantitative Methods Tools}
 \description{
-Instructor-developed tools for AQM 1000 and AQM 2000 courses using R in the curriculum.
+Instructor-developed tools for Analytics and Quantitative Methods (AQM) courses at Babson College. Included are compact descriptive statistics for data frames and lists, expanded reporting and graphics for linear regressions, and formatted reports for best subsets analyses.
 }
 \seealso{
 Useful links:

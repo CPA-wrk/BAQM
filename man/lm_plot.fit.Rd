@@ -8,9 +8,8 @@ lm_plot.fit(
   mdl,
   ...,
   pred.intvl = TRUE,
-  parm = list(),
-  df = lm_plot.df(mdl),
-  plts = list()
+  parms = lm_plot.parms(mdl),
+  df = lm_plot.df(mdl, parms = parms)
 )
 }
 \arguments{
@@ -18,34 +17,29 @@ lm_plot.fit(
 
 \item{...}{Additional arguments (not currently used).}
 
-\item{pred.intvl}{List of options, where \code{pred_intvl_pts} (numeric, default = 100) is used for prediction interval bounds of fitted values (0 to skip).}
+\item{pred.intvl}{(logical, default = TRUE) Option to show prediction interval bounds of fitted values.}
 
-\item{parm}{List of plotting parameters, usually from \code{lm_plot.parms()}.}
+\item{parms}{List of plotting parameters, usually from \code{lm_plot.parms()}.}
 
 \item{df}{Data frame with augmented model data. Defaults to \code{lm_plot.df(mdl)}.}
-
-\item{plts}{List of ggplot objects to which this plot will be added.}
 }
 \value{
-A list containing:
+A \code{ggplot} object representing the fitted vs. observed plot. Included as an attribute \code{"parm"} is a list containing:
 \itemize{
-  \item \code{mdl} Fitted model object,
-  \item \code{pred.intvl} Options used, including \code{pred_intvl_pts},
-  \item \code{parm} Parameter list with autocorrelation test results added,
-  \item \code{df} Data frame used for plotting,
-  \item \code{plts} List of ggplot objects, including the \code{$fit} element.
+  \item \code{lim} Plotted limits on \code{x} and \code{y} axes,
+  \item \code{pred.intvl} Option to show prediction interval,
 }
 }
 \description{
-Generates a scatter plot of fitted values versus observed values from a linear model, with optional prediction intervals and identification of outlier points. The plot includes a reference line \code{y = x} for assessing linearity.
+Generates a scatter plot of fitted values versus observed values from a linear model, with identification of outlier points and optional prediction interval. The plot includes a reference line \code{y = x} for assessing linearity.
 }
 \details{
-The plot visualizes fitted versus observed values, includes a diagonal reference line, marks outliers, and can optionally display loess-smoothed prediction intervals. Outlier and regular points can be labeled. This plot is useful for visually assessing linearity and model fit quality.
+The plot visualizes fitted versus observed values, includes a diagonal reference line, marks outliers, and can optionally display prediction intervals. Outlier and regular points can be labeled. This plot is useful for visually assessing linearity and model fit quality.
 }
 \examples{
 mdl <- lm(Sepal.Length ~ Sepal.Width, data = iris)
-result <- lm_plot.fit(mdl)
-print(result$plts$fit)
+lm_plot.fit(mdl)
+
 }
 \seealso{
 \code{\link{lm_plot.df}}, \code{\link{lm_plot.parms}}

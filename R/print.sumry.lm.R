@@ -46,7 +46,7 @@ print.sumry.lm <- function(x, ...,
   #
   if (!inherits(x, "sumry.lm")) {
     print(x)
-    invisible(x)
+    return(invisible(x))
   }
   #
   headings <- list(

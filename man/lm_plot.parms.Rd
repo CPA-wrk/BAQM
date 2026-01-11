@@ -18,7 +18,7 @@ A list of plot element parameters with defaults filled in for any missing or inv
 Initializes or updates a list of plot element parameters for use in model diagnostic plotting functions. If any required parameter is missing or invalid, a default value will be supplied.
 }
 \details{
-The returned list contains parameters for points (size, color, shape), lines (type, color, size), options for plot features, and Cook's distance/Influence contours. These are used by other \code{lm_plot.*} functions to control plot appearance and annotation. Key defaults include:
+The returned list contains parameters for points (size, color, shape), lines (type, color, size), options for plot features, Cook's distance/Influence contours, and seed values for sampling functions. These are used by other \code{lm_plot.*} functions to control plot appearance and annotation. Key defaults include:
 \itemize{
   \item \strong{pts}: Properties for points (size, color, shape, outlier flags)
   \item \strong{lins}: Properties for lines (type, color, size)
@@ -35,5 +35,5 @@ parms <- lm_plot.parms(mdl = lm(Sepal.Length ~ Sepal.Width, data = iris),
                        parms = list(pts = list(colr = list(reg = "blue"))))
 }
 \seealso{
-\code{\link{lm_plot.fit}}, \code{\link{lm_plot.lev}}, \code{\link{lm_plot.infl}}
+\code{\link{lm_plot.fit}}, \code{\link{lm_plot.lev}}, \code{\link{lm_plot.infl}} \code{\link{outlier}}
 }

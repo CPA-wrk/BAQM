@@ -1,51 +1,42 @@
 #' Plot Observed vs. Fitted Values to Check Linearity
 #'
-#' Generates a scatter plot of fitted values versus observed values from a linear model, with optional prediction intervals and identification of outlier points. The plot includes a reference line \code{y = x} for assessing linearity.
+#' Generates a scatter plot of fitted values versus observed values from a linear model, with identification of outlier points and optional prediction interval. The plot includes a reference line \code{y = x} for assessing linearity.
 #'
 #' @param mdl A fitted model object (typically from \code{\link[stats]{lm}}).
-#' @param pred.intvl List of options, where \code{pred_intvl_pts} (numeric, default = 100) is used for prediction interval bounds of fitted values (0 to skip).
-#' @param parm List of plotting parameters, usually from \code{lm_plot.parms()}.
+#' @param pred.intvl (logical, default = TRUE) Option to show prediction interval bounds of fitted values.
+#' @param parms List of plotting parameters, usually from \code{lm_plot.parms()}.
 #' @param df Data frame with augmented model data. Defaults to \code{lm_plot.df(mdl)}.
-#' @param plts List of ggplot objects to which this plot will be added.
 #' @param ... Additional arguments (not currently used).
 #'
 #' @details
-#' The plot visualizes fitted versus observed values, includes a diagonal reference line, marks outliers, and can optionally display loess-smoothed prediction intervals. Outlier and regular points can be labeled. This plot is useful for visually assessing linearity and model fit quality.
+#' The plot visualizes fitted versus observed values, includes a diagonal reference line, marks outliers, and can optionally display prediction intervals. Outlier and regular points can be labeled. This plot is useful for visually assessing linearity and model fit quality.
 #'
-#' @return A list containing:
+#' @return A \code{ggplot} object representing the fitted vs. observed plot. Included as an attribute \code{"parm"} is a list containing:
 #' \itemize{
-#'   \item \code{mdl} Fitted model object,
-#'   \item \code{pred.intvl} Options used, including \code{pred_intvl_pts},
-#'   \item \code{parm} Parameter list with autocorrelation test results added,
-#'   \item \code{df} Data frame used for plotting,
-#'   \item \code{plts} List of ggplot objects, including the \code{$fit} element.
+#'   \item \code{lim} Plotted limits on \code{x} and \code{y} axes,
+#'   \item \code{pred.intvl} Option to show prediction interval,
 #' }
 #'
 #' @seealso \code{\link{lm_plot.df}}, \code{\link{lm_plot.parms}}
-#' @import ggplot2 ggrepel
-#' @export
 #'
 #' @examples
 #' mdl <- lm(Sepal.Length ~ Sepal.Width, data = iris)
-#' result <- lm_plot.fit(mdl)
-#' print(result$plts$fit)
+#' lm_plot.fit(mdl)
+#'
+#' @export
 lm_plot.fit <- function(mdl, ...,
                         pred.intvl = TRUE,
-                        parm = list(),
-                        df = lm_plot.df(mdl),
-                        plts = list()) {
+                        parms = lm_plot.parms(mdl),
+                        df = lm_plot.df(mdl, parms = parms)) {
   # Copyright 2025, Peter Lert, All rights reserved.
   #
   # Plot of observed versus fitted to test linearity
   #
   # mdl:        fitted linear model
   # pred.intvl: option to plot prediction interval of fitted values
-  # parm:       plot element parameters
+  # parms:      plot element parameters
   # df:         augmented model data
   # plts:       list of ggplot objects to add to
-  #
-  # Default plot element parameters
-  parms <- lm_plot.parms(mdl, parm)
   #
   # Find x, y limits for placing elements
   if (pred.intvl) {
@@ -62,11 +53,8 @@ lm_plot.fit <- function(mdl, ...,
     )
   }
   #
-  # Return fit results
-  parms$fit <- list(lim = lim)
-  #
   # Plot Fitted vs. Observed
-  plts$fit <- ggplot2::ggplot(data = df) +
+  plt_fit <- ggplot2::ggplot(data = df) +
     ggplot2::aes(x = .obs, y = .fits) +
     # Set axis limits
     ggplot2::coord_cartesian(xlim = lim$x, ylim = lim$y) +
@@ -74,7 +62,7 @@ lm_plot.fit <- function(mdl, ...,
     ggplot2::labs(x = "Observed Value", y = "Fitted Value")
   #
   # Plot points - vary color & shape for normal/outlier points
-  plts$fit <- plts$fit +
+  plt_fit <- plt_fit +
     ggplot2::geom_point(
       ggplot2::aes(shape = .is.outl, color = .is.outl),
       size = parms$pts$symsz,
@@ -90,7 +78,7 @@ lm_plot.fit <- function(mdl, ...,
     ))
   #
   # Add y = x line
-  plts$fit <- plts$fit +
+  plt_fit <- plt_fit +
     ggplot2::geom_abline(
       ggplot2::aes(slope = 1, intercept = 0),
       linetype = parms$lins$ltyp$fit,
@@ -108,7 +96,7 @@ lm_plot.fit <- function(mdl, ...,
     )
   #
   # Add legend for outliers
-  plts$fit <- plts$fit +
+  plt_fit <- plt_fit +
     ggplot2::annotate(
       "point",
       x = lim["max", "x"],
@@ -131,23 +119,23 @@ lm_plot.fit <- function(mdl, ...,
   # Plot prediction interval if desired
   if (pred.intvl) {
     p.int <- df[order(df$.obs), ]
-    plts$fit <- plts$fit +
-      ggplot2::geom_smooth(  # Upper limit with quadratic smoothing
+    plt_fit <- plt_fit +
+      ggplot2::geom_smooth(  # Upper limit with linear smoothing
         data = p.int,
         ggplot2::aes(x = .obs, y = .upper.pi),
         method = "lm",
-        formula = y ~ poly(x, 2),
+        formula = y ~ x,
         se = FALSE,
         na.rm = TRUE,
         linetype = parms$lins$ltyp$pi,
         color = parms$lins$colr$fit,
         linewidth = parms$lins$size
       ) +
-      ggplot2::geom_smooth(  # Lower limit with quadratic smoothing
+      ggplot2::geom_smooth(  # Lower limit with linear smoothing
         data = p.int,
         ggplot2::aes(x = .obs, y = .lower.pi),
         method = "lm",
-        formula = y ~ poly(x, 2),
+        formula = y ~ x,
         se = FALSE,
         na.rm = TRUE,
         linetype = parms$lins$ltyp$pi,
@@ -170,7 +158,7 @@ lm_plot.fit <- function(mdl, ...,
   if (parms$pts$id$outl) {
     set.seed(parms$seed$fit$outl) # For reproducible ID placement
     df.outl <- df[df$.is.outl == "outl", , drop = FALSE]
-    plts$fit <- plts$fit +
+    plt_fit <- plt_fit +
       ggrepel::geom_text_repel(
         data = df.outl,
         ggplot2::aes(x = .obs, y = .fits, label = .id),
@@ -183,7 +171,7 @@ lm_plot.fit <- function(mdl, ...,
   if (parms$pts$id$reg) {
     set.seed(parms$seed$fit$reg) # For reproducible ID placement
     df.reg <- df[df$.is.outl == "reg", , drop = FALSE]
-    plts$fit <- plts$fit + ggrepel::geom_text_repel(
+    plt_fit <- plt_fit + ggrepel::geom_text_repel(
       data = df.reg,
       ggplot2::aes(x = .obs, y = .fits, label = .id),
       color = parms$pts$colr$reg,
@@ -193,7 +181,7 @@ lm_plot.fit <- function(mdl, ...,
   #
   # Highlight axes, if within frame
   if (prod(sign(lim$y)) %in% -1) {
-    plts$fit <- plts$fit +
+    plt_fit <- plt_fit +
       ggplot2::geom_hline(
         color = "white",
         linewidth = parms$lins$size_lg,
@@ -201,7 +189,7 @@ lm_plot.fit <- function(mdl, ...,
       )
   }
   if (prod(sign(lim$x)) %in% -1) {
-    plts$fit <- plts$fit +
+    plt_fit <- plt_fit +
       ggplot2::geom_vline(
         color = "white",
         linewidth = parms$lins$size_lg,
@@ -209,12 +197,9 @@ lm_plot.fit <- function(mdl, ...,
       )
   }
   #
-  # Return results
-  list(
-    mdl = mdl,
-    pred.intvl = pred.intvl,
-    parm = parms,
-    df = df,
-    plts = plts
-  )
+  # Return fit results
+  parms_fit <- list(lim = lim, pred.intvl = pred.intvl)
+  #
+  attr(plt_fit, "parms") <- parms_fit
+  plt_fit
 }

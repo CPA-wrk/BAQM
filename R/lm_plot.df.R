@@ -3,7 +3,7 @@
 #' Generates an augmented data frame from a linear model object, including fitted values, residuals, leverage, Cook's distance, prediction intervals, and outlier/influence flags. This function prepares model diagnostics for plotting.
 #'
 #' @param mdl An object of class \code{lm}, representing the fitted linear model.
-#' @param parm List of plotting parameters, usually from \code{lm_plot.parms()}.
+#' @param parms List of plotting parameters, usually from \code{lm_plot.parms()}.
 #'
 #' @details
 #' The returned data frame contains key statistics for each observation:
@@ -29,13 +29,15 @@
 #' @return A data frame with augmented diagnostic variables, one row per observation.
 #'
 #' @seealso \code{\link[stats]{influence}}, \code{\link[stats]{influence.measures}}, \code{\link[stats]{rstandard}}, \code{\link[stats]{rstudent}}, \code{\link{outlier}}
+#'
 #' @export
 #'
 #' @examples
 #' mdl <- lm(Sepal.Length ~ Sepal.Width, data = iris)
 #' df <- lm_plot.df(mdl)
 #' head(df)
-lm_plot.df <- function(mdl, parm = list()) {
+#'
+lm_plot.df <- function(mdl, parms = lm_plot.parms(mdl)) {
   # Copyright 2025, Peter Lert, All rights reserved.
   #
   # Augmented model data for plots
@@ -54,9 +56,6 @@ lm_plot.df <- function(mdl, parm = list()) {
   # .is.outl	  Label for residual outlier ("outl" or "reg")
   # .is.infl	  Label for influential point ("infl" or "outl" or "reg")
   # .is.lev	    Label for high leverage point ("lev" or "outl" or "reg")
-  #
-  # Default plot element parameters
-  parms <- lm_plot.parms(mdl, parm)
   #
   infl <- stats::influence(mdl, do.coef = FALSE)
   pred <- suppressWarnings(stats::predict(

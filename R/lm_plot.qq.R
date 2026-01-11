@@ -4,48 +4,39 @@
 #'
 #' @param mdl A fitted model object (typically from \code{\link[stats]{lm}}).
 #' @param pval.SW (logical, default = FALSE) indicates whether to include Shapiro-Wilk p-value on the plot.
-#' @param parm List of plotting parameters, usually from \code{lm_plot.parms()}.
+#' @param parms List of plotting parameters, usually from \code{lm_plot.parms()}.
 #' @param df Data frame with augmented model data. Defaults to \code{lm_plot.df(mdl)}.
-#' @param plts List of ggplot objects to which this plot will be added.
 #' @param ... Additional arguments (not currently used).
 #'
 #' @details
 #' The plot visualizes the distribution of residuals against theoretical normal quantiles. Points are colored and shaped by outlier status, and a reference Q-Q line is added. Optionally, outlier and regular points can be labeled. If enabled, the Shapiro-Wilk normality test p-value is displayed.
 #'
-#' @return A list containing:
+#' @return A \code{ggplot} object representing the quantile-quantile plot. Included as an attribute \code{"parm"} is a list containing:
 #' \itemize{
-#'   \item \code{mdl} Fitted model object,
-#'   \item \code{pval.SW} Option for including Shapiro-Wilk p-value,
-#'   \item \code{parm} Parameter list with Shapiro-Wilk test results added,
-#'   \item \code{df} Data frame used for plotting,
-#'   \item \code{plts} List of ggplot objects, including the \code{$qq} element.
+#'   \item \code{lim} Plotted limits on \code{x} and \code{y} axes,
+#'   \item \code{pval.SW} Option to show Shapiro-Wilk p-value,
+#'   \item \code{DW} The \code{htest} object with Shapiro-Wilk test results.
 #' }
 #'
 #' @seealso \code{\link{lm_plot.df}}, \code{\link{lm_plot.parms}}, \code{\link[stats]{shapiro.test}}
-#' @import ggplot2 ggrepel stats
-#' @export
 #'
 #' @examples
 #' mdl <- lm(Sepal.Length ~ Sepal.Width, data = iris)
-#' result <- lm_plot.qq(mdl)
-#' print(result$plts$qq)
+#' lm_plot.qq(mdl)
+#'
+#' @export
 lm_plot.qq <- function(mdl, ...,
                        pval.SW = FALSE,
-                       parm = list(),
-                       df = lm_plot.df(mdl),
-                       plts = list()) {
-  # Copyright 2025, Peter Lert, All rights reserved.
+                       parms = lm_plot.parms(mdl),
+                       df = lm_plot.df(mdl, parms = parms)) {
+  # Copyright 2026, Peter Lert, All rights reserved.
   #
   # Q-Q Plot of Residuals to test normality
   #
   # mdl:    fitted linear model
   # pval.SW:include Shapiro-Wilk normality test p-value?
-  # parm:   plot element parameters
+  # parms:  plot element parameters
   # df:     augmented model data
-  # plts:   list of ggplot objects to add to
-  #
-  # Default plot element parameters
-  parms <- lm_plot.parms(mdl, parm)
   #
   # Add qqline elements
   qqlin <- list(probs = c(0.25, 0.75))
@@ -66,7 +57,7 @@ lm_plot.qq <- function(mdl, ...,
   )
   #
   # Q-Q Plot of Residuals
-  plts$qq <- ggplot2::ggplot(data = df) +
+  plt_qq <- ggplot2::ggplot(data = df) +
     ggplot2::aes(x = .quantile, y = .resid) +
     # PLot axis labels
     ggplot2::labs(x = "Theoretical Quantile", y = "Residual") +
@@ -83,7 +74,7 @@ lm_plot.qq <- function(mdl, ...,
     )
   #
   # Plot points - vary color & shape for normal/outlier points
-  plts$qq <- plts$qq +
+  plt_qq <- plt_qq +
     ggplot2::geom_point(
       ggplot2::aes(shape = .is.outl, color = .is.outl),
       size = parms$pts$symsz,
@@ -99,7 +90,7 @@ lm_plot.qq <- function(mdl, ...,
     ))
   #
   # Add Q-Q line
-  plts$qq <- plts$qq +
+  plt_qq <- plt_qq +
     ggplot2::geom_abline(
       ggplot2::aes(slope = qqlin$slope, intercept = qqlin$int),
       linetype = parms$lins$ltyp$qq,
@@ -110,7 +101,7 @@ lm_plot.qq <- function(mdl, ...,
   # ID outlier points if desired
   if (parms$pts$id$outl) {
     df.outl <- df[df$.is.outl == "outl", , drop = FALSE]
-    plts$qq <- plts$qq +
+    plt_qq <- plt_qq +
       ggrepel::geom_text_repel(
         data = df.outl,
         ggplot2::aes(x = .quantile, y = .resid, label = .id),
@@ -122,7 +113,7 @@ lm_plot.qq <- function(mdl, ...,
   # ID regular points if desired
   if (parms$pts$id$reg) {
     df.reg <- df[df$.is.outl == "reg", , drop = FALSE]
-    plts$qq <- plts$qq +
+    plt_qq <- plt_qq +
       ggrepel::geom_text_repel(
         data = df.reg,
         ggplot2::aes(x = .quantile, y = .resid, label = .id),
@@ -132,7 +123,7 @@ lm_plot.qq <- function(mdl, ...,
   }
   #
   # Add legend for outliers
-  plts$qq <- plts$qq +
+  plt_qq <- plt_qq +
     ggplot2::annotate(
       "text",
       x = lim["max", "x"],
@@ -153,16 +144,16 @@ lm_plot.qq <- function(mdl, ...,
     )
   #
   # Return Q-Q results
-  parms$qq <- list(
+  parms_qq <- list(
     lim = lim,
-    qqlin = qqlin,
+    pval.SW = pval.SW,
     SW = stats::shapiro.test(df$.resid)
   )
   #
   # Add Shapiro-Wilk normality test p-value if desired
   if (pval.SW) {
-    note_qq <- paste0("Normality: SW p-val=", round(parms$qq$SW$p.value, 4))
-    plts$qq <- plts$qq +
+    note_qq <- paste0("Normality: SW p-val=", round(parms_qq$SW$p.value, 4))
+    plt_qq <- plt_qq +
       ggplot2::annotate(
         "text",
         x = lim["min", "x"],
@@ -174,12 +165,7 @@ lm_plot.qq <- function(mdl, ...,
         size = parms$lins$notesz
       )
   }
-  # Return results
-  list(
-    mdl = mdl,
-    pval.SW = pval.SW,
-    parm = parms,
-    df = df,
-    plts = plts
-  )
+  # Return Q-Q results
+  attr(plt_qq, "parms") <- parms_qq
+  plt_qq
 }

@@ -14,8 +14,8 @@
 #' @param pval.DW Logical; include Durbin–Watson p-value in \code{ac}  plot.
 #' @param cook.loess Logical; overlay Cook's distance loess curve in \code{infl}  plot.
 #' @param rtn.all Logical; return all plots and parameters (vs. 4-way plot only).
-#' @param plt.nms Character vector of which panels to plot. Defaults to fit, var, qq, and ac/infl depending on \code{is.ts}.
-#' @param parm List of plot formatting parameters (see \code{\link{lm_plot.parms}}).
+#' @param plt.nms Character vector of which panels to plot. Defaults to fit, var, qq, and ac/infl depending on \code{is.ts} (Order: start upper left, continue clockwise)
+#' @param parms List of overrides to plot formatting parameters (see \code{\link{lm_plot.parms}}).
 #' @param ... Additional arguments (not currently used).
 #'
 #' @details
@@ -31,10 +31,12 @@
 #'   }
 #'
 #' @examples
-#' \dontrun{
+#'
 #' fit <- lm(mpg ~ wt + hp, data = mtcars)
-#' lm_plot.4way(fit, is.ts = FALSE, pval.DW = TRUE)
-#' }
+#' lm_plot.4way(fit, is.ts = FALSE, pval.SW = TRUE)
+#' fit <- lm(Employed ~ ., data = longley)
+#' lm_plot.4way(fit, is.ts = TRUE, pval.DW = TRUE)
+#'
 #' @export
 lm_plot.4way <- function(mdl, ...,
                          is.ts = FALSE,
@@ -46,7 +48,7 @@ lm_plot.4way <- function(mdl, ...,
                          rtn.all = FALSE,
                          plt.nms = c("fit", "var", "qq",
                                      ifelse(is.ts, "ac", "infl")),
-                         parm = list()) {
+                         parms = list()) {
   # Copyright 2026, Peter Lert, All rights reserved.
   #
   # Build 4-panel plot of for multiple regression assumption analysis
@@ -59,14 +61,15 @@ lm_plot.4way <- function(mdl, ...,
   #   lev:  Standardized Residuals vs. Leverage with Cook's distance contours
   #
   # options:
-  #   is.ts:          TRUE for time-series, gives ac plot; FALSE gives infl or lev plot
+  #   is.ts:          use TRUE for time-series, gives ac plot; FALSE gives infl plot
   #   pred.intvl:     Plot prediction interval on fitted vs observed plot?
   #   pvals:          Print test pvals on plots?
   #   cook.loess:     add loess curve to Cook's distance plot?
   #   rtn.all:        return full list of plots and data?
+  #   plt.nms         which plots to include (by name)?
   #
   # plot format parameters:
-  #   see lm_plot.parms()
+  #   parms:          see lm_plot.parms()
   #
   # Plot settings
   if (missing(mdl)) {
@@ -83,10 +86,9 @@ lm_plot.4way <- function(mdl, ...,
     )
     invisible()
   }
-  #
-  parms <- lm_plot.parms(mdl, parm)
   # Plot panels
   #
+  # Calculate all data items - parms and df - once for all
   lm_plot.lst <- list(mdl = mdl,
                       is.ts = is.ts,
                       pred.intvl = pred.intvl,
@@ -95,22 +97,25 @@ lm_plot.4way <- function(mdl, ...,
                       pval.DW = pval.DW,
                       cook.loess = cook.loess,
                       rtn.all = rtn.all,
-                      parm = lm_plot.parms(mdl, parms), # inputs override defaults
-                      df = lm_plot.df(mdl, parms),
-                      plts = list())
+                      parms = lm_plot.parms(mdl, parms)) # inputs w/ defaults
+  lm_plot.lst$df <- lm_plot.df(mdl, lm_plot.lst$parms)
+  plts <- list()
   for (nm in plt.nms) {
-    lm_plot.lst <- do.call(paste0("lm_plot.", nm), args = lm_plot.lst)
+    plts[[nm]] <- do.call(paste0("lm_plot.", nm), args = lm_plot.lst)
   }
   #
-  lm_plot.lst$p_4way <- cowplot::plot_grid(
-    lm_plot.lst$plts[[plt.nms[1]]],
-    lm_plot.lst$plts[[plt.nms[2]]],
-    lm_plot.lst$plts[[plt.nms[3]]],
-    lm_plot.lst$plts[[plt.nms[4]]]
+  p_4way <- cowplot::plot_grid(
+    plts[[plt.nms[1]]],
+    plts[[plt.nms[2]]],
+    plts[[plt.nms[3]]],
+    plts[[plt.nms[4]]]
   )
+  attr(p_4way, "plts") <- plt.nms
   #
   if (rtn.all) {
-    invisible(lm_plot.lst)
+    lm_plot.lst$plts <- plts
+    lm_plot.lst[["p_4way"]] <- p_4way
+    return(invisible(lm_plot.lst))
   }
-  lm_plot.lst$p_4way
+  p_4way
 }

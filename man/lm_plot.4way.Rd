@@ -15,7 +15,7 @@ lm_plot.4way(
   cook.loess = FALSE,
   rtn.all = FALSE,
   plt.nms = c("fit", "var", "qq", ifelse(is.ts, "ac", "infl")),
-  parm = list()
+  parms = list()
 )
 }
 \arguments{
@@ -37,9 +37,9 @@ lm_plot.4way(
 
 \item{rtn.all}{Logical; return all plots and parameters (vs. 4-way plot only).}
 
-\item{plt.nms}{Character vector of which panels to plot. Defaults to fit, var, qq, and ac/infl depending on \code{is.ts}.}
+\item{plt.nms}{Character vector of which panels to plot. Defaults to fit, var, qq, and ac/infl depending on \code{is.ts} (Order: start upper left, continue clockwise)}
 
-\item{parm}{List of plot formatting parameters (see \code{\link{lm_plot.parms}}).}
+\item{parms}{List of overrides to plot formatting parameters (see \code{\link{lm_plot.parms}}).}
 }
 \value{
 A \code{ggplot} object representing the 4-way diagnostic panel.
@@ -62,8 +62,10 @@ This function is a high-level wrapper that calls internal plotting functions
 \code{lm_plot.infl}) and assembles their outputs into a combined \code{\link[cowplot]{plot_grid}}.
 }
 \examples{
-\dontrun{
+
 fit <- lm(mpg ~ wt + hp, data = mtcars)
-lm_plot.4way(fit, is.ts = FALSE, pval.DW = TRUE)
-}
+lm_plot.4way(fit, is.ts = FALSE, pval.SW = TRUE)
+fit <- lm(Employed ~ ., data = longley)
+lm_plot.4way(fit, is.ts = TRUE, pval.DW = TRUE)
+
 }

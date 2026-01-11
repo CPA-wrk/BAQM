@@ -3,37 +3,31 @@
 #' Creates a plot of leverage values versus the linear fitted values, including an identification of points with a large Cook's distance, to visualize high-leverage and influential observations.
 #'
 #' @param mdl A fitted model object (typically from \code{\link[stats]{lm}}).
-#' @param parm List of plotting parameters, usually from \code{lm_plot.parms()}.
+#' @param parms List of plotting parameters, usually from \code{lm_plot.parms()}.
 #' @param df Data frame with augmented model data. Defaults to \code{lm_plot.df(mdl)}.
-#' @param plts List of ggplot objects to which this plot will be added.
 #' @param ... Additional arguments (not currently used).
 #'
 #' @details
 #' The plot visualizes the calculated leverage of individual data points, defined as the diagonal element of the 'hat' matrix, as a function of the fitted values and implicitly relative to their location in the field of predictor variables, and the threshold value of high leverage is indicated. In addition, Cook's distance can be used to label influential points, along with outlier and regular points.
 #'
-#' @return A list containing:
+#' @return A \code{ggplot} object representing the comb plot of residuals vs sequence, indicating influential points. Included as an attribute \code{"parms"} is a list containing:
 #' \itemize{
-#'   \item \code{mdl} Fitted model object,
-#'   \item \code{parm} Parameter list for plotting,
-#'   \item \code{df} Data frame used for plotting,
-#'   \item \code{plts} List of ggplot objects, including the \code{$infl} element.
+#'   \item \code{lim} Plotted limits on \code{x} and \code{y} axes.
 #' }
 #'
 #' @seealso \code{\link{lm_plot.df}}, \code{\link{lm_plot.parms}}, \code{\link{outlier}}
-#' @import ggplot2 ggrepel
+#'
 #' @export
 #'
 #' @examples
-#' \dontrun{
+#'
 #' mdl <- lm(Sepal.Length ~ Sepal.Width, data = iris)
 #' result <- lm_plot.infl(mdl)
-#' print(result$plts$infl)
-#' }
+#'
 lm_plot.infl <- function(mdl, ...,
-                         parm = list(),
-                         df = lm_plot.df(mdl, parm),
-                         plts = list()) {
-  # Copyright 2025, Peter Lert, All rights reserved.
+                         parms = lm_plot.parms(mdl),
+                         df = lm_plot.df(mdl, parms = parms)) {
+  # Copyright 2026, Peter Lert, All rights reserved.
   #
   # Comb plot of studentized residual vs sequence
   # Influence values: Measured by Cook's distance.
@@ -41,12 +35,8 @@ lm_plot.infl <- function(mdl, ...,
   #     cooksd > qf(p = 0.5, df1 = mdl$rank, df2 = n - mdl$rank)
   #
   # mdl:    fitted linear model
-  # parm:   plot element parameters
+  # parms:  plot element parameters
   # df:     augmented model data
-  # plts:   list of ggplot objects to add to
-  #
-  # Default plot element parameters
-  parms <- lm_plot.parms(mdl, parm)
   #
   # Find x, y limits for placing elements
   lim <- data.frame(
@@ -60,7 +50,7 @@ lm_plot.infl <- function(mdl, ...,
   infl_lims <- outlier(df$.stud.resid, rpt = TRUE)
   #
   # Plot of studentized residuals vs sequence
-  plts$infl <- ggplot2::ggplot(data = df) +
+  plt_infl <- ggplot2::ggplot(data = df) +
     ggplot2::aes(x = .sequence, y = .stud.resid) +
     # Plot axis labels
     ggplot2::labs(x = "Sequence", y = "Studentized Residual") +
@@ -72,7 +62,7 @@ lm_plot.infl <- function(mdl, ...,
     )
   #
   # Drop lines for influence measure
-  plts$infl <- plts$infl +
+  plt_infl <- plt_infl +
     ggplot2::geom_segment(
       ggplot2::aes(xend = .sequence, yend = 0, color = .is.infl),
       show.legend = FALSE
@@ -87,7 +77,7 @@ lm_plot.infl <- function(mdl, ...,
   if (parms$pts$id$infl) {
     set.seed(parms$seed$infl$infl) # For reproducible ID placement
     df.infl <- df[df$.is.infl == "infl", , drop = FALSE]
-    plts$infl <- plts$infl +
+    plt_infl <- plt_infl +
       ggrepel::geom_text_repel(
         data = df.infl,
         ggplot2::aes(x = .sequence, y = .stud.resid, label = .id, color = .is.infl),
@@ -101,7 +91,7 @@ lm_plot.infl <- function(mdl, ...,
   if (parms$pts$id$outl) {
     set.seed(parms$seed$infl$outl) # For reproducible ID placement
     df.outl <- df[df$.is.infl == "outl", , drop = FALSE]
-    plts$infl <- plts$infl +
+    plt_infl <- plt_infl +
       ggrepel::geom_text_repel(
         data = df.outl,
         ggplot2::aes(x = .sequence, y = .stud.resid, label = .id, color = .is.infl),
@@ -127,7 +117,7 @@ lm_plot.infl <- function(mdl, ...,
   for (i in 1:length(infl_lims)) {
     if (infl_lims[i] >= lim["min", "y"] &   # Only if within y limits
       infl_lims[i] <= lim["max", "y"]) {
-      plts$infl <- plts$infl +
+      plt_infl <- plt_infl +
         ggplot2::geom_hline(
           yintercept = infl_lims[i],
           color = parms$lins$colr$infl,
@@ -138,7 +128,7 @@ lm_plot.infl <- function(mdl, ...,
           "label",
           x = lim["min", "x"],
           y = infl_lims[i],
-          label = paste("Influential", c('\u2193', '\u2191')[i]), # Arrows
+          label = "Influential",
           hjust = 0,
           color = parms$lins$colr$infl,
           size = parms$pts$lblsz
@@ -147,7 +137,7 @@ lm_plot.infl <- function(mdl, ...,
   }
   #
   # Add legend for outliers
-  plts$infl <- plts$infl +
+  plt_infl <- plt_infl +
     ggplot2::annotate(
       "text",
       x = lim["max", "x"],
@@ -159,11 +149,9 @@ lm_plot.infl <- function(mdl, ...,
       size = parms$pts$lblsz
     )
   #
-  # Return results
-  list(
-    mdl = mdl,
-    parm = parms,
-    df = df,
-    plts = plts
-  )
+  # Return influence results
+  parms_infl <- list(lim = lim)
+  #
+  attr(plt_infl, "parms") <- parms_infl
+  plt_infl
 }

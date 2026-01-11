@@ -8,9 +8,8 @@ lm_plot.lev(
   mdl,
   ...,
   cook.loess = FALSE,
-  parm = list(),
-  df = lm_plot.df(mdl),
-  plts = list()
+  parms = lm_plot.parms(mdl),
+  df = lm_plot.df(mdl, parms = parms)
 )
 }
 \arguments{
@@ -20,34 +19,27 @@ lm_plot.lev(
 
 \item{cook.loess}{Option (logical, default = FALSE) indicates whether to show loess curve for Cook's distances on the plot.}
 
-\item{parm}{List of plotting parameters, usually from \code{lm_plot.parms()}.}
+\item{parms}{List of plotting parameters, usually from \code{lm_plot.parms()}.}
 
 \item{df}{Data frame with augmented model data. Defaults to \code{lm_plot.df(mdl)}.}
-
-\item{plts}{List of ggplot objects to which this plot will be added.}
 }
 \value{
-A list containing:
+A \code{ggplot} object representing the standardized residuals vs leverage plot. Included as an attribute \code{"parms"} is a list containing:
 \itemize{
-  \item \code{mdl} Fitted model object,
-  \item \code{cook.loess} Option for loess curve for Cook's distances,
-  \item \code{parm} Parameter list for plotting, including Cook's distance contours,
-  \item \code{df} Data frame used for plotting,
-  \item \code{plts} List of ggplot objects, including the \code{$lev} element.
+  \item \code{lim} Plotted limits on \code{x} and \code{y} axes,
+  \item \code{cook.loess} Option to show loess curve for Cook's distances.
 }
 }
 \description{
 Creates a plot of standard residuals versus leverage values, including Cook's distance contours to visualize influential observations.
 }
 \details{
-The plot displays standard residuals against leverage, overlays Cook's distance contours, and marks outliers based on residuals and Cook's distance. Outlier and influential points can be labeled, and a loess fit line is optionally added.
+The plot displays standardized residuals against leverage, overlays Cook's distance contours, and marks outliers based on residuals and Cook's distance. Outlier and influential points can be labeled, and a loess fit line is optionally added.
 }
 \examples{
-\dontrun{
 mdl <- lm(Sepal.Length ~ Sepal.Width, data = iris)
-result <- lm_plot.lev(mdl)
-print(result$plts$lev)
-}
+lm_plot.lev(mdl)
+
 }
 \seealso{
 \code{\link{lm_plot.df}}, \code{\link{lm_plot.parms}}

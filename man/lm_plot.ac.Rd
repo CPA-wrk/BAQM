@@ -8,9 +8,8 @@ lm_plot.ac(
   mdl,
   ...,
   pval.DW = FALSE,
-  parm = list(),
-  df = lm_plot.df(mdl),
-  plts = list()
+  parms = lm_plot.parms(mdl),
+  df = lm_plot.df(mdl, parms = parms)
 )
 }
 \arguments{
@@ -20,26 +19,20 @@ lm_plot.ac(
 
 \item{pval.DW}{(logical, default = FALSE) Option to show Durbin-Watson p-value on the plot.}
 
-\item{parm}{A list of plotting parameters, usually from \code{lm_plot.parms()}.}
+\item{parms}{A list of plotting parameters, usually from \code{lm_plot.parms()}.}
 
 \item{df}{Data frame with augmented model data. Defaults to \code{lm_plot.df(mdl)}.}
-
-\item{plts}{A list of ggplot objects to which this plot will be added.}
 }
 \value{
-A list containing:
+A \code{ggplot} object representing the residuals vs. order plot. Included as an attribute \code{"parm"} is a list containing:
 \itemize{
-  \item \code{mdl} Fitted model object,
+  \item \code{lim} Plotted limits on \code{x} and \code{y} axes,
   \item \code{pval.DW} Option to show Durbin-Watson p-value,
-  \item \code{parm} Parameter list with Durbin-Watson test results added,
-  \item \code{df} Data frame used for plotting,
-  \item \code{plts} List of ggplot objects, including the \code{$ac} element.
+  \item \code{DW} The \code{htest} object with Durbin-Watson test results.
 }
 }
 \description{
-Creates a plot of residuals against the sequence/order of observations to visually
-assess independence and detect autocorrelation. Optionally overlays results from the
-Durbin–Watson test and labels outliers.
+Creates a plot of residuals against the sequence/order of observations to visually assess independence and detect autocorrelation. Outliers are labeled by default. Optionally includes p-value result from the Durbin–Watson test for autocorrelation.
 }
 \details{
 Points are colored and shaped according to whether they are residual outliers
@@ -47,8 +40,10 @@ Points are colored and shaped according to whether they are residual outliers
 \pkg{ggrepel} if \code{parm$pts$id$outl} or \code{parm$pts$id$reg} are set to \code{TRUE}.
 }
 \examples{
-\dontrun{
-fit <- lm(mpg ~ wt + hp, data = mtcars)
-lm_plot.ac(fit)
+fit <- lm(res ~ ., data = data.frame(time = time(austres), res = austres))
+lm_plot.ac(fit, pval.DW = TRUE)
+
 }
+\seealso{
+\code{\link[lmtest]{dwtest}}, \code{\link{lm_plot.df}}, \code{\link{lm_plot.parms}}
 }

@@ -4,12 +4,12 @@
 \alias{lm_plot.df}
 \title{Augment Model Data for Diagnostic Plots}
 \usage{
-lm_plot.df(mdl, parm = list())
+lm_plot.df(mdl, parms = lm_plot.parms(mdl))
 }
 \arguments{
 \item{mdl}{An object of class \code{lm}, representing the fitted linear model.}
 
-\item{parm}{List of plotting parameters, usually from \code{lm_plot.parms()}.}
+\item{parms}{List of plotting parameters, usually from \code{lm_plot.parms()}.}
 }
 \value{
 A data frame with augmented diagnostic variables, one row per observation.
@@ -42,6 +42,7 @@ The returned data frame contains key statistics for each observation:
 mdl <- lm(Sepal.Length ~ Sepal.Width, data = iris)
 df <- lm_plot.df(mdl)
 head(df)
+
 }
 \seealso{
 \code{\link[stats]{influence}}, \code{\link[stats]{influence.measures}}, \code{\link[stats]{rstandard}}, \code{\link[stats]{rstudent}}, \code{\link{outlier}}

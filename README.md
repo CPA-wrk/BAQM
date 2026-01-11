@@ -30,8 +30,8 @@ You can install the development version of BAQM from
 [GitHub](https://github.com/) with:
 
 ``` r
-# install.packages("pak")
-# pak::pak("CPA-wrk/BAQM")
+install.packages("pak")
+pak::pak("CPA-wrk/BAQM")
 ```
 
 ## Example
@@ -162,4 +162,4 @@ sumry(mdl)
 lm_plot.4way(mdl)
 ```
 
-<img src="man/figures/README-example-1.png" width="100%" />
+<img src="man/figures/README-example-1.png" alt="" width="100%" />
