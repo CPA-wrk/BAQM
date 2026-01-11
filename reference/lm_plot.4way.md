@@ -21,7 +21,7 @@ lm_plot.4way(
   cook.loess = FALSE,
   rtn.all = FALSE,
   plt.nms = c("fit", "var", "qq", ifelse(is.ts, "ac", "infl")),
-  parm = list()
+  parms = list()
 )
 ```
 
@@ -67,11 +67,12 @@ lm_plot.4way(
 - plt.nms:
 
   Character vector of which panels to plot. Defaults to fit, var, qq,
-  and ac/infl depending on `is.ts`.
+  and ac/infl depending on `is.ts` (Order: start upper left, continue
+  clockwise)
 
-- parm:
+- parms:
 
-  List of plot formatting parameters (see
+  List of overrides to plot formatting parameters (see
   [`lm_plot.parms`](https://cpa-wrk.github.io/BAQM/reference/lm_plot.parms.md)).
 
 ## Value
@@ -94,8 +95,10 @@ combined
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
 fit <- lm(mpg ~ wt + hp, data = mtcars)
-lm_plot.4way(fit, is.ts = FALSE, pval.DW = TRUE)
-} # }
+lm_plot.4way(fit, is.ts = FALSE, pval.SW = TRUE)
+
+fit <- lm(Employed ~ ., data = longley)
+lm_plot.4way(fit, is.ts = TRUE, pval.DW = TRUE)
+
 ```

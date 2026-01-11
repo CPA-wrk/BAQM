@@ -1,7 +1,9 @@
-# BAQM: Analytics Functions for Babson AQM Courses
+# BAQM: Babson Analytics and Quantitative Methods Tools
 
-Instructor-developed tools for AQM 1000 and AQM 2000 courses using R in
-the curriculum.
+Instructor-developed tools for Analytics and Quantitative Methods (AQM)
+courses at Babson College. Included are compact descriptive statistics
+for data frames and lists, expanded reporting and graphics for linear
+regressions, and formatted reports for best subsets analyses.
 
 ## See also
 

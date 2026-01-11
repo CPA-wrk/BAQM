@@ -8,7 +8,7 @@ diagnostics for plotting.
 ## Usage
 
 ``` r
-lm_plot.df(mdl, parm = list())
+lm_plot.df(mdl, parms = lm_plot.parms(mdl))
 ```
 
 ## Arguments
@@ -17,7 +17,7 @@ lm_plot.df(mdl, parm = list())
 
   An object of class `lm`, representing the fitted linear model.
 
-- parm:
+- parms:
 
   List of plotting parameters, usually from
   [`lm_plot.parms()`](https://cpa-wrk.github.io/BAQM/reference/lm_plot.parms.md).

@@ -10,9 +10,8 @@ lm_plot.lev(
   mdl,
   ...,
   cook.loess = FALSE,
-  parm = list(),
-  df = lm_plot.df(mdl),
-  plts = list()
+  parms = lm_plot.parms(mdl),
+  df = lm_plot.df(mdl, parms = parms)
 )
 ```
 
@@ -32,7 +31,7 @@ lm_plot.lev(
   Option (logical, default = FALSE) indicates whether to show loess
   curve for Cook's distances on the plot.
 
-- parm:
+- parms:
 
   List of plotting parameters, usually from
   [`lm_plot.parms()`](https://cpa-wrk.github.io/BAQM/reference/lm_plot.parms.md).
@@ -41,31 +40,21 @@ lm_plot.lev(
 
   Data frame with augmented model data. Defaults to `lm_plot.df(mdl)`.
 
-- plts:
-
-  List of ggplot objects to which this plot will be added.
-
 ## Value
 
-A list containing:
+A `ggplot` object representing the standardized residuals vs leverage
+plot. Included as an attribute `"parms"` is a list containing:
 
-- `mdl` Fitted model object,
+- `lim` Plotted limits on `x` and `y` axes,
 
-- `cook.loess` Option for loess curve for Cook's distances,
-
-- `parm` Parameter list for plotting, including Cook's distance
-  contours,
-
-- `df` Data frame used for plotting,
-
-- `plts` List of ggplot objects, including the `$lev` element.
+- `cook.loess` Option to show loess curve for Cook's distances.
 
 ## Details
 
-The plot displays standard residuals against leverage, overlays Cook's
-distance contours, and marks outliers based on residuals and Cook's
-distance. Outlier and influential points can be labeled, and a loess fit
-line is optionally added.
+The plot displays standardized residuals against leverage, overlays
+Cook's distance contours, and marks outliers based on residuals and
+Cook's distance. Outlier and influential points can be labeled, and a
+loess fit line is optionally added.
 
 ## See also
 
@@ -75,9 +64,7 @@ line is optionally added.
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
 mdl <- lm(Sepal.Length ~ Sepal.Width, data = iris)
-result <- lm_plot.lev(mdl)
-print(result$plts$lev)
-} # }
+lm_plot.lev(mdl)
+
 ```

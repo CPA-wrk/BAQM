@@ -29,10 +29,10 @@ missing or invalid entries.
 ## Details
 
 The returned list contains parameters for points (size, color, shape),
-lines (type, color, size), options for plot features, and Cook's
-distance/Influence contours. These are used by other `lm_plot.*`
-functions to control plot appearance and annotation. Key defaults
-include:
+lines (type, color, size), options for plot features, Cook's
+distance/Influence contours, and seed values for sampling functions.
+These are used by other `lm_plot.*` functions to control plot appearance
+and annotation. Key defaults include:
 
 - **pts**: Properties for points (size, color, shape, outlier flags)
 
@@ -50,6 +50,7 @@ values.
 [`lm_plot.fit`](https://cpa-wrk.github.io/BAQM/reference/lm_plot.fit.md),
 [`lm_plot.lev`](https://cpa-wrk.github.io/BAQM/reference/lm_plot.lev.md),
 [`lm_plot.infl`](https://cpa-wrk.github.io/BAQM/reference/lm_plot.infl.md)
+[`outlier`](https://cpa-wrk.github.io/BAQM/reference/outlier.md)
 
 ## Examples
 

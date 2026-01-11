@@ -10,9 +10,8 @@ visualize high-leverage and influential observations.
 lm_plot.infl(
   mdl,
   ...,
-  parm = list(),
-  df = lm_plot.df(mdl, parm),
-  plts = list()
+  parms = lm_plot.parms(mdl),
+  df = lm_plot.df(mdl, parms = parms)
 )
 ```
 
@@ -27,7 +26,7 @@ lm_plot.infl(
 
   Additional arguments (not currently used).
 
-- parm:
+- parms:
 
   List of plotting parameters, usually from
   [`lm_plot.parms()`](https://cpa-wrk.github.io/BAQM/reference/lm_plot.parms.md).
@@ -36,21 +35,13 @@ lm_plot.infl(
 
   Data frame with augmented model data. Defaults to `lm_plot.df(mdl)`.
 
-- plts:
-
-  List of ggplot objects to which this plot will be added.
-
 ## Value
 
-A list containing:
+A `ggplot` object representing the comb plot of residuals vs sequence,
+indicating influential points. Included as an attribute `"parms"` is a
+list containing:
 
-- `mdl` Fitted model object,
-
-- `parm` Parameter list for plotting,
-
-- `df` Data frame used for plotting,
-
-- `plts` List of ggplot objects, including the `$infl` element.
+- `lim` Plotted limits on `x` and `y` axes.
 
 ## Details
 
@@ -70,9 +61,6 @@ points, along with outlier and regular points.
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
 mdl <- lm(Sepal.Length ~ Sepal.Width, data = iris)
 result <- lm_plot.infl(mdl)
-print(result$plts$infl)
-} # }
 ```

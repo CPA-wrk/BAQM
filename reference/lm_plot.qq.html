@@ -43,9 +43,8 @@
 <span>  <span class="va">mdl</span>,</span>
 <span>  <span class="va">...</span>,</span>
 <span>  pval.SW <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  parm <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  df <span class="op">=</span> <span class="fu"><a href="lm_plot.df.html">lm_plot.df</a></span><span class="op">(</span><span class="va">mdl</span><span class="op">)</span>,</span>
-<span>  plts <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>  parms <span class="op">=</span> <span class="fu"><a href="lm_plot.parms.html">lm_plot.parms</a></span><span class="op">(</span><span class="va">mdl</span><span class="op">)</span>,</span>
+<span>  df <span class="op">=</span> <span class="fu"><a href="lm_plot.df.html">lm_plot.df</a></span><span class="op">(</span><span class="va">mdl</span>, parms <span class="op">=</span> <span class="va">parms</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -65,25 +64,19 @@
 <dd><p>(logical, default = FALSE) indicates whether to include Shapiro-Wilk p-value on the plot.</p></dd>
 
 
-<dt id="arg-parm">parm<a class="anchor" aria-label="anchor" href="#arg-parm"></a></dt>
+<dt id="arg-parms">parms<a class="anchor" aria-label="anchor" href="#arg-parms"></a></dt>
 <dd><p>List of plotting parameters, usually from <code><a href="lm_plot.parms.html">lm_plot.parms()</a></code>.</p></dd>
 
 
 <dt id="arg-df">df<a class="anchor" aria-label="anchor" href="#arg-df"></a></dt>
 <dd><p>Data frame with augmented model data. Defaults to <code>lm_plot.df(mdl)</code>.</p></dd>
 
-
-<dt id="arg-plts">plts<a class="anchor" aria-label="anchor" href="#arg-plts"></a></dt>
-<dd><p>List of ggplot objects to which this plot will be added.</p></dd>
-
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A list containing:</p><ul><li><p><code>mdl</code> Fitted model object,</p></li>
-<li><p><code>pval.SW</code> Option for including Shapiro-Wilk p-value,</p></li>
-<li><p><code>parm</code> Parameter list with Shapiro-Wilk test results added,</p></li>
-<li><p><code>df</code> Data frame used for plotting,</p></li>
-<li><p><code>plts</code> List of ggplot objects, including the <code>$qq</code> element.</p></li>
+    <p>A <code>ggplot</code> object representing the quantile-quantile plot. Included as an attribute <code>"parm"</code> is a list containing:</p><ul><li><p><code>lim</code> Plotted limits on <code>x</code> and <code>y</code> axes,</p></li>
+<li><p><code>pval.SW</code> Option to show Shapiro-Wilk p-value,</p></li>
+<li><p><code>DW</code> The <code>htest</code> object with Shapiro-Wilk test results.</p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -97,9 +90,9 @@
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">mdl</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">Sepal.Length</span> <span class="op">~</span> <span class="va">Sepal.Width</span>, data <span class="op">=</span> <span class="va">iris</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu">lm_plot.qq</span><span class="op">(</span><span class="va">mdl</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">result</span><span class="op">$</span><span class="va">plts</span><span class="op">$</span><span class="va">qq</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">lm_plot.qq</span><span class="op">(</span><span class="va">mdl</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="lm_plot.qq-1.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

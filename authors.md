@@ -9,11 +9,11 @@
 Source:
 [`DESCRIPTION`](https://github.com/CPA-wrk/BAQM/blob/main/DESCRIPTION)
 
-Lert P (2026). *BAQM: Analytics Functions for Babson AQM Courses*. R
-package version 0.1.3, <https://github.com/CPA-wrk/BAQM>.
+Lert P (2026). *BAQM: Babson Analytics and Quantitative Methods Tools*.
+R package version 0.1.3, <https://github.com/CPA-wrk/BAQM>.
 
     @Manual{,
-      title = {BAQM: Analytics Functions for Babson AQM Courses},
+      title = {BAQM: Babson Analytics and Quantitative Methods Tools},
       author = {Peter Lert},
       year = {2026},
       note = {R package version 0.1.3},

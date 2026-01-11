@@ -11,9 +11,8 @@ lm_plot.qq(
   mdl,
   ...,
   pval.SW = FALSE,
-  parm = list(),
-  df = lm_plot.df(mdl),
-  plts = list()
+  parms = lm_plot.parms(mdl),
+  df = lm_plot.df(mdl, parms = parms)
 )
 ```
 
@@ -33,7 +32,7 @@ lm_plot.qq(
   (logical, default = FALSE) indicates whether to include Shapiro-Wilk
   p-value on the plot.
 
-- parm:
+- parms:
 
   List of plotting parameters, usually from
   [`lm_plot.parms()`](https://cpa-wrk.github.io/BAQM/reference/lm_plot.parms.md).
@@ -42,23 +41,16 @@ lm_plot.qq(
 
   Data frame with augmented model data. Defaults to `lm_plot.df(mdl)`.
 
-- plts:
-
-  List of ggplot objects to which this plot will be added.
-
 ## Value
 
-A list containing:
+A `ggplot` object representing the quantile-quantile plot. Included as
+an attribute `"parm"` is a list containing:
 
-- `mdl` Fitted model object,
+- `lim` Plotted limits on `x` and `y` axes,
 
-- `pval.SW` Option for including Shapiro-Wilk p-value,
+- `pval.SW` Option to show Shapiro-Wilk p-value,
 
-- `parm` Parameter list with Shapiro-Wilk test results added,
-
-- `df` Data frame used for plotting,
-
-- `plts` List of ggplot objects, including the `$qq` element.
+- `DW` The `htest` object with Shapiro-Wilk test results.
 
 ## Details
 
@@ -78,6 +70,6 @@ displayed.
 
 ``` r
 mdl <- lm(Sepal.Length ~ Sepal.Width, data = iris)
-result <- lm_plot.qq(mdl)
-print(result$plts$qq)
+lm_plot.qq(mdl)
+
 ```
