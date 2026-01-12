@@ -126,8 +126,8 @@ build_test_rds <- function(test_options = NULL) {
           file = file.path(fixt_path, "lm_plot.df_longley.rds"))
   #
   lm_plot.ac_longley <- lm_plot.ac_longley_bld(test_options)
-  saveRDS(attributes(lm_plot.ac_longley), ascii = TRUE,
-          file = file.path(fixt_path, "lm_plot.ac_longley.rds"))
+  # saveRDS(attributes(lm_plot.ac_longley), ascii = TRUE,
+  #         file = file.path(fixt_path, "lm_plot.ac_longley.rds"))
   vdiffr::write_svg(plot = lm_plot.ac_longley,
                     file = file.path(fixt_path, "lm_plot.ac_longley.svg"))
   #
@@ -136,38 +136,38 @@ build_test_rds <- function(test_options = NULL) {
           file = file.path(fixt_path, "lm_plot.df_cars.rds"))
   #
   lm_plot.4way_cars <- lm_plot.4way_cars_bld(test_options)
-  saveRDS(attributes(lm_plot.4way_cars), ascii = TRUE,
-          file = file.path(fixt_path, "lm_plot.4way_cars.rds"))
+  # saveRDS(attributes(lm_plot.4way_cars), ascii = TRUE,
+  #         file = file.path(fixt_path, "lm_plot.4way_cars.rds"))
   vdiffr::write_svg(plot = lm_plot.4way_cars,
                     file = file.path(fixt_path, "lm_plot.4way_cars.svg"))
   #
   lm_plot.fit_cars <- lm_plot.fit_cars_bld(test_options)
-  saveRDS(attributes(lm_plot.fit_cars), ascii = TRUE,
-          file = file.path(fixt_path, "lm_plot.fit_cars.rds"))
+  # saveRDS(attributes(lm_plot.fit_cars), ascii = TRUE,
+  #         file = file.path(fixt_path, "lm_plot.fit_cars.rds"))
   vdiffr::write_svg(plot = lm_plot.fit_cars,
                     file = file.path(fixt_path, "lm_plot.fit_cars.svg"))
   #
   lm_plot.qq_cars <- lm_plot.qq_cars_bld(test_options)
-  saveRDS(attributes(lm_plot.qq_cars), ascii = TRUE,
-          file = file.path(fixt_path, "lm_plot.qq_cars.rds"))
+  # saveRDS(attributes(lm_plot.qq_cars), ascii = TRUE,
+  #         file = file.path(fixt_path, "lm_plot.qq_cars.rds"))
   vdiffr::write_svg(plot = lm_plot.qq_cars,
                     file = file.path(fixt_path, "lm_plot.qq_cars.svg"))
   #
   lm_plot.var_cars <- lm_plot.var_cars_bld(test_options)
-  saveRDS(attributes(lm_plot.var_cars), ascii = TRUE,
-          file = file.path(fixt_path, "lm_plot.var_cars.rds"))
+  # saveRDS(attributes(lm_plot.var_cars), ascii = TRUE,
+  #         file = file.path(fixt_path, "lm_plot.var_cars.rds"))
   vdiffr::write_svg(plot = lm_plot.var_cars,
                     file = file.path(fixt_path, "lm_plot.var_cars.svg"))
   #
   lm_plot.infl_cars <- lm_plot.infl_cars_bld(test_options)
-  saveRDS(attributes(lm_plot.infl_cars), ascii = TRUE,
-          file = file.path(fixt_path, "lm_plot.infl_cars.rds"))
+  # saveRDS(attributes(lm_plot.infl_cars), ascii = TRUE,
+  #         file = file.path(fixt_path, "lm_plot.infl_cars.rds"))
   vdiffr::write_svg(plot = lm_plot.infl_cars,
                     file = file.path(fixt_path, "lm_plot.infl_cars.svg"))
   #
   lm_plot.lev_cars <- lm_plot.lev_cars_bld(test_options)
-  saveRDS(attributes(lm_plot.lev_cars), ascii = TRUE,
-          file = file.path(fixt_path, "lm_plot.lev_cars.rds"))
+  # saveRDS(attributes(lm_plot.lev_cars), ascii = TRUE,
+  #         file = file.path(fixt_path, "lm_plot.lev_cars.rds"))
   vdiffr::write_svg(plot = lm_plot.lev_cars,
                     file = file.path(fixt_path, "lm_plot.lev_cars.svg"))
 }
