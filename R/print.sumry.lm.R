@@ -13,7 +13,8 @@
 #'
 #' @details
 #' The function prints summary statistics, ANOVA, and coefficients tables for a linear model in order, along with specified optional tables if provided. It concludes with a five-number-plus-mean summary of residuals and the model call.
-#' For objects not of class \code{sumry.lm}, a default print method is used.
+#'
+#' @return Invisibly return the unmodified object included in the call.
 #'
 #' @seealso \code{\link{sumry.lm}}, \code{\link{print.table.sumry.lm}}
 #'
@@ -29,6 +30,7 @@ print.sumry.lm <- function(x, ...,
                            options = NULL,
                            na.print = "",
                            eps = .Machine$double.eps) {
+  #
   # Copyright 2026, Peter Lert, All rights reserved.
   #
   # Method to print a more detailed summary of an lm object

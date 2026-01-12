@@ -8,13 +8,14 @@
 #' @details
 #' The function formats a table summarizing the best models selected, including the number of predictors, R-squared, adjusted R-squared, standard error of estimate (SEE), Mallows' Cp, and included variables. It is first converted to a summary.regsubsets with \code{summary()}. If not, the object is returned unmodified.
 #'
-#' @seealso \code{\link[leaps]{regsubsets}}
+#' @return Returns a matrix containing a summary table for the best subsets analysis. Each row summarizes a model showing: the number of predictors, \code{k}, used; "which best" that model is for that \code{k}; performance statistics (see above); and a series of columns with asterisks indicating the specific predictors included in the model.
+#'
+#' @seealso \code{\link[leaps]{regsubsets}},  \code{\link{print.sumry.regsubsets}}
 #'
 #' @examples
-#' \dontrun{
+#'
 #' fit <- leaps::regsubsets(Fertility ~ ., data = swiss, nbest = 3)
-#' print.summary.regsubsets(fit)
-#' }
+#' summary.regsubsets(fit)
 #'
 #' @export
 sumry.regsubsets <- function(x, ...) {

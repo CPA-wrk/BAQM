@@ -12,8 +12,7 @@
 #' @details
 #' For each variable in \code{x}, the function computes the count of non-missing and missing values. Numeric variables are summarized by minimum, first quartile, median, mean, third quartile, maximum, and standard deviation. Factor, logical, and character variables are summarized by level frequencies, where level names may be abbreviated for readability. Results are formatted in a table and printed. The function returns a list containing numeric or factor summaries for each variable.
 #'
-#' @return Invisibly returns a list containing a summary data frame for each variable, to full precision. For example,  \code{smry <- sumry.df(df[c("A", "B", "C")]); smry$A$std.dev} gives the standard deviation of variable \code{A} in data frame \code{df}
-#'
+#' @return Invisibly returns a list containing a summary data frame for each variable with no rounding. For example,  \code{smry <- sumry.df(df[c("A", "B", "C")]); smry$A$std.dev} gives the standard deviation of variable \code{A} in data frame \code{df}
 #'
 #' @examples
 #' sumry(penguins)
@@ -27,6 +26,7 @@ sumry.default <- function(x, ...,
                           pad = 2,
                           maxsum = 10,
                           opts = list(digits = 4, scipen = 2)) {
+  #
   # Copyright 2026, Peter Lert, All rights reserved.
   #
   # Summary descriptive statistics for x (list, data frame, or vector)

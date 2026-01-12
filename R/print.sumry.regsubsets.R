@@ -9,13 +9,14 @@
 #' The function prints the model call and a table summarizing the best models selected, including the number of predictors, R-squared, adjusted R-squared, standard error of estimate (SEE), Mallows' Cp, and included variables.
 #' If the input is a \code{regsubsets} object, it is converted with \code{sumry()}. If not, the object is returned unmodified.
 #'
+#' @return Invisibly return the object printed.
+#'
 #' @seealso \code{\link[leaps]{regsubsets}}, \code{\link{sumry.regsubsets}}
 #'
 #' @examples
-#' \dontrun{
+#'
 #' fit <- leaps::regsubsets(Fertility ~ ., data = swiss, nbest = 3)
 #' print.sumry.regsubsets(fit)
-#' }
 #'
 #' @export
 print.sumry.regsubsets <- function(x, ...) {
