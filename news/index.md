@@ -1,5 +1,7 @@
 # Changelog
 
+## BAQM 0.1.4
+
 ## BAQM 0.1.3
 
 ## BAQM 0.1.2
