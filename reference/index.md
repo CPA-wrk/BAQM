@@ -40,7 +40,7 @@
 - [`print(`*`<sumry.regsubsets>`*`)`](https://cpa-wrk.github.io/BAQM/reference/print.sumry.regsubsets.md)
   :
 
-  Print Summary for Subset Selection (`regsubsets`) Objects
+  Print Method for Best Subset Selection (`regsubsets`) Objects
 
 - [`print(`*`<table.sumry.lm>`*`)`](https://cpa-wrk.github.io/BAQM/reference/print.table.sumry.lm.md)
   : Print a Table from Linear Model Summary

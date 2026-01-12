@@ -60,13 +60,16 @@ print(
   Smallest positive floating-point value, used for formatting near-zero
   residuals. Defaults to `.Machine$double.eps`.
 
+## Value
+
+Invisibly return the unmodified object included in the call.
+
 ## Details
 
 The function prints summary statistics, ANOVA, and coefficients tables
 for a linear model in order, along with specified optional tables if
 provided. It concludes with a five-number-plus-mean summary of residuals
-and the model call. For objects not of class `sumry.lm`, a default print
-method is used.
+and the model call.
 
 ## See also
 

@@ -54,7 +54,7 @@ sumry(
 ## Value
 
 Invisibly returns a list containing a summary data frame for each
-variable, to full precision. For example,
+variable with no rounding. For example,
 `smry <- sumry.df(df[c("A", "B", "C")]); smry$A$std.dev` gives the
 standard deviation of variable `A` in data frame `df`
 

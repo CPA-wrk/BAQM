@@ -1,4 +1,4 @@
-# Print Summary for Subset Selection (`regsubsets`) Objects
+# Print Method for Best Subset Selection (`regsubsets`) Objects
 
 Prints a summary for objects of class `summary.regsubsets` or
 `regsubsets` (from the `leaps` package), showing model selection
@@ -22,6 +22,10 @@ print(x, ...)
 
   Additional arguments (not currently used).
 
+## Value
+
+Invisibly return the object printed.
+
 ## Details
 
 The function prints the model call and a table summarizing the best
@@ -39,8 +43,7 @@ the object is returned unmodified.
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
 fit <- leaps::regsubsets(Fertility ~ ., data = swiss, nbest = 3)
 print.sumry.regsubsets(fit)
-} # }
+#> Error in print.sumry.regsubsets(fit): could not find function "print.sumry.regsubsets"
 ```

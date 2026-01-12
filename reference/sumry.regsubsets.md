@@ -22,6 +22,14 @@ sumry(x, ...)
 
   Additional arguments (not currently used).
 
+## Value
+
+Returns a matrix containing a summary table for the best subsets
+analysis. Each row summarizes a model showing: the number of predictors,
+`k`, used; "which best" that model is for that `k`; performance
+statistics (see above); and a series of columns with asterisks
+indicating the specific predictors included in the model.
+
 ## Details
 
 The function formats a table summarizing the best models selected,
@@ -33,13 +41,13 @@ is returned unmodified.
 
 ## See also
 
-[`regsubsets`](https://rdrr.io/pkg/leaps/man/regsubsets.html)
+[`regsubsets`](https://rdrr.io/pkg/leaps/man/regsubsets.html),
+[`print.sumry.regsubsets`](https://cpa-wrk.github.io/BAQM/reference/print.sumry.regsubsets.md)
 
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
 fit <- leaps::regsubsets(Fertility ~ ., data = swiss, nbest = 3)
-print.summary.regsubsets(fit)
-} # }
+summary.regsubsets(fit)
+#> Error in summary.regsubsets(fit): could not find function "summary.regsubsets"
 ```
