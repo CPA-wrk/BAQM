@@ -90,11 +90,11 @@ sysnm <- function() {
   #
   if ((os <- tolower(Sys.info()["sysname"])) == "darwin") {
     os <- "mac"
-  } else if (!os %in% c("windows", "solaris")) {
+  } else if (!os %in% c("windows")) {
     os <- "linux"
   }
   #
-  if (!os %in% c("mac", "windows", "solaris", "linux")) {
+  if (!os %in% c("mac", "windows", "linux")) {
     os <- "mac"
   }
   os
