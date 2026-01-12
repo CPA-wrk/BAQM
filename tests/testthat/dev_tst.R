@@ -1,5 +1,8 @@
 # dev_tst.R
 #### Example code for testing BAQM package readme ####
+# Note: Run usethis::use_release_issue() in your package's R session
+# to create an interactive checklist as a GitHub issue.
+#### Ignored in build
 sumry(swiss)
 names(swiss) <- substr(names(swiss), 1, 4) # Narrows output
 regs <- leaps::regsubsets(Fert ~ ., data = swiss, nbest = 3)

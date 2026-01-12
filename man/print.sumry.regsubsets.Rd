@@ -24,7 +24,7 @@ If the input is a \code{regsubsets} object, it is converted with \code{sumry()}.
 \examples{
 
 fit <- leaps::regsubsets(Fertility ~ ., data = swiss, nbest = 3)
-print.sumry.regsubsets(fit)
+print(sumry(fit))
 
 }
 \seealso{

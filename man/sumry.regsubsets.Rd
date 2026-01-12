@@ -23,7 +23,7 @@ The function formats a table summarizing the best models selected, including the
 \examples{
 
 fit <- leaps::regsubsets(Fertility ~ ., data = swiss, nbest = 3)
-summary.regsubsets(fit)
+sumry(fit)
 
 }
 \seealso{

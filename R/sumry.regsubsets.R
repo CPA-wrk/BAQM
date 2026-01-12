@@ -15,7 +15,7 @@
 #' @examples
 #'
 #' fit <- leaps::regsubsets(Fertility ~ ., data = swiss, nbest = 3)
-#' summary.regsubsets(fit)
+#' sumry(fit)
 #'
 #' @export
 sumry.regsubsets <- function(x, ...) {
