@@ -19,9 +19,11 @@
 #' @seealso \code{\link{sumry.lm}}, \code{\link{print.table.sumry.lm}}
 #'
 #' @examples
+#'
 #' mdl <- lm(Sepal.Length ~ Sepal.Width, data = iris)
 #' sumry(mdl)
 #' sumry(mdl, options = c("correlation", "fits"))
+#'
 #' @export
 print.sumry.lm <- function(x, ...,
                            digits = max(5, getOption("digits") - 2),

@@ -32,17 +32,21 @@
 
 \item{eps}{Smallest positive floating-point value, used for formatting near-zero residuals. Defaults to \code{.Machine$double.eps}.}
 }
+\value{
+Invisibly return the unmodified object included in the call.
+}
 \description{
 Prints a comprehensive summary for objects of class \code{summary.lm} or \code{lm}, including model statistics, ANOVA table, coefficients, and optional tables (correlations, covariance, fits), followed by a five-number summary of residuals and the model call.
 }
 \details{
 The function prints summary statistics, ANOVA, and coefficients tables for a linear model in order, along with specified optional tables if provided. It concludes with a five-number-plus-mean summary of residuals and the model call.
-For objects not of class \code{sumry.lm}, a default print method is used.
 }
 \examples{
+
 mdl <- lm(Sepal.Length ~ Sepal.Width, data = iris)
 sumry(mdl)
 sumry(mdl, options = c("correlation", "fits"))
+
 }
 \seealso{
 \code{\link{sumry.lm}}, \code{\link{print.table.sumry.lm}}

@@ -1,4 +1,4 @@
-#' Print Summary for Subset Selection (\code{regsubsets}) Objects
+#' Print Method for Best Subset Selection (\code{regsubsets}) Objects
 #'
 #' Prints a summary for objects of class \code{summary.regsubsets} or \code{regsubsets} (from the \code{leaps} package), showing model selection statistics for best subsets, including R-squared, adjusted R-squared, standard error of estimate, Mallows' Cp, and AIC.
 #'

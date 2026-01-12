@@ -27,7 +27,7 @@
 \item{opts}{A key=value type list, optional input for \code{options} values on output. Existing values are restored on exit.}
 }
 \value{
-Invisibly returns a list containing a summary data frame for each variable, to full precision. For example,  \code{smry <- sumry.df(df[c("A", "B", "C")]); smry$A$std.dev} gives the standard deviation of variable \code{A} in data frame \code{df}
+Invisibly returns a list containing a summary data frame for each variable with no rounding. For example,  \code{smry <- sumry.df(df[c("A", "B", "C")]); smry$A$std.dev} gives the standard deviation of variable \code{A} in data frame \code{df}
 }
 \description{
 Computes and prints summary descriptive statistics for each variable in a data frame, list, or vector including counts, numeric summaries (min, quartiles, mean, max, standard deviation), and factor summaries (levels and frequencies).

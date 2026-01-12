@@ -2,7 +2,7 @@
 % Please edit documentation in R/print.sumry.regsubsets.R
 \name{print.sumry.regsubsets}
 \alias{print.sumry.regsubsets}
-\title{Print Summary for Subset Selection (\code{regsubsets}) Objects}
+\title{Print Method for Best Subset Selection (\code{regsubsets}) Objects}
 \usage{
 \method{print}{sumry.regsubsets}(x, ...)
 }
@@ -10,6 +10,9 @@
 \item{x}{An object of class \code{summary.regsubsets} or \code{regsubsets}.}
 
 \item{...}{Additional arguments (not currently used).}
+}
+\value{
+Invisibly return the object printed.
 }
 \description{
 Prints a summary for objects of class \code{summary.regsubsets} or \code{regsubsets} (from the \code{leaps} package), showing model selection statistics for best subsets, including R-squared, adjusted R-squared, standard error of estimate, Mallows' Cp, and AIC.
@@ -19,10 +22,9 @@ The function prints the model call and a table summarizing the best models selec
 If the input is a \code{regsubsets} object, it is converted with \code{sumry()}. If not, the object is returned unmodified.
 }
 \examples{
-\dontrun{
+
 fit <- leaps::regsubsets(Fertility ~ ., data = swiss, nbest = 3)
 print.sumry.regsubsets(fit)
-}
 
 }
 \seealso{
