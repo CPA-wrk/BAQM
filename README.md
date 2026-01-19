@@ -12,19 +12,29 @@
 
 BAQM supplies functions developed by Babson College instructors for AQM
 1000 and AQM 2000 courses using R in the curriculum. The primary
-functions provide:
+functions include:
 
-- `sumry.df()` - summary descriptive statistics for data frames,
-  allowing both numeric and factor variables, in both wide and long
-  formats.
-- `sumry.lm()` - expanded statistics and enhanced formatting to
-  summarize linear model results.
+- `sumry()` - a generic function with methods to summarize certain
+  classes of objects, including:
+  - `sumry.default()` - summary descriptive statistics for data frames,
+    lists, and vectors, allowing both numeric and factor variables, in
+    both wide and long formats.
+  - `sumry.lm()` - expanded statistics and enhanced formatting to
+    summarize linear model results.
+  - `sumry.regsubsets()` - compact “best subsets” linear model reports
+    for analytics from the `regsubsets` function of the `leaps` package.
+  - `print` methods for the above.
 - `lm_plot.4way()` - multiple diagnostic plots for linear models using
   ggplot, including a 4-in-1 summary graphic.
-- `sumry.regsubsets()` - compact “best subsets” linear model reports for
-  analytics from the `regsubsets` function of the leaps package.
 
 ## Installation
+
+You can install the released version of BAQM from
+[CRAN](https://cran.r-project.org/package=BAQM/) with:
+
+``` r
+install.packages("BAQM")
+```
 
 You can install the development version of BAQM from
 [GitHub](https://github.com/) with:
