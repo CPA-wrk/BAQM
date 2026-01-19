@@ -52,22 +52,32 @@
 <!-- badges: start -->
 
 <!-- R_LIBS_USER='/Users/peter/Library/Caches/org.R-project.R/R/renv/library/BAQM-8c6b0fb8/macos/R-4.5/aarch64-apple-darwin20' -->
-<p>BAQM supplies functions developed by Babson College instructors for AQM 1000 and AQM 2000 courses using R in the curriculum. The primary functions provide:</p>
+<p>BAQM supplies functions developed by Babson College instructors for AQM 1000 and AQM 2000 courses using R in the curriculum. The primary functions include:</p>
 <ul>
 <li>
-<code>sumry.df()</code> - summary descriptive statistics for data frames, allowing both numeric and factor variables, in both wide and long formats.</li>
+<code><a href="reference/sumry.html">sumry()</a></code> - a generic function with methods to summarize certain classes of objects, including:
+<ul>
+<li>
+<code><a href="reference/sumry.default.html">sumry.default()</a></code> - summary descriptive statistics for data frames, lists, and vectors, allowing both numeric and factor variables, in both wide and long formats.</li>
 <li>
 <code><a href="reference/sumry.lm.html">sumry.lm()</a></code> - expanded statistics and enhanced formatting to summarize linear model results.</li>
 <li>
-<code><a href="reference/lm_plot.4way.html">lm_plot.4way()</a></code> - multiple diagnostic plots for linear models using ggplot, including a 4-in-1 summary graphic.</li>
+<code><a href="reference/sumry.regsubsets.html">sumry.regsubsets()</a></code> - compact “best subsets” linear model reports for analytics from the <code>regsubsets</code> function of the <code>leaps</code> package.</li>
 <li>
-<code><a href="reference/sumry.regsubsets.html">sumry.regsubsets()</a></code> - compact “best subsets” linear model reports for analytics from the <code>regsubsets</code> function of the leaps package.</li>
+<code>print</code> methods for the above.</li>
+</ul>
+</li>
+<li>
+<code><a href="reference/lm_plot.4way.html">lm_plot.4way()</a></code> - multiple diagnostic plots for linear models using ggplot, including a 4-in-1 summary graphic.</li>
 </ul>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>You can install the development version of BAQM from <a href="https://github.com/" class="external-link">GitHub</a> with:</p>
+<p>You can install the released version of BAQM from <a href="https://cran.r-project.org/package=BAQM/" class="external-link">CRAN</a> with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"BAQM"</span><span class="op">)</span></span></code></pre></div>
+<p>You can install the development version of BAQM from <a href="https://github.com/" class="external-link">GitHub</a> with:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"pak"</span><span class="op">)</span></span>
 <span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"CPA-wrk/BAQM"</span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -82,7 +92,7 @@
 <li>a 4-way diagnostic plot for the <code>mtcars</code> model.</li>
 </ul>
 <p>(Variable names are truncated in <code>swiss</code> to narrow the output.)</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">leaps</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/CPA-wrk/BAQM" class="external-link">BAQM</a></span><span class="op">)</span></span>
 <span><span class="co">#</span></span>

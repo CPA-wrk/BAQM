@@ -7,7 +7,7 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/CPA-wrk/BAQM/blob/v0.1.4/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/CPA-wrk/BAQM/blob/main/DESCRIPTION)
 
 Lert P (2026). *BAQM: Babson Analytics and Quantitative Methods Tools*.
 R package version 0.1.4, <https://github.com/CPA-wrk/BAQM>.
